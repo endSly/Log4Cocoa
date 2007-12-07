@@ -5,7 +5,6 @@
 #import "L4LoggingEvent.h"
 #import "L4Logger.h"
 #import "L4PreprocessorStatics.h"
-#import "L4RendererMap.h"
 
 static NSCalendarDate *startTime = nil;
 
@@ -187,28 +186,11 @@ static NSCalendarDate *startTime = nil;
 
 - (NSString *) renderedMessage	
 {
-    if( renderedMessage == nil && message != nil )
-    {
-        if([message isKindOfClass: [NSString class]])
-        {
+    if( renderedMessage == nil && message != nil ) {
+        if([message isKindOfClass: [NSString class]]) {
             renderedMessage = message;  // if its a string return it.
-        }
-        else
-        {
-            id <L4LoggerRepository> repository = [logger loggerRepository];
-            if([repository conformsToProtocol: @protocol(L4RendererSupport)])
-            {
-                // try to find a renderer for the message
-                //
-                id <L4RendererSupport> rs = (id <L4RendererSupport>) repository;
-                renderedMessage = [[rs rendererMap] findAndRender: message];
-            }
-            else
-            {
-                // when in doubt, call description
-                //
-                renderedMessage = [message description];
-            }
+        } else {
+			renderedMessage = [message description];
         }
     }
     

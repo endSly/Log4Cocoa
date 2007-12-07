@@ -51,17 +51,3 @@ parameter. See also {@link #setThreshold} method.  */
 @end
 
 
-@protocol L4ObjectRenderer
-
-- (NSString *) render: (id) anObject;
-
-@end
-
-
-@protocol L4RendererSupport
-
-- (L4RendererMap *) rendererMap;
-- (void) setRenderer: (id <L4ObjectRenderer>) renderer
-            forClass: (Class) aClass;
-
-@end

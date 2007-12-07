@@ -2,16 +2,12 @@
  * For copyright & license, see COPYRIGHT.txt.
  */
 
-#import "L4NSObjectAdditions.h"
+#import "NSObject+Log4Cocoa.h"
 #import "L4Logger.h"
 #import "L4LogManager.h"
 
-@implementation L4NSObjectAdditions
 
-@end
-
-
-@implementation NSObject(L4CocoaMethods)
+@implementation NSObject (Log4Cocoa)
 
 + (L4Logger *) l4Logger
 {
@@ -24,4 +20,3 @@
 }
 
 @end
-
