@@ -34,6 +34,9 @@
 
 #import "L4LogManager.h"
 #import "L4RootLogger.h"
+#import "L4Level.h"
+#import "L4LoggerStore.h"
+#import "L4LogLog.h"
 
 static id guard = nil;
 static id <L4RepositorySelector> repositorySelector = nil;

@@ -40,7 +40,6 @@
 // #import "Log4Cocoa.h"
 #import <Foundation/Foundation.h>
 #import "L4WriterAppender.h"
-#import "L4Layout.h"
 
 /*!
 	@class L4FileAppender

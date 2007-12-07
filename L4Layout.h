@@ -34,7 +34,6 @@
 
 #import <Foundation/Foundation.h>
 #import "L4AppenderProtocols.h"
-#import "L4LoggingEvent.h"
 
 @class L4LoggingEvent, L4SimpleLayout;
 

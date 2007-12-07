@@ -33,7 +33,8 @@
 ****************************/
 
 #import "L4NSObjectAdditions.h"
-
+#import "L4Logger.h"
+#import "L4LogManager.h"
 
 @implementation L4NSObjectAdditions
 

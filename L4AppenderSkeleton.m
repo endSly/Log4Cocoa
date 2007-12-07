@@ -33,7 +33,10 @@
 ****************************/
 
 #import "L4AppenderSkeleton.h"
-
+#import "L4Filter.h"
+#import "L4Level.h"
+#import "L4LoggingEvent.h"
+#import "L4LogLog.h"
 
 @implementation L4AppenderSkeleton
 

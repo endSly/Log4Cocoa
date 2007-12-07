@@ -33,19 +33,6 @@
 ****************************/
 
 
-//
-//  L4DailyRollingFileAppender.h
-//  Log4Cocoa
-//
-//  Created by Michael James on Thu Apr 29 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
-//
-
-/*!
-	@header L4DailyRollingFileAppender
-	@updated 2004-04-29
-*/
-
 #import <Foundation/Foundation.h>
 #import "L4FileAppender.h"
 

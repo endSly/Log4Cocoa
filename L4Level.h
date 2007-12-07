@@ -32,7 +32,6 @@
 *
 ****************************/
 
-// #import "Log4Cocoa.h"
 #import <Foundation/Foundation.h>
 
 // ALL < DEBUG < INFO < WARN < ERROR < FATAL < OFF

@@ -34,9 +34,8 @@
 
 #import <Foundation/Foundation.h>
 #import "L4LoggerProtocols.h"
-#import "L4Logger.h"
-#import "L4Level.h"
-#import "L4LogLog.h"
+
+@class L4Level, L4Logger;
 
 // ### TODO Add support the L4RendererSupport protocol,
 // called from the L4LoggingEvent:renderedMessage method

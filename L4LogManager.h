@@ -34,9 +34,7 @@
 
 #import <Foundation/Foundation.h>
 #import "L4LoggerProtocols.h"
-#import "L4Logger.h"
-#import "L4LoggerStore.h"
-
+@class L4Logger;
 
 #define NO_ERROR 0;
 #define GUARD_ERROR_CODE 10001;

@@ -34,8 +34,6 @@
 
 #import <Foundation/Foundation.h>
 #import "L4AppenderProtocols.h"
-#import "L4LoggingEvent.h"
-// #import "Log4Cocoa.h"
 
 #define FILTER_DENY    -1
 #define FILTER_NEUTRAL  0

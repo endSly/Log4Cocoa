@@ -33,7 +33,7 @@
 ****************************/
 
 #import "L4SimpleLayout.h"
-
+#import "L4LoggingEvent.h"
 
 @implementation L4SimpleLayout
 

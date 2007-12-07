@@ -33,7 +33,7 @@
 ****************************/
 
 #import "L4ConsoleAppender.h"
-
+#import "L4Layout.h"
 
 @implementation L4ConsoleAppender
 

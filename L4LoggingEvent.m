@@ -35,6 +35,7 @@
 #import "L4LoggingEvent.h"
 #import "L4Logger.h"
 #import "L4PreprocessorStatics.h"
+#import "L4RendererMap.h"
 
 static NSCalendarDate *startTime = nil;
 

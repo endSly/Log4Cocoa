@@ -33,9 +33,6 @@
 ****************************/
 
 #import <Foundation/Foundation.h>
-// #import "L4Logger.h"
-// #import "L4Level.h"
-
 @class L4Logger, L4Level, L4RendererMap;
 
 

@@ -34,6 +34,7 @@
 
 #import "L4Layout.h"
 #import "L4SimpleLayout.h"
+#import "L4LoggingEvent.h"
 
 @implementation L4Layout
 

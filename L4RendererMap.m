@@ -34,6 +34,7 @@
 
 #import "L4RendererMap.h"
 #import <objc/objc-class.h>
+#import "L4DefaultRenderer.h"
 
 static id <L4ObjectRenderer> defaultRenderer = nil;
 

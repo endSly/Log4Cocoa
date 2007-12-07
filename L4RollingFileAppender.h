@@ -32,7 +32,6 @@
 *
 ****************************/
 
-// #import "Log4Cocoa.h"
 #import <Foundation/Foundation.h>
 #import "L4FileAppender.h"
 

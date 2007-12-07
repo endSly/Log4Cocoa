@@ -32,11 +32,9 @@
 *
 ****************************/
 
-// #import "Log4Cocoa.h"
 #import <Foundation/Foundation.h>
-#import "L4AppenderSkeleton.h"
-#import "L4LoggingEvent.h"
 #import "L4AppenderProtocols.h"
+#import "L4AppenderSkeleton.h"
 
 @interface L4WriterAppender : L4AppenderSkeleton
 {

@@ -34,6 +34,9 @@
 
 #import "L4WriterAppender.h"
 #import "L4Configurator.h"
+#import "L4Layout.h"
+#import "L4LoggingEvent.h"
+#import "L4LogLog.h"
 
 @implementation L4WriterAppender
 

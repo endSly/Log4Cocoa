@@ -34,10 +34,7 @@
 
 #import <Foundation/Foundation.h>
 #import "L4AppenderProtocols.h"
-#import "L4LoggingEvent.h"
-#import "L4Level.h"
-#import "L4Filter.h"
-#import "L4Layout.h"
+@class L4Filter, L4Level, L4LoggingEvent;
 
 @interface L4AppenderSkeleton : NSObject {
     NSString *name;

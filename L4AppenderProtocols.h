@@ -33,10 +33,6 @@
 ****************************/
 
 #import <Foundation/Foundation.h>
-// #import "L4Logger.h"
-// #import "L4LoggingEvent.h"
-// #import "L4Layout.h"
-// #import "L4Filter.h"
 
 @class L4Logger, L4Filter, L4Layout, L4LoggingEvent;
 
@@ -48,7 +44,7 @@
 
 @protocol L4ErrorHandler <L4OptionHandler>
 
-- (void) activateOptions; // in Java ErrorHandler extends OptionHanlder, but for now I just copied the method
+- (void) activateOptions;
 
 - (void) setLogger: (L4Logger *) aLogger;
 

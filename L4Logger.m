@@ -33,8 +33,13 @@
 ****************************/
 
 #import "L4Logger.h"
-#import "L4PreprocessorStatics.h"
+#import "L4AppenderAttachableImpl.h"
+#import "L4Level.h"
+#import "L4LoggingEvent.h"
+#import "L4LogLog.h"
+#import "L4LogManager.h"
 #import "L4NSObjectAdditions.h"
+#import "L4PreprocessorStatics.h"
 
 static L4Level *_fatal = nil;
 static L4Level *_error = nil;

@@ -33,10 +33,11 @@
 ****************************/
 
 #import "L4Configurator.h"
-#import "L4Logger.h"
-#import "L4Level.h"
 #import "L4ConsoleAppender.h"
 #import "L4Layout.h"
+#import "L4Level.h"
+#import "L4Logger.h"
+#import "L4LoggingEvent.h"
 
 static NSData *lineBreakChar;
 

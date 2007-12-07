@@ -32,15 +32,11 @@
 *
 ****************************/
 
-// #import "Log4Cocoa.h"
 #import <Foundation/Foundation.h>
-#import "L4AppenderAttachableImpl.h"
 #import "L4AppenderProtocols.h"
 #import "L4LoggerProtocols.h"
-#import "L4Level.h"
-#import "L4LoggingEvent.h"
-#import "L4LogManager.h"
-#import "L4LogLog.h"
+
+@class L4AppenderAttachableImpl, L4Level, L4LoggingEvent;
 
 /**
  * LOGGING MACROS: These macros are convience macros that easily
@@ -82,9 +78,6 @@ void log4Log(id object, int line, char *file, const char *method,
 #define log4FatalWithException(message, e, args...) log4Log(L4_EXCEPTION(fatal, e), message, (args))
 
 #define log4Assert(assertion, message, args...) log4Log(L4_ASSERTION(assertion), message, (args))
-
-
-@class L4AppenderAttachableImpl;
 
 @interface L4Logger : NSObject {
     NSString *name;

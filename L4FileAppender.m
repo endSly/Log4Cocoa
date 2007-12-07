@@ -33,6 +33,7 @@
 ****************************/
 
 #import "L4FileAppender.h"
+#import "L4Layout.h"
 
 
 @implementation L4FileAppender

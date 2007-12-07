@@ -34,8 +34,7 @@
 
 #import <Foundation/Foundation.h>
 #import "L4Logger.h"
-#import "L4LogLog.h"
-
+@class L4Level;
 
 
 @interface L4RootLogger : L4Logger {

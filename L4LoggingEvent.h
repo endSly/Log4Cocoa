@@ -35,9 +35,6 @@
 // #import "Log4Cocoa.h"
 #import <Foundation/Foundation.h>
 #import "L4LoggerProtocols.h"
-#import "L4Logger.h"
-#import "L4Level.h"
-#import "L4RendererMap.h"
 
 // key component is that it is serializable
 // there is something going on with NDC & MDC's that I don't understand
@@ -46,7 +43,7 @@
 
 //  implements java.io.Serializable
 
-@class L4Logger;
+@class L4Level, L4Logger;
 
 @interface L4LoggingEvent : NSObject {
     NSNumber *lineNumber;

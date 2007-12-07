@@ -34,7 +34,6 @@
 
 #import <Foundation/Foundation.h>
 #import "L4LoggerProtocols.h"
-#import "L4DefaultRenderer.h"
 
 @interface L4RendererMap : NSObject <L4RendererSupport> {
     NSMutableDictionary *renderMap;

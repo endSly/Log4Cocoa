@@ -33,6 +33,7 @@
 ****************************/
 
 #import "L4Filter.h"
+#import "L4LoggingEvent.h"
 
 
 @implementation L4Filter

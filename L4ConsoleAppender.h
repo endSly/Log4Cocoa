@@ -32,9 +32,7 @@
 *
 ****************************/
 
-// #import "Log4Cocoa.h"
 #import <Foundation/Foundation.h>
-#import "L4Layout.h"
 #import "L4WriterAppender.h"
 
 @interface L4ConsoleAppender : L4WriterAppender {

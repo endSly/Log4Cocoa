@@ -33,7 +33,7 @@
 ****************************/
 
 #import <Foundation/Foundation.h>
-#import "L4Logger.h"
+@class L4Logger;
 
 @interface L4NSObjectAdditions : NSObject {
 

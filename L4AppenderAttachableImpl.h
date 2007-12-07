@@ -32,9 +32,7 @@
 *
 ****************************/
 
-// #import "Log4Cocoa.h"
 #import <Foundation/Foundation.h>
-#import "L4LoggingEvent.h"
 #import "L4AppenderProtocols.h"
 
 #define APPENDER_ADDED_EVENT   @"AppenderAddedEvent"
