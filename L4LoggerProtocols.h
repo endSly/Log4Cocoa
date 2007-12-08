@@ -43,10 +43,3 @@ parameter. See also {@link #setThreshold} method.  */
 @end
 
 
-@protocol L4RepositorySelector <NSObject>
-
-- (id <L4LoggerRepository>) loggerRepository;
-
-@end
-
-

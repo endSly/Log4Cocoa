@@ -74,13 +74,6 @@
 @end
 
 
-@interface L4LoggerStore (L4RepositorySelectorCategory) <L4RepositorySelector>
-
-- (id <L4LoggerRepository>) loggerRepository;
-
-@end
-
-
 @interface L4LoggerStore (L4LoggerFactoryCategory) <L4LoggerFactory>
 
 - (L4Logger *) makeNewLoggerInstance: (NSString *) aName;

@@ -53,8 +53,7 @@ static NSLock *_storeLock = nil;
 - (id) initWithRoot: (id) rootLogger
 {
 	self = [super init];
-	if( self != nil )
-	{
+	if( self != nil ) {
 		root = [rootLogger retain];
 		
 		repository = [[NSMutableDictionary alloc] init];
@@ -66,9 +65,7 @@ static NSLock *_storeLock = nil;
 
 		emittedNoAppenderWarning = NO;
 		emittedNoResourceBundleWarning = NO;
-	}
-	else
-	{
+	} else {
 		[rootLogger release];  // ### todo - ???
 	}
 	return self;
@@ -295,14 +292,6 @@ static NSLock *_storeLock = nil;
 	while ((logger = (L4Logger *)[enumerator nextObject])) {
 		[logger removeAllAppenders];
 	}
-}
-/* ********************************************************************* */
-#pragma mark L4RepositorySelectorCategory methods
-/* ********************************************************************* */
-
-- (id <L4LoggerRepository>) loggerRepository
-{
-	return self;
 }
 
 /* ********************************************************************* */

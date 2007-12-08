@@ -6,16 +6,10 @@
 #import "L4LoggerProtocols.h"
 @class L4Logger;
 
-#define NO_ERROR 0;
-#define GUARD_ERROR_CODE 10001;
-#define NO_SELECTOR_ERROR_CODE 10002;
-
 @interface L4LogManager : NSObject {
 }
 
 + (void) initialize;
-
-+ (int) setRepositorySelector: (id <L4RepositorySelector>) aSelector guard: (id) aGuard;
 
 + (id <L4LoggerRepository>) loggerRepository;
 
