@@ -7,13 +7,11 @@
 
 @class L4LoggingEvent, L4SimpleLayout;
 
-@interface L4Layout : NSObject <L4OptionHandler> {
+@interface L4Layout : NSObject {
 
 }
 
 + (id) simpleLayout;
-
-- (void) activateOptions;
 
 - (NSString *) format: (L4LoggingEvent *) event;
 - (NSString *) contentType;

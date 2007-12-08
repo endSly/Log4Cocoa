@@ -73,14 +73,6 @@
 
 @end
 
-
-@interface L4WriterAppender (L4OptionHandlerCategory) <L4OptionHandler>
-
-- (void) activateOptions;
-
-@end
-
-
 @interface L4WriterAppender (L4AppenderCategory)
 
 - (void) close;

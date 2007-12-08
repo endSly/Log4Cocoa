@@ -140,14 +140,6 @@
 }
 
 /* ********************************************************************* */
-#pragma mark L4OptionHandlerCategory methods
-/* ********************************************************************* */
-- (void) activateOptions
-{
-	// does nothing in this class.
-}
-
-/* ********************************************************************* */
 #pragma mark L4AppenderCategory methods
 /* ********************************************************************* */
 - (void) close // synchronized ... make thread safe???

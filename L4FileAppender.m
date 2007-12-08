@@ -10,17 +10,24 @@
 
 - (id) init
 {
-	return [self initWithLayout: nil fileName: nil append: NO];
+	return [self initWithLayout:nil fileName:nil append:NO];
 }
 
-- (id) initWithLayout: (L4Layout *) aLayout fileName: (NSString *) aName
+- (id) initWithLayout:(L4Layout *) aLayout fileName:(NSString *) aName
 {
-	return [self initWithLayout: aLayout fileName: aName append: NO];
+	return [self initWithLayout:aLayout fileName:aName append:NO];
 }
 
-- (id) initWithLayout: (L4Layout *) aLayout fileName: (NSString *) aName append: (BOOL) flag
+- (id) initWithLayout:(L4Layout *) aLayout fileName:(NSString *) aName append:(BOOL) flag
 {
-	return [self initWithLayout: aLayout fileName: aName append: flag];
+	if (self = [super init])
+	{
+		[self setLayout: aLayout];
+		fileName = [aName retain];
+		append = flag;
+		[self setupFile];
+	}
+	return self;
 }
 
 - (void)dealloc
@@ -31,14 +38,10 @@
 	[super dealloc];
 }
 
-- (void)activateOptions
+- (void)setupFile
 {
 	NSFileManager*	fm = nil;
 	
-	if (fileName != nil) {
-		[self setFile: fileName append: append];
-	}
-
 	if (fileName == nil || [fileName length] <= 0) {
 		[self closeFile];
 		[fileName release];
@@ -48,7 +51,7 @@
 	}
 	
 	fm = [NSFileManager defaultManager];
-
+	
 	// if file doesn't exist, try to create the file
 	if (![fm fileExistsAtPath: fileName]) {
 		// if the we cannot create the file, raise a FileNotFoundException
@@ -56,15 +59,15 @@
 			[NSException raise: @"FileNotFoundException" format: @"Couldn't create a file at %@", fileName];
 		}
 	}
-
+	
 	// if we had a previous file name, close it and release the file handle
 	if (fileName != nil) {
 		[self closeFile];
 	}
-
+	
 	// open a file handle to the file
 	[self setFileHandle: [NSFileHandle fileHandleForWritingAtPath: fileName]];
-
+	
 	// check the append option
 	if (append) {
 		[fileHandle seekToEndOfFile];
@@ -78,29 +81,9 @@
 	return fileName;
 }
 
-- (void) setFileName: (NSString *) aFileName
-{
-	if (fileName != aFileName) {
-		[fileName release];
-		fileName = nil;
-		fileName = [aFileName retain];
-	}
-}
-
-- (void) setFile: (NSString *) aFileName append: (BOOL) flag
-{
-	[self setAppend: flag];
-	[self setFileName: aFileName];
-}
-
 - (BOOL) append
 {
 	return append;
-}
-
-- (void) setAppend: (BOOL) flag
-{
-	append = flag;
 }
 
 /* ********************************************************************* */

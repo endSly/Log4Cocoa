@@ -25,13 +25,6 @@
 @end
 
 
-@interface L4AppenderSkeleton (L4OptionHandlerCategory) <L4OptionHandler>
-
-- (void) activateOptions;
-
-@end
-
-
 @interface L4AppenderSkeleton (L4AppenderCategory) <L4Appender>
 
 - (void) doAppend: (L4LoggingEvent *) anEvent;

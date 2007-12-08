@@ -211,7 +211,7 @@
 		}
 		
 		// re-activate this appender (this will open a new log file named [self fileName])
-		[self activateOptions];
+		[self setupFile];
 	}
 	
 	[tempLastRolloverDate release];

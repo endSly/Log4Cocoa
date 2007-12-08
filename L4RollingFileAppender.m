@@ -72,7 +72,7 @@ const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize = (1024 * 1024
 	} else {
 		[self closeFile];
 		[self renameLogFile: 0];
-		[self activateOptions];
+		[self setupFile];
 	}
 }
 

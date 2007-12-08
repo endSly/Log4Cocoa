@@ -29,7 +29,7 @@
  * @throws 
  * @return An initialized L4FileAppender object
 */
-- (id) initWithLayout: (L4Layout *) aLayout fileName: (NSString *) aName;
+- (id) initWithLayout:(L4Layout *) aLayout fileName:(NSString *) aName;
 
 /**
  * Initializes an L4FileAppender instance with the specified layout, file path name, and append option.
@@ -41,17 +41,7 @@
  * @throws
  * @return An initialized L4FileAppender object
 */
-- (id) initWithLayout: (L4Layout *) aLayout fileName: (NSString *) aName append: (BOOL) flag;
-
-/**
- * Activate the options that were previously set with calls to option setters.	
- * This allows to defer activiation of the options until all options have been set. This is required for objects which have 
- * related options that remain ambigous until all are set.
- * For example, the L4FileAppender has the fileName and append options both of which are ambigous until the other is also set.  
- * So if you call <code>setFileName:</code> or <code>setAppend:</code> in your code, you have to call this method to have your changes 
- * take effect.
-*/
-- (void) activateOptions;
+- (id) initWithLayout:(L4Layout *) aLayout fileName:(NSString *) aName append:(BOOL) flag;
 
 /**
  * The path to the file to which log output should be written.
@@ -59,34 +49,13 @@
  */
 - (NSString *) fileName;
 
-/**
- * Sets the path to the file to which you want log output written.
- * If you use this method, make sure you call <code>activateOptions</code> to have it take effect.
- * @param aFileName The path to the file to which you want log output written.
-*/
-- (void) setFileName: (NSString *) aFileName;
+- (void)setupFile;
 
-/**
- * Sets the file name and append options simultaneously.
- * If you use this method, make sure you call <code>activateOptions</code> to have it take effect.
- * @param aFileName The path to the file to which you want log output written
- * @param flag YES = append output to the end of the file, NO = overwrite the previous contents of the file when the file is opened 
- * for logging output
-*/
-- (void) setFile: (NSString *) aFileName append: (BOOL) flag;
 /**
  * The append option of this object.
  * @return YES = output will be appended to the end of the file, NO = output will overwrite the previous contents of the file
  */
 - (BOOL) append;
-
-/**
- * Sets the append option for this object
- * If you use this method, make sure you call <code>activateOptions</code> to have it take effect.
- * @param flag YES = append output to the end of the file, NO = overwrite the previous contents of the file when the file is opened
- * for logging output
- */
-- (void) setAppend: (BOOL) flag;
 
 @end
 

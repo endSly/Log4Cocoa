@@ -21,10 +21,3 @@
 - (void) setNext: (L4Filter *) newNext;
 
 @end
-
-
-@interface L4Filter (L4OptionHandlerCategory) <L4OptionHandler>
-
-- (void) activateOptions;
-
-@end

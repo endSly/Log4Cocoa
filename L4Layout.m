@@ -13,10 +13,6 @@
 	return [[[L4SimpleLayout alloc] init] autorelease];
 }
 
-- (void) activateOptions
-{
-}
-
 - (NSString *) format: (L4LoggingEvent *) event
 {
 	return [event description];

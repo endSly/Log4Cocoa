@@ -6,23 +6,16 @@
 
 @class L4Logger, L4Filter, L4Layout, L4LoggingEvent;
 
-@protocol L4OptionHandler <NSObject>
-
-- (void) activateOptions;
-
-@end
-
-@protocol L4ErrorHandler <L4OptionHandler>
-
-- (void) activateOptions;
-
-- (void) setLogger: (L4Logger *) aLogger;
-
+@protocol L4ErrorHandler
 - (void) error: (NSString *) message;
 
 - (void) error: (NSString *) message exception: (NSException *) e errorCode: (int) errorCode;
 
 - (void) error: (NSString *) message exception: (NSException *) e errorCode: (int) errorCode event: (L4LoggingEvent *) event;
+
+- (id)retain;
+
+- (void) setLogger: (L4Logger *) aLogger;
 
 - (void) setAppender: (id) appender; // can't forward declare protocols, so check to see if the object responds
 - (void) setBackupAppender: (id) appender;
