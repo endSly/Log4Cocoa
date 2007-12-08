@@ -4,7 +4,10 @@
 
 #import "L4LoggingEvent.h"
 #import "L4Logger.h"
-#import "L4PreprocessorStatics.h"
+
+static int   NO_LINE_NUMBER = -1;
+static char *NO_FILE_NAME   = "";
+static char *NO_METHOD_NAME = "";
 
 static NSCalendarDate *startTime = nil;
 
@@ -12,189 +15,180 @@ static NSCalendarDate *startTime = nil;
 
 + (void) initialize
 {
-    startTime = [[NSCalendarDate calendarDate] retain];
+	startTime = [[NSCalendarDate calendarDate] retain];
 }
 
 + (NSCalendarDate *) startTime
 {
-    return startTime;
+	return startTime;
 }
 
 + (L4LoggingEvent *) logger: (L4Logger *) aLogger
-                      level: (L4Level *) aLevel
-                    message: (id) aMessage
+					  level: (L4Level *) aLevel
+					message: (id) aMessage
 {
-    return [self logger: aLogger
-                  level: aLevel
-             lineNumber: NO_LINE_NUMBER
-               fileName: NO_FILE_NAME
-             methodName: NO_METHOD_NAME
-                message: aMessage
-              exception: nil];
+	return [self logger: aLogger
+				  level: aLevel
+			 lineNumber: NO_LINE_NUMBER
+			   fileName: NO_FILE_NAME
+			 methodName: NO_METHOD_NAME
+				message: aMessage
+			  exception: nil];
 }
 
 + (L4LoggingEvent *) logger: (L4Logger *) aLogger
-                      level: (L4Level *) aLevel
-                    message: (id) aMessage
-                  exception: (NSException *) e;
+					  level: (L4Level *) aLevel
+					message: (id) aMessage
+				  exception: (NSException *) e;
 {
-    return [self logger: aLogger
-                  level: aLevel
-             lineNumber: NO_LINE_NUMBER
-               fileName: NO_FILE_NAME
-             methodName: NO_METHOD_NAME
-                message: aMessage
-              exception: e];
+	return [self logger: aLogger
+				  level: aLevel
+			 lineNumber: NO_LINE_NUMBER
+			   fileName: NO_FILE_NAME
+			 methodName: NO_METHOD_NAME
+				message: aMessage
+			  exception: e];
 }
 
 + (L4LoggingEvent *) logger: (L4Logger *) aLogger
-                      level: (L4Level *) aLevel
-                 lineNumber: (int) aLineNumber
-                   fileName: (char *) aFileName
-                 methodName: (char *) aMethodName
-                    message: (id) aMessage
-                  exception: (NSException *) e
+					  level: (L4Level *) aLevel
+				 lineNumber: (int) aLineNumber
+				   fileName: (char *) aFileName
+				 methodName: (char *) aMethodName
+					message: (id) aMessage
+				  exception: (NSException *) e
 {
-    return [[[L4LoggingEvent alloc] initWithLogger: aLogger
-                                             level: aLevel
-                                        lineNumber: aLineNumber
-                                          fileName: aFileName
-                                        methodName: aMethodName
-                                           message: aMessage
-                                         exception: e
-                                    eventTimestamp: [NSCalendarDate calendarDate]] autorelease];
+	return [[[L4LoggingEvent alloc] initWithLogger: aLogger
+											 level: aLevel
+										lineNumber: aLineNumber
+										  fileName: aFileName
+										methodName: aMethodName
+										   message: aMessage
+										 exception: e
+									eventTimestamp: [NSCalendarDate calendarDate]] autorelease];
 }
 
 - (id) init
 {
-    [self autorelease];
-    return nil;
+	[self autorelease];
+	return nil;
 }
 
 - (id) initWithLogger: (L4Logger *) aLogger
-                level: (L4Level *) aLevel
-           lineNumber: (int) aLineNumber
-             fileName: (char *) aFileName
-           methodName: (char *) aMethodName
-              message: (id) aMessage
-            exception: (NSException *) e
-       eventTimestamp: (NSDate *) aDate
+				level: (L4Level *) aLevel
+		   lineNumber: (int) aLineNumber
+			 fileName: (char *) aFileName
+		   methodName: (char *) aMethodName
+			  message: (id) aMessage
+			exception: (NSException *) e
+	   eventTimestamp: (NSDate *) aDate
 {
-    self = [super init];
-    if( self != nil )
-    {
-        rawFileName = aFileName;
-        rawMethodName = aMethodName;
-        rawLineNumber = aLineNumber;
+	self = [super init];
+	if( self != nil )
+	{
+		rawFileName = aFileName;
+		rawMethodName = aMethodName;
+		rawLineNumber = aLineNumber;
 		
 		lineNumber = nil;
 		fileName = nil;
 		methodName = nil;
 		
-        logger = [aLogger retain];
-        level = [aLevel retain];
-        message = [aMessage retain];
-        exception = [e retain];
-        timestamp = [aDate retain];
-    }
-    return self;
+		logger = [aLogger retain];
+		level = [aLevel retain];
+		message = [aMessage retain];
+		exception = [e retain];
+		timestamp = [aDate retain];
+	}
+	return self;
 }
 
 - (void) dealloc
 {
-    [logger release];
-    [level release];
-    [message release];
-    [exception release];
-    [timestamp release];
-    if( lineNumber != nil ) [lineNumber release];
-    if( fileName != nil )   [fileName release];
-    if( methodName != nil ) [methodName release];
-    [super dealloc];
+	[logger release];
+	[level release];
+	[message release];
+	[exception release];
+	[timestamp release];
+	if( lineNumber != nil ) [lineNumber release];
+	if( fileName != nil )   [fileName release];
+	if( methodName != nil ) [methodName release];
+	[super dealloc];
 }
 
 - (L4Logger *) logger
 {
-    return logger;
+	return logger;
 }
 
 - (L4Level *) level
 {
-    return level;
+	return level;
 }
 
 - (NSNumber *) lineNumber
 {
-    if((lineNumber == nil) && (rawLineNumber != NO_LINE_NUMBER))
-    {
-        lineNumber = [[NSNumber numberWithInt: rawLineNumber] retain];
-    }
-	else if (rawLineNumber == NO_LINE_NUMBER)
-	{
+	if((lineNumber == nil) && (rawLineNumber != NO_LINE_NUMBER)) {
+		lineNumber = [[NSNumber numberWithInt: rawLineNumber] retain];
+	} else if (rawLineNumber == NO_LINE_NUMBER) {
 		lineNumber = [[NSNumber numberWithInt: NO_LINE_NUMBER] retain];
 	}
-    return lineNumber;
+	return lineNumber;
 }
 
 - (NSString *) fileName
 {
-    if((fileName == nil) && (rawFileName != NO_FILE_NAME))
-    {
-        fileName = [[NSString stringWithCString: rawFileName] retain];
-    }
-	else if (rawFileName == NO_FILE_NAME)
-	{
+	if((fileName == nil) && (rawFileName != NO_FILE_NAME)) {
+		fileName = [[NSString stringWithCString: rawFileName] retain];
+	} else if (rawFileName == NO_FILE_NAME) {
 		fileName = [[NSString stringWithString: @"No file name!"] retain];
 	}
-    return fileName;
+	return fileName;
 }
 
 - (NSString *) methodName
 {
-    if((methodName == nil) && (rawMethodName != NO_METHOD_NAME))
-    {
-        methodName = [[NSString stringWithCString: rawMethodName] retain];
-    }
-	else if (rawMethodName == NO_METHOD_NAME)
-	{
+	if((methodName == nil) && (rawMethodName != NO_METHOD_NAME)) {
+		methodName = [[NSString stringWithCString: rawMethodName] retain];
+	} else if (rawMethodName == NO_METHOD_NAME) {
 		methodName = [[NSString stringWithString: @"No method name!"] retain];
 	}
-    return methodName;
+	return methodName;
 }
 
 - (NSCalendarDate *) timestamp
 {
-    return timestamp;
+	return timestamp;
 }
 
 - (NSException *) exception
 {
-    return exception;
+	return exception;
 }
 
 - (long) millisSinceStart
 {
-    // its a double in seconds
-    NSTimeInterval time = [timestamp timeIntervalSinceDate: startTime];
-    return (long) (time * 1000);
+	// its a double in seconds
+	NSTimeInterval time = [timestamp timeIntervalSinceDate: startTime];
+	return (long) (time * 1000);
 }
 
 - (id) message
 {
-    return message;
+	return message;
 }
 
 - (NSString *) renderedMessage	
 {
-    if( renderedMessage == nil && message != nil ) {
-        if([message isKindOfClass: [NSString class]]) {
-            renderedMessage = message;  // if its a string return it.
-        } else {
+	if( renderedMessage == nil && message != nil ) {
+		if([message isKindOfClass: [NSString class]]) {
+			renderedMessage = message;  // if its a string return it.
+		} else {
 			renderedMessage = [message description];
-        }
-    }
-    
-    return renderedMessage;
+		}
+	}
+	
+	return renderedMessage;
 }
-    
+	
 @end

@@ -15,16 +15,14 @@
 
 + (void) initialize;
 
-+ (int) setRepositorySelector: (id <L4RepositorySelector>) aSelector
-                        guard: (id) aGuard;
++ (int) setRepositorySelector: (id <L4RepositorySelector>) aSelector guard: (id) aGuard;
 
 + (id <L4LoggerRepository>) loggerRepository;
 
 + (L4Logger *) rootLogger;
 + (L4Logger *) loggerForClass: (Class) aClass;
 + (L4Logger *) loggerForName: (NSString *) aName;
-+ (L4Logger *) loggerForName: (NSString *) aName
-                     factory: (id <L4LoggerFactory>) aFactory;
++ (L4Logger *) loggerForName: (NSString *) aName factory: (id <L4LoggerFactory>) aFactory;
 
 + (L4Logger *) exists: (id) loggerNameOrLoggerClass;
 

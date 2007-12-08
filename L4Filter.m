@@ -10,30 +10,27 @@
 
 - (int) decide: (L4LoggingEvent *) event
 {
-    return FILTER_NEUTRAL;
+	return FILTER_NEUTRAL;
 }
 
 - (L4Filter *) next
 {
-    return next;
+	return next;
 }
 
 - (void) setNext: (L4Filter *) newNext
 {
-    if( next != newNext )
-    {
-        [next autorelease];
-        next = [newNext retain];
-    }
+	if( next != newNext ) {
+		[next autorelease];
+		next = [newNext retain];
+	}
 }
 
-@end
-
-@implementation L4Filter (L4OptionHandlerCategory) 
-
+/* ********************************************************************* */
+#pragma mark L4OptionHandlerCategory methods
+/* ********************************************************************* */
 - (void) activateOptions
 {
-    return;
+	return;
 }
-
 @end

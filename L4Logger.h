@@ -27,8 +27,8 @@
  */
 
 void log4Log(id object, int line, char *file, const char *method,
-              SEL sel, BOOL isAssertion, BOOL assertion, 
-              id exception, id message, ...);
+			  SEL sel, BOOL isAssertion, BOOL assertion, 
+			  id exception, id message, ...);
 
 
 #define L4_PLAIN(type) self, __LINE__, __FILE__, __PRETTY_FUNCTION__, @selector(lineNumber:fileName:methodName:type:), NO, YES, nil
@@ -50,12 +50,12 @@ void log4Log(id object, int line, char *file, const char *method,
 #define log4Assert(assertion, message, args...) log4Log(L4_ASSERTION(assertion), message, (args))
 
 @interface L4Logger : NSObject {
-    NSString *name;
-    L4Level *level;
-    L4Logger *parent;
-    id <L4LoggerRepository> repository;
-    BOOL additive;
-    L4AppenderAttachableImpl *aai;
+	NSString *name;
+	L4Level *level;
+	L4Logger *parent;
+	id <L4LoggerRepository> repository;
+	BOOL additive;
+	L4AppenderAttachableImpl *aai;
 }
 
 + (void) taskNowMultiThreaded: (NSNotification *) event;
@@ -114,127 +114,127 @@ void log4Log(id object, int line, char *file, const char *method,
 - (BOOL) isEnabledFor: (L4Level *) aLevel;
 
 - (void) assert: (BOOL) anAssertion
-            log: (NSString *) aMessage;
+			log: (NSString *) aMessage;
 
 - (void) lineNumber: (int) lineNumber
-           fileName: (char *) fileName
-         methodName: (char *) methodName
-             assert: (BOOL) anAssertion
-                log: (NSString *) aMessage;
+		   fileName: (char *) fileName
+		 methodName: (char *) methodName
+			 assert: (BOOL) anAssertion
+				log: (NSString *) aMessage;
 
 /* Debug */
 
 - (void) debug: (id) aMessage;
 
 - (void) debug: (id) aMessage
-     exception: (NSException *) e;
+	 exception: (NSException *) e;
 
 - (void) lineNumber: (int) lineNumber
-           fileName: (char *) fileName
-         methodName: (char *) methodName
-              debug: (id) aMessage;
+		   fileName: (char *) fileName
+		 methodName: (char *) methodName
+			  debug: (id) aMessage;
 
 - (void) lineNumber: (int) lineNumber
-           fileName: (char *) fileName
-         methodName: (char *) methodName
-              debug: (id) aMessage
-          exception: (NSException *) e;
+		   fileName: (char *) fileName
+		 methodName: (char *) methodName
+			  debug: (id) aMessage
+		  exception: (NSException *) e;
 
 /* Info */
 
 - (void) info: (id) aMessage;
 
 - (void) info: (id) aMessage
-    exception: (NSException *) e;
+	exception: (NSException *) e;
 
 - (void) lineNumber: (int) lineNumber
-           fileName: (char *) fileName
-         methodName: (char *) methodName
-               info: (id) aMessage;
+		   fileName: (char *) fileName
+		 methodName: (char *) methodName
+			   info: (id) aMessage;
 
 - (void) lineNumber: (int) lineNumber
-           fileName: (char *) fileName
-         methodName: (char *) methodName
-               info: (id) aMessage
-          exception: (NSException *) e;
+		   fileName: (char *) fileName
+		 methodName: (char *) methodName
+			   info: (id) aMessage
+		  exception: (NSException *) e;
 
 /* Warn */
 
 - (void) warn: (id) aMessage;
 
 - (void) warn: (id) aMessage
-    exception: (NSException *) e;
+	exception: (NSException *) e;
 
 - (void) lineNumber: (int) lineNumber
-           fileName: (char *) fileName
-         methodName: (char *) methodName
-               warn: (id) aMessage;
+		   fileName: (char *) fileName
+		 methodName: (char *) methodName
+			   warn: (id) aMessage;
 
 - (void) lineNumber: (int) lineNumber
-           fileName: (char *) fileName
-         methodName: (char *) methodName
-               warn: (id) aMessage
-          exception: (NSException *) e;
+		   fileName: (char *) fileName
+		 methodName: (char *) methodName
+			   warn: (id) aMessage
+		  exception: (NSException *) e;
 
 /* Error */
 
 - (void) error: (id) aMessage;
 
 - (void) error: (id) aMessage
-     exception: (NSException *) e;
+	 exception: (NSException *) e;
 
 - (void) lineNumber: (int) lineNumber
-           fileName: (char *) fileName
-         methodName: (char *) methodName
-              error: (id) aMessage;
+		   fileName: (char *) fileName
+		 methodName: (char *) methodName
+			  error: (id) aMessage;
 
 - (void) lineNumber: (int) lineNumber
-           fileName: (char *) fileName
-         methodName: (char *) methodName
-              error: (id) aMessage
-          exception: (NSException *) e;
+		   fileName: (char *) fileName
+		 methodName: (char *) methodName
+			  error: (id) aMessage
+		  exception: (NSException *) e;
 
 /* Fatal */
 
 - (void) fatal: (id) aMessage;
 
 - (void) fatal: (id) aMessage
-     exception: (NSException *) e;
+	 exception: (NSException *) e;
 
 - (void) lineNumber: (int) lineNumber
-           fileName: (char *) fileName
-         methodName: (char *) methodName
-              fatal: (id) aMessage;
+		   fileName: (char *) fileName
+		 methodName: (char *) methodName
+			  fatal: (id) aMessage;
 
 - (void) lineNumber: (int) lineNumber
-           fileName: (char *) fileName
-         methodName: (char *) methodName
-              fatal: (id) aMessage
-          exception: (NSException *) e;
+		   fileName: (char *) fileName
+		 methodName: (char *) methodName
+			  fatal: (id) aMessage
+		  exception: (NSException *) e;
 
-/* Legacy primitive logging methods               */
+/* Legacy primitive logging methods			   */
 /* See below, forcedLog: (L4LoggingEvent *) event */
 
 - (void) log: (id) aMessage
-       level: (L4Level *) aLevel;
+	   level: (L4Level *) aLevel;
 
 - (void) log: (id) aMessage
-       level: (L4Level *) aLevel
+	   level: (L4Level *) aLevel
    exception: (NSException *) e;
 
 - (void) log: (id) aMessage
-       level: (L4Level *) aLevel
+	   level: (L4Level *) aLevel
    exception: (NSException *) e
   lineNumber: (int) lineNumber
-    fileName: (char *) fileName
+	fileName: (char *) fileName
   methodName: (char *) methodName;
 
 - (void) forcedLog: (id) aMessage
-             level: (L4Level *) aLevel
-         exception: (NSException *) e
-        lineNumber: (int) lineNumber
-          fileName: (char *) fileName
-        methodName: (char *) methodName;
+			 level: (L4Level *) aLevel
+		 exception: (NSException *) e
+		lineNumber: (int) lineNumber
+		  fileName: (char *) fileName
+		methodName: (char *) methodName;
 
 /* This is the designated logging method that the others invoke. */
 
@@ -250,7 +250,7 @@ void log4Log(id object, int line, char *file, const char *method,
 + (L4Logger *) loggerForClass: (Class) aClass;
 + (L4Logger *) loggerForName: (NSString *) aName;
 + (L4Logger *) loggerForName: (NSString *) aName
-                     factory: (id <L4LoggerFactory>) aFactory;
+					 factory: (id <L4LoggerFactory>) aFactory;
 
 /* returns logger if it exists, otherise nil */
 + (L4Logger *) exists: (NSString *) loggerName;

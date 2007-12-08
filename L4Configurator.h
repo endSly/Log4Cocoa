@@ -4,18 +4,19 @@
 
 #import <Foundation/Foundation.h>
 
-#define LINE_BREAK_SEPERATOR_KEY @"LINE_BREAK_SEPERATOR_KEY"
 
 @interface L4Configurator : NSObject {
 
 }
 
+/**
+ * Making sure that we capture the startup time of this application.  This sanity 
+ * check is also in +[L4Logger initialize] too.
+ */
 + (void) initialize;
 
 + (void) basicConfiguration;
-+ (id) propertyForKey: (NSString *) aKey;
 
-+ (void) resetLineBreakChar;
 + (NSData *) lineBreakChar;
 
 @end

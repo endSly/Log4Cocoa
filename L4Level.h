@@ -15,16 +15,14 @@
 #define   ALL_INT  0
 
 @interface L4Level : NSObject {
-    int      intValue;
-    int      syslogEquivalent;
-    NSString *name;
+	int	  intValue;
+	int	  syslogEquivalent;
+	NSString *name;
 }
 
 + (void) initialize;
 
-+ (L4Level *) withLevel: (int) aLevel
-               withName: (NSString *) aName
-       syslogEquivalent: (int) sysLogLevel;
++ (L4Level *) withLevel: (int) aLevel withName: (NSString *) aName syslogEquivalent: (int) sysLogLevel;
 
 + (L4Level *) off;
 + (L4Level *) fatal;
@@ -35,16 +33,12 @@
 + (L4Level *) all;
 
 + (L4Level *) levelWithName: (NSString *) aLevel;
-+ (L4Level *) levelWithName: (NSString *) aLevel
-               defaultLevel: (L4Level *) defaultLevel;
++ (L4Level *) levelWithName: (NSString *) aLevel defaultLevel: (L4Level *) defaultLevel;
 
 + (L4Level *) levelWithInt: (int) aLevel;
-+ (L4Level *) levelWithInt: (int) aLevel
-              defaultLevel: (L4Level *) defaultLevel;
++ (L4Level *) levelWithInt: (int) aLevel defaultLevel: (L4Level *) defaultLevel;
 
-- (id) initLevel: (int) aLevel
-        withName: (NSString *) aName
-syslogEquivalent: (int) sysLogLevel;
+- (id) initLevel: (int) aLevel withName: (NSString *) aName syslogEquivalent: (int) sysLogLevel;
 
 - (void) dealloc;
 - (NSString *) description;

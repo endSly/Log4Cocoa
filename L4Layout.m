@@ -10,7 +10,7 @@
 
 + (id) simpleLayout
 {
-    return [[[L4SimpleLayout alloc] init] autorelease];
+	return [[[L4SimpleLayout alloc] init] autorelease];
 }
 
 - (void) activateOptions
@@ -19,27 +19,27 @@
 
 - (NSString *) format: (L4LoggingEvent *) event
 {
-    return [event description];
+	return [event description];
 }
 
 - (NSString *) contentType
 {
-    return @"text/plain";
+	return @"text/plain";
 }
 
 - (NSString *) header
 {
-    return nil;
+	return nil;
 }
 
 - (NSString *) footer
 {
-    return nil;
+	return nil;
 }
 
 - (BOOL) ignoresExceptions
 {
-    return YES;
+	return YES;
 }
 
 @end

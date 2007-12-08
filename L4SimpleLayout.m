@@ -20,7 +20,7 @@
 
 - (BOOL) ignoresException
 {
-    return YES;
+	return YES;
 }
 
 @end

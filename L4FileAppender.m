@@ -10,45 +10,23 @@
 
 - (id) init
 {
-    return [self initWithLayout: nil fileName: nil append: NO bufferIO: NO bufferSize: 0];
+	return [self initWithLayout: nil fileName: nil append: NO];
 }
 
-- (id) initWithLayout: (L4Layout *) aLayout
-             fileName: (NSString *) aName  // throws IOException
+- (id) initWithLayout: (L4Layout *) aLayout fileName: (NSString *) aName
 {
-    return [self initWithLayout: aLayout fileName: aName append: NO bufferIO: NO bufferSize: 0];
+	return [self initWithLayout: aLayout fileName: aName append: NO];
 }
 
-- (id) initWithLayout: (L4Layout *) aLayout
-             fileName: (NSString *) aName
-               append: (BOOL) append   // throws IOException
+- (id) initWithLayout: (L4Layout *) aLayout fileName: (NSString *) aName append: (BOOL) flag
 {
-    return [self initWithLayout: aLayout fileName: aName append: append bufferIO: NO bufferSize: 0];
-}
-
-- (id) initWithLayout: (L4Layout *) aLayout
-             fileName: (NSString *) aName
-               append: (BOOL) append
-             bufferIO: (BOOL) bufferedIO
-           bufferSize: (int) bufferSize  // throws IOException
-{
-    self = [super init];
-	
-	if (self != nil)
-	{
-		[self setLayout: aLayout];
-		[self setFileName: aName];
-		[self setAppend: append];
-		[self activateOptions];
-	}
-	
-	return self;
+	return [self initWithLayout: aLayout fileName: aName append: flag];
 }
 
 - (void)dealloc
 {
-	[_fileName release];
-	_fileName = nil;
+	[fileName release];
+	fileName = nil;
 	
 	[super dealloc];
 }
@@ -57,110 +35,77 @@
 {
 	NSFileManager*	fm = nil;
 	
-    if (_fileName != nil)
-	{
-		[self setFile: _fileName append: _append bufferedIO: [self bufferedIO] bufferSize: [self bufferSize]];
+	if (fileName != nil) {
+		[self setFile: fileName append: append];
 	}
 
-	if (_fileName == nil || [_fileName length] <= 0)
-	{
+	if (fileName == nil || [fileName length] <= 0) {
 		[self closeFile];
-		[_fileName release];
-		_fileName = nil;
+		[fileName release];
+		fileName = nil;
 		[self setFileHandle: nil];
 		return;
 	}
-    
+	
 	fm = [NSFileManager defaultManager];
 
 	// if file doesn't exist, try to create the file
-	if (![fm fileExistsAtPath: _fileName])
-	{
+	if (![fm fileExistsAtPath: fileName]) {
 		// if the we cannot create the file, raise a FileNotFoundException
-		if (![fm createFileAtPath: _fileName contents: nil attributes: nil])
-		{
-			[NSException raise: @"FileNotFoundException" format: @"Couldn't create a file at %@", _fileName];
+		if (![fm createFileAtPath: fileName contents: nil attributes: nil]) {
+			[NSException raise: @"FileNotFoundException" format: @"Couldn't create a file at %@", fileName];
 		}
 	}
 
 	// if we had a previous file name, close it and release the file handle
-	if (_fileName != nil)
-	{
+	if (fileName != nil) {
 		[self closeFile];
 	}
 
 	// open a file handle to the file
-	[self setFileHandle: [NSFileHandle fileHandleForWritingAtPath: _fileName]];
+	[self setFileHandle: [NSFileHandle fileHandleForWritingAtPath: fileName]];
 
 	// check the append option
-	if (_append)
-	{
+	if (append) {
 		[fileHandle seekToEndOfFile];
-	}
-	else
-	{
+	} else {
 		[fileHandle truncateFileAtOffset: 0];
 	}
 }
 
 - (NSString *) fileName
 {
-    return _fileName;
+	return fileName;
 }
 
-- (void) setFileName: (NSString *) fileName
+- (void) setFileName: (NSString *) aFileName
 {
-	if (_fileName != fileName)
-	{
-		[_fileName release];
-		_fileName = nil;
-		_fileName = [fileName retain];
+	if (fileName != aFileName) {
+		[fileName release];
+		fileName = nil;
+		fileName = [aFileName retain];
 	}
 }
 
-- (void) setFile: (NSString *) fileName
-          append: (BOOL) append
-      bufferedIO: (BOOL) bufferedIO
-      bufferSize: (int) size // synchronized ... make thread safe?? throws IOException
+- (void) setFile: (NSString *) aFileName append: (BOOL) flag
 {
-	[self setAppend: append];
-    [self setFileName: fileName];
+	[self setAppend: flag];
+	[self setFileName: aFileName];
 }
 
 - (BOOL) append
 {
-    return _append;
+	return append;
 }
 
-- (void) setAppend: (BOOL) append
+- (void) setAppend: (BOOL) flag
 {
-    _append = append;
+	append = flag;
 }
 
-- (BOOL) bufferedIO
-{
-    return NO;
-}
-
-- (void) setBufferedIO: (BOOL) buffer
-{
-    // do nothing, we don't allow the user to customize buffering
-}
-
-- (int) bufferSize
-{
-    return 0;
-}
-
-- (void) setBufferSize: (int) size
-{
-    // do nothing, we don't allow the user to customize buffering
-}
-
-@end
-
-@implementation L4FileAppender (__ProtectedMethods)
-
+/* ********************************************************************* */
+#pragma mark Protected methods
+/* ********************************************************************* */
 - (void) closeFile
 {
 	[fileHandle closeFile];
@@ -169,5 +114,5 @@
 	[fileHandle release];
 	fileHandle = nil;
 }
-
 @end
+

@@ -11,12 +11,12 @@
 
 + (L4Logger *) l4Logger
 {
-    return [L4LogManager loggerForClass: (Class) self];
+	return [L4LogManager loggerForClass: (Class) self];
 }
 
 - (L4Logger *) l4Logger
 {
-    return [L4LogManager loggerForClass: [self class]];
+	return [L4LogManager loggerForClass: [self class]];
 }
 
 @end

@@ -20,14 +20,9 @@
 
 - (void) error: (NSString *) message;
 
-- (void) error: (NSString *) message
-     exception: (NSException *) e
-     errorCode: (int) errorCode;
+- (void) error: (NSString *) message exception: (NSException *) e errorCode: (int) errorCode;
 
-- (void) error: (NSString *) message
-     exception: (NSException *) e
-     errorCode: (int) errorCode
-         event: (L4LoggingEvent *) event;
+- (void) error: (NSString *) message exception: (NSException *) e errorCode: (int) errorCode event: (L4LoggingEvent *) event;
 
 - (void) setAppender: (id) appender; // can't forward declare protocols, so check to see if the object responds
 - (void) setBackupAppender: (id) appender;
@@ -36,17 +31,39 @@
 
 
 @protocol L4Appender <NSObject>
+/**
+ * Appender log this event.
+ * @param the event to append.
+ */
+- (void) doAppend: (L4LoggingEvent *) anEvent;
 
-- (void) doAppend: (L4LoggingEvent *) anEvent;   // appender log this event
+/**
+ * Adds to the end of list.
+ * @param the filter to add.
+ */
+- (void) addFilter: (L4Filter *) newFilter;
 
-- (void) addFilter: (L4Filter *) newFilter;      // adds to end of list
-- (L4Filter *) headFilter;   // returns first filter or nil of there are none
-- (void) clearFilters;       // removes all filters from list
-- (void) close;              // it is a programing error to append to a close appender
+/**
+ * @return first filter or nil of there are none.
+ */
+- (L4Filter *) headFilter;
+
+/**
+ * removes all filters from list.
+ */
+- (void) clearFilters;
+
+/**
+ * it is a programing error to append to a close appender.
+ */
+- (void) close;
 
 - (BOOL) requiresLayout;
 
-- (NSString *) name;      // unique name of this appender
+/**
+ * unique name of this appender.
+ */
+- (NSString *) name;
 - (void) setName: (NSString *) aName;
 
 - (L4Layout *) layout;

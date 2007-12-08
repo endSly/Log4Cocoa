@@ -7,13 +7,13 @@
 @class L4Filter, L4Level, L4LoggingEvent;
 
 @interface L4AppenderSkeleton : NSObject {
-    NSString *name;
-    L4Layout *layout;
-    L4Level *threshold;
-    L4Filter *headFilter;
-    L4Filter *tailFilter;
-    id errorHandler;
-    BOOL closed;
+	NSString *name;
+	L4Layout *layout;
+	L4Level *threshold;
+	L4Filter *headFilter;
+	L4Filter *tailFilter;
+	id errorHandler;
+	BOOL closed;
 }
 
 - (void) append: (L4LoggingEvent *) anEvent;

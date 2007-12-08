@@ -7,83 +7,79 @@
 
 @implementation L4ConsoleAppender
 
+/* ********************************************************************* */
+#pragma mark Class methods
+/* ********************************************************************* */
 + (L4ConsoleAppender *) standardOutWithLayout: (L4Layout *) aLayout
 {
-    return (L4ConsoleAppender *) [[[L4ConsoleAppender alloc] initTarget: YES
-                                                             withLayout: aLayout] autorelease];
+	return [[[L4ConsoleAppender alloc] initTarget: YES withLayout: aLayout] autorelease];
 }
 
 + (L4ConsoleAppender *) standardErrWithLayout: (L4Layout *) aLayout
 {
-    return (L4ConsoleAppender *) [[[L4ConsoleAppender alloc] initTarget: NO
-                                                             withLayout: aLayout] autorelease];
+	return [[[L4ConsoleAppender alloc] initTarget: NO withLayout: aLayout] autorelease];
 }
 
+/* ********************************************************************* */
+#pragma mark Instance methods
+/* ********************************************************************* */
 - (id) init
 {
-    self = [super init];
-    return self;
+	self = [super init];
+	return self;
 }
 
 - (id) initTarget: (BOOL) standardOut
-       withLayout: (L4Layout *) aLayout
+	   withLayout: (L4Layout *) aLayout
 {
-    self = [super init];
-    if( self != nil )
-    {
-        if( standardOut )
-        {
-            [self setStandardOut];
-        }
-        else
-        {
-            [self setStandardErr];
-        }
-        [self setLayout: aLayout];
-    }
-    return self;
+	self = [super init];
+	if( self != nil ) {
+		if( standardOut ) {
+			[self setStandardOut];
+		} else {
+			[self setStandardErr];
+		}
+		[self setLayout: aLayout];
+	}
+	return self;
 }
 
 - (id) initStandardOutWithLayout: (L4Layout *) aLayout
 {
-    return [self initTarget: YES
-                 withLayout: aLayout];
+	return [self initTarget: YES withLayout: aLayout];
 }
 
 - (id) initStandardErrWithLayout: (L4Layout *) aLayout
 {
-    return [self initTarget: NO
-                 withLayout: aLayout];
+	return [self initTarget: NO withLayout: aLayout];
 }
 
 - (void) setStandardOut
 {
-    if(!isStandardOut || (fileHandle == nil))
-    {
-        isStandardOut = YES;
-        [fileHandle autorelease];
-        fileHandle = [[NSFileHandle fileHandleWithStandardOutput] retain];
-    }
+	if(!isStandardOut || (fileHandle == nil)) {
+		isStandardOut = YES;
+		[fileHandle autorelease];
+		fileHandle = [[NSFileHandle fileHandleWithStandardOutput] retain];
+	}
 }
 
 - (void) setStandardErr
 {
-    if(isStandardOut || (fileHandle == nil))
-    {
-        isStandardOut = NO;
-        [fileHandle autorelease];
-        fileHandle = [[NSFileHandle fileHandleWithStandardError] retain];
-    }
+	if(isStandardOut || (fileHandle == nil)) {
+		isStandardOut = NO;
+		[fileHandle autorelease];
+		fileHandle = [[NSFileHandle fileHandleWithStandardError] retain];
+	}
 }
 
 - (NSFileHandle *) target
 {
-    return fileHandle;
+	return fileHandle;
 }
 
 - (BOOL) isStandardOut
 {
-    return isStandardOut;
+	return isStandardOut;
 }
 
 @end

@@ -13,76 +13,68 @@ static BOOL quietMode = NO;
 
 + (BOOL) internalDebuggingEnabled
 {
-    return internalDebugging;
+	return internalDebugging;
 }
 
 + (void) setInternalDebuggingEnabled: (BOOL) enabled
 {
-    internalDebugging = enabled;
+	internalDebugging = enabled;
 }
 
 + (BOOL) quietModeEnabled
 {
-    return quietMode;
+	return quietMode;
 }
 
 + (void) setQuietModeEnabled: (BOOL) enabled
 {
-    quietMode = enabled;
+	quietMode = enabled;
 }
 
 + (void) debug: (NSString *) message
 {
-    [self debug: message
-      exception: nil];
+	[self debug: message exception: nil];
 }
 
-+ (void) debug: (NSString *) message
-     exception: (NSException *) e
++ (void) debug: (NSString *) message exception: (NSException *) e
 {
-    if(internalDebugging && !quietMode)
-    {
-        [self writeMessage: message
-                withPrefix: L4LogLog_PREFIX
-                    toFile: [NSFileHandle fileHandleWithStandardOutput]
-                 exception: e];
-    }
+	if(internalDebugging && !quietMode) {
+		[self writeMessage: message
+				withPrefix: L4LogLog_PREFIX
+					toFile: [NSFileHandle fileHandleWithStandardOutput]
+				 exception: e];
+	}
 }
 
 + (void) warn: (NSString *) message
 {
-    [self warn: message
-     exception: nil];
+	[self warn: message exception: nil];
 }
 
-+ (void) warn: (NSString *) message
-    exception: (NSException *) e
++ (void) warn: (NSString *) message exception: (NSException *) e
 {
-    if(!quietMode)
-    {
-        [self writeMessage: message
-                withPrefix: L4LogLog_WARN_PREFIX
-                    toFile: [NSFileHandle fileHandleWithStandardError]
-                 exception: e];
-    }
-}
-
-+ (void) error: (NSString *) message
-{
-    [self error: message
-      exception: nil];
+	if(!quietMode)
+	{
+		[self writeMessage: message
+				withPrefix: L4LogLog_WARN_PREFIX
+					toFile: [NSFileHandle fileHandleWithStandardError]
+				 exception: e];
+	}
 }
 
 + (void) error: (NSString *) message
-     exception: (NSException *) e
 {
-    if(!quietMode)
-    {
-        [self writeMessage: message
-                withPrefix: L4LogLog_ERROR_PREFIX
-                    toFile: [NSFileHandle fileHandleWithStandardError]
-                 exception: e];
-    }
+	[self error: message exception: nil];
+}
+
++ (void) error: (NSString *) message exception: (NSException *) e
+{
+	if(!quietMode) {
+		[self writeMessage: message
+				withPrefix: L4LogLog_ERROR_PREFIX
+					toFile: [NSFileHandle fileHandleWithStandardError]
+				 exception: e];
+	}
 }
 
 // ### TODO *** HELP --- need a unix file expert.  Should I need to flush after printf?
@@ -93,26 +85,26 @@ static BOOL quietMode = NO;
 // ### TODO -- must test under heavy load and talk to performance expert.
 //
 + (void) writeMessage: (NSString *) message
-           withPrefix: (NSString *) prefix
-               toFile: (NSFileHandle *) fileHandle
-            exception: (NSException *) e
+		   withPrefix: (NSString *) prefix
+			   toFile: (NSFileHandle *) fileHandle
+			exception: (NSException *) e
 {
-    NS_DURING
-    [fileHandle writeData:
-        [[prefix stringByAppendingString: message] dataUsingEncoding: NSASCIIStringEncoding
-                                                allowLossyConversion: YES]];
-    [fileHandle writeData: [L4Configurator lineBreakChar]];
-
-    if( e != nil )
-    {
-        [fileHandle writeData:
-            [[prefix stringByAppendingString: [e description]] dataUsingEncoding: NSASCIIStringEncoding
-                                                            allowLossyConversion: YES]];
-        [fileHandle writeData: [L4Configurator lineBreakChar]];
-    }
-    NS_HANDLER
-        // ### TODO WTF? WE'RE SCRWEDED HERE ... ABORT? EXIT? RAISE? Write Error Haiku?
-    NS_ENDHANDLER
+	@try {
+		[fileHandle writeData:
+		 [[prefix stringByAppendingString: message] dataUsingEncoding: NSASCIIStringEncoding
+												 allowLossyConversion: YES]];
+		[fileHandle writeData: [L4Configurator lineBreakChar]];
+		
+		if( e != nil ) {
+			[fileHandle writeData:
+			 [[prefix stringByAppendingString: [e description]] dataUsingEncoding: NSASCIIStringEncoding
+															 allowLossyConversion: YES]];
+			[fileHandle writeData: [L4Configurator lineBreakChar]];
+		}
+	}
+	@catch (NSException * e) {
+		// ### TODO WTF? WE'RE SCRWEDED HERE ... ABORT? EXIT? RAISE? Write Error Haiku?
+	}
 }
 
 @end
