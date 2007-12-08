@@ -4,12 +4,16 @@
 
 #import "L4LogLog.h"
 
-#import "L4Configurator.h"
 
 static BOOL internalDebugging = NO;
 static BOOL quietMode = NO;
+static NSData *lineBreakChar;
 
 @implementation L4LogLog
++ (void) initialize
+{
+	lineBreakChar = [[@"\n" dataUsingEncoding: NSASCIIStringEncoding allowLossyConversion: YES] retain];
+}
 
 + (BOOL) internalDebuggingEnabled
 {
@@ -93,13 +97,12 @@ static BOOL quietMode = NO;
 		[fileHandle writeData:
 		 [[prefix stringByAppendingString: message] dataUsingEncoding: NSASCIIStringEncoding
 												 allowLossyConversion: YES]];
-		[fileHandle writeData: [L4Configurator lineBreakChar]];
+		[fileHandle writeData: lineBreakChar];
 		
 		if( e != nil ) {
 			[fileHandle writeData:
-			 [[prefix stringByAppendingString: [e description]] dataUsingEncoding: NSASCIIStringEncoding
-															 allowLossyConversion: YES]];
-			[fileHandle writeData: [L4Configurator lineBreakChar]];
+			 [[prefix stringByAppendingString: [e description]] dataUsingEncoding: NSASCIIStringEncoding allowLossyConversion: YES]];
+			[fileHandle writeData:lineBreakChar];
 		}
 	}
 	@catch (NSException * e) {

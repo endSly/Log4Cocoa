@@ -7,7 +7,6 @@
 #import "L4AppenderAttachableImpl.h"
 #import "L4AppenderProtocols.h"
 #import "L4AppenderSkeleton.h"
-#import "L4Configurator.h"
 #import "L4ConsoleAppender.h"
 #import "L4FileAppender.h"
 #import "L4Filter.h"

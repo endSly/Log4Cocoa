@@ -3,11 +3,11 @@
  */
 
 #import "L4WriterAppender.h"
-#import "L4Configurator.h"
 #import "L4Layout.h"
 #import "L4LoggingEvent.h"
 #import "L4LogLog.h"
 
+static NSData *lineBreakChar;
 @implementation L4WriterAppender
 
 - (id) init
@@ -16,6 +16,7 @@
 	if( self != nil ) {
 		immediateFlush = YES;
 	}
+	lineBreakChar = [[@"\n" dataUsingEncoding: NSASCIIStringEncoding allowLossyConversion: YES] retain];
 	return self;
 }
 
@@ -111,7 +112,7 @@
 			// TODO - ### - NEED TO WORK ON ENCODING ISSUES (& THEN LATER LOCALIZATION)
 			//
 			[fileHandle writeData: [theString dataUsingEncoding: NSASCIIStringEncoding allowLossyConversion: YES]];
-			[fileHandle writeData: [L4Configurator lineBreakChar]];
+			[fileHandle writeData: lineBreakChar];
 		}
 		@catch (NSException *localException) {
 			[[self errorHandler] error:[NSString stringWithFormat:@"Appender failed to write string:%@\n%@", theString, localException]];
