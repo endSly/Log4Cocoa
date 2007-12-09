@@ -1,7 +1,3 @@
-/**
- * For copyright & license, see COPYRIGHT.txt.
- */
-
 #import <Foundation/Foundation.h>
 #import "L4AppenderProtocols.h"
 #import "L4LoggerProtocols.h"
@@ -86,8 +82,7 @@ void log4Log(id object, int line, char *file, const char *method,
 
 - (L4AppenderAttachableImpl *) aai;
 
-- (NSArray *) allAppendersArray;
-- (NSEnumerator *) allAppenders;
+- (NSArray *) allAppenders;
 - (id <L4Appender>) appenderWithName: (NSString *) aName; // returns appender if in list, otherwise nil
 
 - (void) addAppender: (id <L4Appender>) appender; // SYNCHRONIZED
@@ -259,4 +254,4 @@ void log4Log(id object, int line, char *file, const char *method,
 + (NSEnumerator *) currentLoggers;
 
 @end
-
+// For copyright & license, see COPYRIGHT.txt.

@@ -1,11 +1,7 @@
-/**
- * For copyright & license, see COPYRIGHT.txt.
- */
-
 #import <Foundation/Foundation.h>
 #import "L4Logger.h"
-@class L4Level;
 
+@class L4Level;
 
 @interface L4RootLogger : L4Logger {
 }
@@ -15,3 +11,4 @@
 - (L4Level *) effectiveLevel;
 
 @end
+// For copyright & license, see COPYRIGHT.txt.

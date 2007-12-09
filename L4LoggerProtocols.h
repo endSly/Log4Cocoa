@@ -1,10 +1,6 @@
-/**
- * For copyright & license, see COPYRIGHT.txt.
- */
-
 #import <Foundation/Foundation.h>
-@class L4Logger, L4Level, L4RendererMap;
 
+@class L4Logger, L4Level, L4RendererMap;
 
 @protocol L4LoggerFactory
 
@@ -42,4 +38,4 @@ parameter. See also {@link #setThreshold} method.  */
 
 @end
 
-
+// For copyright & license, see COPYRIGHT.txt.

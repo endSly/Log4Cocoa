@@ -1,49 +1,53 @@
-/**
- * For copyright & license, see COPYRIGHT.txt.
- */
-
 #import <Foundation/Foundation.h>
 #import "L4AppenderProtocols.h"
+
 @class L4Filter, L4Level, L4LoggingEvent;
 
-@interface L4AppenderSkeleton : NSObject {
-	NSString *name;
-	L4Layout *layout;
-	L4Level *threshold;
-	L4Filter *headFilter;
-	L4Filter *tailFilter;
-	id errorHandler;
-	BOOL closed;
+/**
+ * This class acts as a superclass for classes that want to log. It is not intended
+ * to be instantiated, but as Objective C does not have the concept of abstract classes,
+ * and as protocols can't have implementations, this class simply impliments some
+ * standard, generic logging behaviour.
+ */
+@interface L4AppenderSkeleton : NSObject <L4Appender> {
+	NSString *name; /**< The name for this appneder.*/
+	L4Layout *layout; /**< The layout used by this appender.*/
+	L4Level *threshold; /**< The level below which this appender will not log.*/
+	L4Filter *headFilter; /**< The firsst filter used by this appender.*/
+	L4Filter *tailFilter; /**< The last filter used by this appender.*/
+	id errorHandler; /**< The error handler for this appender.*/
+	BOOL closed; /**< Tracks if this appender has been closed.*/
 }
 
+/**
+ * Appends an event to the log.
+ * @param anEvent the event to be appended.
+ */
 - (void) append: (L4LoggingEvent *) anEvent;
+
+/**
+ * Used to determine if a given event would be logged by this appender
+ * given this appensers current threshold.
+ * @param aLevel the level to be tested.
+ * @return YES if this appended would log, NO otherwise.
+ */
 - (BOOL) isAsSevereAsThreshold: (L4Level *) aLevel;
 
+/**
+ * Accessor for the threshold attribute.
+ * Tracks the level at wich this appnded will log an event.
+ * @return the current threshold.
+ */
 - (L4Level *) threshold;
+
+/**
+ * Mutator for the threshold attribute.
+ * Changes the threshold for this appnder to the new value.
+ * @param aLevel the new threshold to use.
+ */
 - (void) setThreshold: (L4Level *) aLevel;
 
 @end
 
+// For copyright & license, see COPYRIGHT.txt.
 
-@interface L4AppenderSkeleton (L4AppenderCategory) <L4Appender>
-
-- (void) doAppend: (L4LoggingEvent *) anEvent;
-// calls [self append: anEvent] after doing threshold checks
-
-- (void) addFilter: (L4Filter *) aFilter;
-- (L4Filter *) headFilter;
-- (void) clearFilters;
-- (void) close;
-
-- (BOOL) requiresLayout;
-
-- (NSString *) name;
-- (void) setName: (NSString *) aName;
-
-- (L4Layout *) layout;
-- (void) setLayout: (L4Layout *) aLayout;
-
-- (id <L4ErrorHandler>) errorHandler;
-- (void) setErrorHandler: (id <L4ErrorHandler>) anErrorHandler;
-
-@end

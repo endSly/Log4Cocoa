@@ -1,8 +1,3 @@
-/**
- * For copyright & license, see COPYRIGHT.txt.
- */
-
-// #import "Log4Cocoa.h"
 #import <Foundation/Foundation.h>
 #import "L4LoggerProtocols.h"
 
@@ -77,3 +72,4 @@
 - (NSString *) renderedMessage;
 
 @end
+// For copyright & license, see COPYRIGHT.txt.

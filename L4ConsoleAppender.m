@@ -5,6 +5,17 @@
 #import "L4ConsoleAppender.h"
 #import "L4Layout.h"
 
+@interface L4ConsoleAppender (Private)
+/**
+ * Sets this appender up to use stdout.
+ */
+- (void) setStandardOut;
+/**
+ * Sets this appender up to use stderr.
+ */
+- (void) setStandardErr;
+@end
+
 @implementation L4ConsoleAppender
 
 /* ********************************************************************* */
@@ -29,8 +40,7 @@
 	return self;
 }
 
-- (id) initTarget: (BOOL) standardOut
-	   withLayout: (L4Layout *) aLayout
+- (id) initTarget: (BOOL) standardOut withLayout: (L4Layout *) aLayout
 {
 	self = [super init];
 	if( self != nil ) {
@@ -44,16 +54,14 @@
 	return self;
 }
 
-- (id) initStandardOutWithLayout: (L4Layout *) aLayout
+- (BOOL) isStandardOut
 {
-	return [self initTarget: YES withLayout: aLayout];
+	return isStandardOut;
 }
 
-- (id) initStandardErrWithLayout: (L4Layout *) aLayout
-{
-	return [self initTarget: NO withLayout: aLayout];
-}
-
+/* ********************************************************************* */
+#pragma mark Private methods
+/* ********************************************************************* */
 - (void) setStandardOut
 {
 	if(!isStandardOut || (fileHandle == nil)) {
@@ -72,14 +80,5 @@
 	}
 }
 
-- (NSFileHandle *) target
-{
-	return fileHandle;
-}
-
-- (BOOL) isStandardOut
-{
-	return isStandardOut;
-}
 
 @end

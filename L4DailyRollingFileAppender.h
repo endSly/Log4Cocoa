@@ -1,31 +1,18 @@
-/**
- * For copyright & license, see COPYRIGHT.txt.
- */
-
-
 #import <Foundation/Foundation.h>
 #import "L4FileAppender.h"
 
 /**
- * @typedef L4RollingFrequency
- * @abstract The accepted constants for L4DailyRollingFileAppenderFrequency's <code>setFrequency:</code> method.
- * @constant never Never roll the file over (this is a default setting)
- * @constant monthly Roll the file over every month
- * @constant weekly Roll the file over every week
- * @constant daily Roll the file over every day
- * @constant half_daily Roll the file over every half day (once at midnight, once at noon)
- * @constant hourly Roll the file over every hour
- * @constant minutely Roll the file over every minute
+ * The accepted constants for L4DailyRollingFileAppenderFrequency's <code>setFrequency:</code> method.
  */
 typedef enum L4RollingFrequency
 {
-	never,
-	monthly,
-	weekly,
-	daily,
-	half_daily,
-	hourly,
-	minutely
+	never,		/**< Never roll the file. */
+	monthly,	/**< Roll the file over every month. */
+	weekly,		/**< Roll the file over every week. */
+	daily,		/**< Roll the file over every day. */
+	half_daily,	/**< Roll the file over every 12 hours. */
+	hourly,		/**< Roll the file over every hour. */
+	minutely	/**< Roll the file over every minute. */
 } L4RollingFrequency;
 
 /**
@@ -37,8 +24,8 @@ typedef enum L4RollingFrequency
 */
 @interface L4DailyRollingFileAppender : L4FileAppender
 {
-	L4RollingFrequency	rollingFrequency;
-	NSCalendarDate*		lastRolloverDate;
+	L4RollingFrequency	rollingFrequency; /**< The frequency with which the file should be rolled.*/
+	NSCalendarDate*		lastRolloverDate; /**< The date the last role-over ocured.*/
 }
 
 /**
@@ -50,9 +37,9 @@ typedef enum L4RollingFrequency
  * Initializes an instance of this class with the specified layout, file name, and rolling frequency.
  * @param aLayout The layout object for this appender
  * @param aName The file path to the file in which you want logging output recorded
- * @param rollingFrequency The frequency at which you want the log file rolled over
+ * @param aRollingFrequency The frequency at which you want the log file rolled over
  */
-- (id)initWithLayout: (L4Layout*)aLayout fileName: (NSString*)aName rollingFrequency: (L4RollingFrequency)aRollingFrequency;
+- (id)initWithLayout:(L4Layout*)aLayout fileName:(NSString*)aName rollingFrequency:(L4RollingFrequency)aRollingFrequency;
 
 /**
  * Returns this object's rolling frequency.
@@ -62,7 +49,7 @@ typedef enum L4RollingFrequency
 
 /**
  Sets the object's rolling frequency
- * @param rollingFrequency The desired rolling frequency for this object
+ * @param aRollingFrequency The desired rolling frequency for this object
  */
 - (void)setRollingFrequency: (L4RollingFrequency)aRollingFrequency;
 
@@ -81,3 +68,4 @@ typedef enum L4RollingFrequency
 - (void)subAppend: (L4LoggingEvent*)event;
 
 @end
+// For copyright & license, see COPYRIGHT.txt.

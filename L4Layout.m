@@ -8,7 +8,7 @@
 
 @implementation L4Layout
 
-+ (id) simpleLayout
++ (L4Layout *) simpleLayout
 {
 	return [[[L4SimpleLayout alloc] init] autorelease];
 }

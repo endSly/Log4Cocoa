@@ -18,9 +18,4 @@
 				[anEvent renderedMessage]];
 }
 
-- (BOOL) ignoresException
-{
-	return YES;
-}
-
 @end

@@ -11,12 +11,10 @@
 {
 	int size = 0;
 
-	if( appenderList != nil )
-	{
+	if( appenderList != nil ) {
 		int i;
 		size = [appenderList count];
-		for( i = 0; i < size; i++ )
-		{
+		for( i = 0; i < size; i++ ) {
 			[[appenderList objectAtIndex: i] doAppend: event];
 		}
 	}
@@ -24,7 +22,7 @@
 }
 
 /* ********************************************************************* */
-#pragma mark L4AppenderAttachableMethods methods
+#pragma mark L4AppenderAttachableMethods protocol methods
 /* ********************************************************************* */
 - (void) addAppender: (id <L4Appender>) newAppender
 {
@@ -43,12 +41,7 @@
 	}
 }
 
-- (NSEnumerator *) allAppenders
-{
-	return [appenderList objectEnumerator];
-}
-
-- (NSArray *) allAppendersArray
+- (NSArray *) allAppenders
 {
 	return appenderList;
 }

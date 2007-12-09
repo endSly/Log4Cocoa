@@ -1,7 +1,3 @@
-/**
- * For copyright & license, see COPYRIGHT.txt.
- */
-
 #import <Foundation/Foundation.h>
 #import "L4LoggerProtocols.h"
 
@@ -10,7 +6,7 @@
 // ### TODO Add support the L4RendererSupport protocol,
 // called from the L4LoggingEvent:renderedMessage method
 //
-@interface L4LoggerStore : NSObject <L4LoggerRepository> {
+@interface L4LoggerStore : NSObject <L4LoggerRepository,L4LoggerFactory> {
 	L4Logger *root;
 	NSMutableDictionary *repository;
 	NSMutableArray *loggers;
@@ -72,10 +68,4 @@
 - (void) shutdown;
 
 @end
-
-
-@interface L4LoggerStore (L4LoggerFactoryCategory) <L4LoggerFactory>
-
-- (L4Logger *) makeNewLoggerInstance: (NSString *) aName;
-
-@end
+// For copyright & license, see COPYRIGHT.txt.

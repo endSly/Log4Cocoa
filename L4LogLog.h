@@ -1,7 +1,3 @@
-/**
- * For copyright & license, see COPYRIGHT.txt.
- */
-
 #import <Foundation/Foundation.h>
 
 #define	   L4LogLog_PREFIX @"log4cocoa: "
@@ -39,3 +35,4 @@
 + (void) writeMessage: (NSString *) message withPrefix: (NSString *) prefix toFile: (NSFileHandle *) fileHandle exception: (NSException *) e;
 
 @end
+// For copyright & license, see COPYRIGHT.txt.

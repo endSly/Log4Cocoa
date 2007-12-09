@@ -1,16 +1,11 @@
-/**
- * For copyright & license, see COPYRIGHT.txt.
- */
-
 #import <Foundation/Foundation.h>
 #import "L4FileAppender.h"
 
 @class L4Layout;
 @class L4LoggingEvent;
 
-/*!
-	@const kL4RollingFileAppenderDefaultMaxFileSize
-	@discussion The default maximum file size, which is 10MB
+/**
+ * The default maximum file size, which is 10MB.
 */
 extern const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize;
 
@@ -19,8 +14,8 @@ extern const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize;
  */
 @interface L4RollingFileAppender : L4FileAppender
 {
-	unsigned int		maxBackupIndex; // by default, this is 1
-	unsigned long long	maxFileSize; // by default, this is 10MB
+	unsigned int		maxBackupIndex; /**< The number of old files to keep; by default, this is 1.*/
+	unsigned long long	maxFileSize; /**< The max size a log file is allowed to be; by default, this is 10MB.*/
 }
 
 /**
@@ -37,17 +32,17 @@ extern const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize;
  * @param aName The file path of the initial file you want created.  Backup files have the same name, but with the backup file number appended to it (See the <code>rollOver</code> method). 
  * @return An initialized instance of this class.
  */
-- (id) initWithLayout: (L4Layout *) aLayout fileName: (NSString *) aName;
+- (id) initWithLayout:(L4Layout *) aLayout fileName:(NSString *) aName;
 
 /**
  * This method initialized a new instance of this class with the specified layout, file path, and append option
  * This is the class's designated initializer.
  * @param aLayout The layout object you want this appender to have.
  * @param aName The file path of the initial file you want created.  Backup files have the same name, but with the backup file number appended to it (See the <code>rollOver</code> method).
- * @param append YES = log output should be appended to the file.  NO = the file's previous contents should be overwritten.
+ * @param flag YES = log output should be appended to the file.  NO = the file's previous contents should be overwritten.
  * @return An initialized instance of this class
  */
-- (id) initWithLayout: (L4Layout *) aLayout fileName: (NSString *) aName append: (BOOL) flag;
+- (id) initWithLayout:(L4Layout *) aLayout fileName:(NSString *) aName append:(BOOL) flag;
 
 /**
  * Returns the maximum number of backup files that will be created when the initial log file rolls over.
@@ -99,3 +94,4 @@ extern const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize;
 - (void)subAppend: (L4LoggingEvent*)event;
 
 @end
+// For copyright & license, see COPYRIGHT.txt.

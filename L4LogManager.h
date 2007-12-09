@@ -1,9 +1,6 @@
-/**
- * For copyright & license, see COPYRIGHT.txt.
- */
-
 #import <Foundation/Foundation.h>
 #import "L4LoggerProtocols.h"
+
 @class L4Logger;
 
 @interface L4LogManager : NSObject {
@@ -27,3 +24,4 @@
 + (void) resetConfiguration;
 
 @end
+// For copyright & license, see COPYRIGHT.txt.

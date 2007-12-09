@@ -9,8 +9,8 @@
 
 @interface L4FileAppender : L4WriterAppender
 {
-	BOOL			append;
-	NSString*		fileName;
+	BOOL			append; /**< Tracks if we should append or over-right.*/
+	NSString*		fileName; /**< The name of the file we write to.*/
 }
 
 /**
@@ -49,8 +49,6 @@
  */
 - (NSString *) fileName;
 
-- (void)setupFile;
-
 /**
  * The append option of this object.
  * @return YES = output will be appended to the end of the file, NO = output will overwrite the previous contents of the file
@@ -69,4 +67,11 @@
  */
 - (void) closeFile;
 
+/**
+ * This method is called to insure the file is set up to write to.
+ */
+- (void)setupFile;
+
+
 @end
+// For copyright & license, see COPYRIGHT.txt.

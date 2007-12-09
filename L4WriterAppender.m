@@ -1,13 +1,10 @@
-/**
- * For copyright & license, see COPYRIGHT.txt.
- */
-
 #import "L4WriterAppender.h"
 #import "L4Layout.h"
 #import "L4LoggingEvent.h"
 #import "L4LogLog.h"
 
 static NSData *lineBreakChar;
+
 @implementation L4WriterAppender
 
 - (id) init
@@ -16,7 +13,9 @@ static NSData *lineBreakChar;
 	if( self != nil ) {
 		immediateFlush = YES;
 	}
-	lineBreakChar = [[@"\n" dataUsingEncoding: NSASCIIStringEncoding allowLossyConversion: YES] retain];
+	if (lineBreakChar == nil) {
+		lineBreakChar = [[@"\n" dataUsingEncoding: NSASCIIStringEncoding allowLossyConversion: YES] retain];
+	}
 	return self;
 }
 
@@ -158,3 +157,4 @@ static NSData *lineBreakChar;
 }
 
 @end
+// For copyright & license, see COPYRIGHT.txt.

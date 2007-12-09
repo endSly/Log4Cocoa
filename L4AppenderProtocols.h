@@ -1,7 +1,3 @@
-/**
- * For copyright & license, see COPYRIGHT.txt.
- */
-
 #import <Foundation/Foundation.h>
 
 @class L4Logger, L4Filter, L4Layout, L4LoggingEvent;
@@ -22,27 +18,31 @@
 
 @end
 
-
+/**
+ * Appenders are responsible for adding a log message to log.
+ * This formal protocol defines the messages a class used for appending needs to support.
+ */
 @protocol L4Appender <NSObject>
 /**
  * Appender log this event.
- * @param the event to append.
+ * @param anEvent the event to append.
  */
 - (void) doAppend: (L4LoggingEvent *) anEvent;
 
 /**
  * Adds to the end of list.
- * @param the filter to add.
+ * @param newFilter the filter to add.
  */
 - (void) addFilter: (L4Filter *) newFilter;
 
 /**
- * @return first filter or nil of there are none.
+ * Accessor for the head filter (the first in the list).
+ * @return first filter or nil if there are none.
  */
 - (L4Filter *) headFilter;
 
 /**
- * removes all filters from list.
+ * Removes all filters from list.
  */
 - (void) clearFilters;
 
@@ -54,26 +54,54 @@
 - (BOOL) requiresLayout;
 
 /**
- * unique name of this appender.
+ * Accessor for name attribute.
+ * @return unique name of this appender.
  */
 - (NSString *) name;
+/**
+ * Mutator for name attribute.
+ * @param aName the name for this appender.
+ */
 - (void) setName: (NSString *) aName;
 
+/**
+ * Accessor for layout attribute.
+ * @return layout of this appender.
+ */
 - (L4Layout *) layout;
+
+/**
+ * Mutator for layout attribute.
+ * @param aLayout the layout for this appender.
+ */
 - (void) setLayout: (L4Layout *) aLayout;
 
+/**
+ * Accessor for errorHandler attribute.
+ * @return errorHandler of this appender.
+ */
 - (id <L4ErrorHandler>) errorHandler;
+/**
+ * Mutator for errorHandler attribute.
+ * @param anErrorHandler the errorHandler for this appender.
+ */
 - (void) setErrorHandler: (id <L4ErrorHandler>) anErrorHandler;
 
 @end
 
 
 @protocol L4AppenderAttachable <NSObject>
+/**
+ * Adds an appender to be logged to.
+ * @param newAppender the new appender to add.
+ */
+- (void) addAppender:(id <L4Appender>) newAppender;
 
-- (void) addAppender: (id <L4Appender>) newAppender;
-
-- (NSEnumerator *) allAppenders;
-- (NSArray *) allAppendersArray;
+/**
+ * Accessor for the collection of log appenders.
+ * @return an array of al appenders.
+ */
+- (NSArray *) allAppenders;
 
 - (id <L4Appender>) appenderWithName: (NSString *) aName;
 - (BOOL) isAttached: (id <L4Appender>) appender;
@@ -83,3 +111,4 @@
 - (void) removeAppenderWithName: (NSString *) aName;
 
 @end
+// For copyright & license, see COPYRIGHT.txt.

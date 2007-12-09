@@ -267,12 +267,7 @@ void log4Log(id object, int line, char *file, const char *method,
 	return aai;
 }
 
-- (NSArray *) allAppendersArray
-{
-	return [aai allAppendersArray];
-}
-
-- (NSEnumerator *) allAppenders
+- (NSArray *) allAppenders
 {
 	return [aai allAppenders];
 }
@@ -312,7 +307,7 @@ void log4Log(id object, int line, char *file, const char *method,
 //
 - (void) closeNestedAppenders
 {
-	NSEnumerator *enumerator = [self allAppenders];
+	NSEnumerator *enumerator = [[self allAppenders] objectEnumerator];
 	id <L4Appender> anObject;
 	
 	while ((anObject = (id <L4Appender>)[enumerator nextObject]))
