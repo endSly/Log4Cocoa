@@ -24,7 +24,7 @@
  * + (L4Logger *) log 
  * {
  * if( myLoggerClassVar == nil ) {
- *	myLoggerClassVar = [super logger];  
+ *	myLoggerClassVar = [super l4Logger];  
  * }
  * 
  * return myLoggerClassVar;
@@ -33,7 +33,7 @@
  * - (L4Logger *) log
  * {
  * if( myLoggerIVar == nil ) {
- *	myLoggerIVar = [super logger];  
+ *	myLoggerIVar = [super l4Logger];  
  * }
  * 
  vreturn myLoggerIVar;

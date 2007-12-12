@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 
-#define	   L4LogLog_PREFIX @"log4cocoa: "
+#define		  L4LogLog_PREFIX @"log4cocoa: "
 #define  L4LogLog_WARN_PREFIX @"log4cocoa: WARN: "
 #define L4LogLog_ERROR_PREFIX @"log4cocoa: ERROR: "
 

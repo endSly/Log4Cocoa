@@ -23,33 +23,22 @@ static NSLock *_loggerLock = nil;
 
 id objc_msgSend(id self, SEL op, ...);
 
-void log4Log(id object, int line, char *file, const char *method,
-			  SEL sel, BOOL isAssertion, BOOL assertion, 
-			  id exception, id message, ...)
+void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL isAssertion, BOOL assertion,  id exception, id message, ...)
 {
 	NSString *combinedMessage;
-	if ( [message isKindOfClass:[NSString class]] )
-	{
+	if ( [message isKindOfClass:[NSString class]] ) {
 		va_list args;
 		va_start(args, message);
-		combinedMessage = [[NSString alloc] initWithFormat:message
-												 arguments:args];
+		combinedMessage = [[NSString alloc] initWithFormat:message arguments:args];
 		va_end(args);
-	}
-	else
-	{
+	} else {
 		combinedMessage = [message retain];
 	}
 
-	if ( isAssertion )
-	{
-		objc_msgSend([object l4Logger], sel, line, file, method, 
-					 assertion, combinedMessage);
-	}
-	else
-	{
-		objc_msgSend([object l4Logger], sel, line, file, method, 
-					 combinedMessage, exception);
+	if ( isAssertion ) {
+		objc_msgSend([object l4Logger], sel, line, file, method, assertion, combinedMessage);
+	} else {
+		objc_msgSend([object l4Logger], sel, line, file, method, combinedMessage, exception);
 	}
 	
 	[combinedMessage release];
