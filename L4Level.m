@@ -70,12 +70,12 @@ static L4Level *ALL   = nil;
 	return ALL;
 }
 
-+ (L4Level *) levelWithName: (NSString *) aLevel
++ (L4Level *) levelWithName:(NSString *) aLevel
 {
 	return [L4Level levelWithName: aLevel defaultLevel: DEBUG];
 }
 
-+ (L4Level *) levelWithName: (NSString *) aLevel defaultLevel: (L4Level *) defaultLevel
++ (L4Level *) levelWithName:(NSString *) aLevel defaultLevel:(L4Level *) defaultLevel
 {
 	NSString *theLevel;
 

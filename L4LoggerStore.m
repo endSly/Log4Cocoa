@@ -247,10 +247,8 @@ static NSLock *_storeLock = nil;
 
 - (void) emitNoAppenderWarning: (L4Logger *) aLogger
 {
-	if( !emittedNoAppenderWarning )
-	{
-		[L4LogLog warn: [NSString stringWithFormat:
-			@"No appenders could be found for logger(%@).", [aLogger name]]];
+	if( !emittedNoAppenderWarning ) {
+		[L4LogLog warn: [NSString stringWithFormat: @"No appenders could be found for logger(%@).", [aLogger name]]];
 		[L4LogLog warn: @"Please initialize the Log4Cocoa system properly."];
 
 		emittedNoAppenderWarning = YES;

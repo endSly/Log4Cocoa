@@ -46,53 +46,105 @@ void log4Log(id object, int line, char *file, const char *method,
 #define log4Assert(assertion, message, args...) log4Log(L4_ASSERTION(assertion), message, args)
 
 @interface L4Logger : NSObject {
-	NSString *name;
-	L4Level *level;
-	L4Logger *parent;
-	id <L4LoggerRepository> repository;
-	BOOL additive;
-	L4AppenderAttachableImpl *aai;
+	NSString *name; /**< The name of this logger.*/
+	L4Level *level; /**< The level of this logger.*/
+	L4Logger *parent; /**< The parent of this logger.*/
+	id <L4LoggerRepository> repository; /**< Don't know.*/
+	BOOL additive; /**< Don't know.*/
+	L4AppenderAttachableImpl *aai; /**< What does the actual appending for this logger.*/
 }
 
-+ (void) taskNowMultiThreaded: (NSNotification *) event;
+/**
+ * Don't know.
+ * @param event
+ */
++ (void) taskNowMultiThreaded:(NSNotification *) event;
 
-// DON'T USE, only for use of log manager
-- (id) initWithName: (NSString *) loggerName;
+/**
+ * DON'T USE, only for use of log manager
+ * @param loggerName the name of this logger.
+ */
+- (id) initWithName:(NSString *) loggerName;
 
+/**
+ * Accessor for additivity.
+ * @return if additive is set.
+ */
 - (BOOL) additivity;
-- (void) setAdditivity: (BOOL) newAdditivity;
 
-- (L4Logger *) parent; // root Logger returs nil
-- (void) setParent: (L4Logger *) theParent;
+/**
+ * Mutator for additivity.
+ * @param newAdditivity the new value.
+ */
+- (void) setAdditivity:(BOOL) newAdditivity;
 
+/**
+ * Accessor for the loggers parent.
+ * @return parent; root Logger returs nil.
+ */
+- (L4Logger *) parent;
+
+/**
+ * Mutator for this loggers parent.
+ * @param theParent the new parent.
+ */
+- (void) setParent:(L4Logger *) theParent;
+
+/**
+ * Accessor for the name attribute.
+ * @return the name for this logger.
+ */
 - (NSString *) name;
-- (id <L4LoggerRepository>) loggerRepository;
-- (void) setLoggerRepository: (id <L4LoggerRepository>) aRepository;
 
+/**
+ * Acccessor for this loggers repository.
+ * @return the repository for this logger.
+ */
+- (id <L4LoggerRepository>) loggerRepository;
+
+/**
+ * The mutator for this loggers repository.
+ * @param aRepository the new value.
+ */
+- (void) setLoggerRepository:(id <L4LoggerRepository>) aRepository;
+
+/**
+ * The efective level for this logger.  Events with a level below this will not be logged.
+ * @return the minimum level this logger will log.
+ */
 - (L4Level *) effectiveLevel;
 
+/**
+ * Accessor for the level of this logger.
+ * @return the level of this logger.
+ */
 - (L4Level *) level;
-- (void) setLevel: (L4Level *) aLevel; // nil is ok, because then we just pick up the parent's level
+
+/**
+ * Mutator for the level of this logger.
+ * @param aLevel the new level for this logger.
+ */
+- (void) setLevel:(L4Level *) aLevel; // nil is ok, because then we just pick up the parent's level
 
 @end
 
 @interface L4Logger (AppenderRelatedMethods)
 
-- (void) callAppenders: (L4LoggingEvent *) event;
+- (void) callAppenders:(L4LoggingEvent *) event;
 
 - (L4AppenderAttachableImpl *) aai;
 
 - (NSArray *) allAppenders;
-- (id <L4Appender>) appenderWithName: (NSString *) aName; // returns appender if in list, otherwise nil
+- (id <L4Appender>) appenderWithName:(NSString *) aName; // returns appender if in list, otherwise nil
 
-- (void) addAppender: (id <L4Appender>) appender; // SYNCHRONIZED
-- (BOOL) isAttached: (id <L4Appender>) appender;
+- (void) addAppender:(id <L4Appender>) appender; // SYNCHRONIZED
+- (BOOL) isAttached:(id <L4Appender>) appender;
 
 - (void) closeNestedAppenders;
 
 - (void) removeAllAppenders;
-- (void) removeAppender: (id <L4Appender>) appender;
-- (void) removeAppenderWithName: (NSString *) aName;
+- (void) removeAppender:(id <L4Appender>) appender;
+- (void) removeAppenderWithName:(NSString *) aName;
 
 @end
 
@@ -106,134 +158,134 @@ void log4Log(id object, int line, char *file, const char *method,
 - (BOOL) isErrorEnabled;  /* added not in Log4J */ 
 - (BOOL) isFatalEnabled;  /* added not in Log4J */
 
-- (BOOL) isEnabledFor: (L4Level *) aLevel;
+- (BOOL) isEnabledFor:(L4Level *) aLevel;
 
-- (void) assert: (BOOL) anAssertion
-			log: (NSString *) aMessage;
+- (void) assert:(BOOL) anAssertion
+			log:(NSString *) aMessage;
 
-- (void) lineNumber: (int) lineNumber
-		   fileName: (char *) fileName
-		 methodName: (char *) methodName
-			 assert: (BOOL) anAssertion
-				log: (NSString *) aMessage;
+- (void) lineNumber:(int) lineNumber
+		   fileName:(char *) fileName
+		 methodName:(char *) methodName
+			 assert:(BOOL) anAssertion
+				log:(NSString *) aMessage;
 
 /* Debug */
 
-- (void) debug: (id) aMessage;
+- (void) debug:(id) aMessage;
 
-- (void) debug: (id) aMessage
-	 exception: (NSException *) e;
+- (void) debug:(id) aMessage
+	 exception:(NSException *) e;
 
-- (void) lineNumber: (int) lineNumber
-		   fileName: (char *) fileName
-		 methodName: (char *) methodName
-			  debug: (id) aMessage;
+- (void) lineNumber:(int) lineNumber
+		   fileName:(char *) fileName
+		 methodName:(char *) methodName
+			  debug:(id) aMessage;
 
-- (void) lineNumber: (int) lineNumber
-		   fileName: (char *) fileName
-		 methodName: (char *) methodName
-			  debug: (id) aMessage
-		  exception: (NSException *) e;
+- (void) lineNumber:(int) lineNumber
+		   fileName:(char *) fileName
+		 methodName:(char *) methodName
+			  debug:(id) aMessage
+		  exception:(NSException *) e;
 
 /* Info */
 
-- (void) info: (id) aMessage;
+- (void) info:(id) aMessage;
 
-- (void) info: (id) aMessage
-	exception: (NSException *) e;
+- (void) info:(id) aMessage
+	exception:(NSException *) e;
 
-- (void) lineNumber: (int) lineNumber
-		   fileName: (char *) fileName
-		 methodName: (char *) methodName
-			   info: (id) aMessage;
+- (void) lineNumber:(int) lineNumber
+		   fileName:(char *) fileName
+		 methodName:(char *) methodName
+			   info:(id) aMessage;
 
-- (void) lineNumber: (int) lineNumber
-		   fileName: (char *) fileName
-		 methodName: (char *) methodName
-			   info: (id) aMessage
-		  exception: (NSException *) e;
+- (void) lineNumber:(int) lineNumber
+		   fileName:(char *) fileName
+		 methodName:(char *) methodName
+			   info:(id) aMessage
+		  exception:(NSException *) e;
 
 /* Warn */
 
-- (void) warn: (id) aMessage;
+- (void) warn:(id) aMessage;
 
-- (void) warn: (id) aMessage
-	exception: (NSException *) e;
+- (void) warn:(id) aMessage
+	exception:(NSException *) e;
 
-- (void) lineNumber: (int) lineNumber
-		   fileName: (char *) fileName
-		 methodName: (char *) methodName
-			   warn: (id) aMessage;
+- (void) lineNumber:(int) lineNumber
+		   fileName:(char *) fileName
+		 methodName:(char *) methodName
+			   warn:(id) aMessage;
 
-- (void) lineNumber: (int) lineNumber
-		   fileName: (char *) fileName
-		 methodName: (char *) methodName
-			   warn: (id) aMessage
-		  exception: (NSException *) e;
+- (void) lineNumber:(int) lineNumber
+		   fileName:(char *) fileName
+		 methodName:(char *) methodName
+			   warn:(id) aMessage
+		  exception:(NSException *) e;
 
 /* Error */
 
-- (void) error: (id) aMessage;
+- (void) error:(id) aMessage;
 
-- (void) error: (id) aMessage
-	 exception: (NSException *) e;
+- (void) error:(id) aMessage
+	 exception:(NSException *) e;
 
-- (void) lineNumber: (int) lineNumber
-		   fileName: (char *) fileName
-		 methodName: (char *) methodName
-			  error: (id) aMessage;
+- (void) lineNumber:(int) lineNumber
+		   fileName:(char *) fileName
+		 methodName:(char *) methodName
+			  error:(id) aMessage;
 
-- (void) lineNumber: (int) lineNumber
-		   fileName: (char *) fileName
-		 methodName: (char *) methodName
-			  error: (id) aMessage
-		  exception: (NSException *) e;
+- (void) lineNumber:(int) lineNumber
+		   fileName:(char *) fileName
+		 methodName:(char *) methodName
+			  error:(id) aMessage
+		  exception:(NSException *) e;
 
 /* Fatal */
 
-- (void) fatal: (id) aMessage;
+- (void) fatal:(id) aMessage;
 
-- (void) fatal: (id) aMessage
-	 exception: (NSException *) e;
+- (void) fatal:(id) aMessage
+	 exception:(NSException *) e;
 
-- (void) lineNumber: (int) lineNumber
-		   fileName: (char *) fileName
-		 methodName: (char *) methodName
-			  fatal: (id) aMessage;
+- (void) lineNumber:(int) lineNumber
+		   fileName:(char *) fileName
+		 methodName:(char *) methodName
+			  fatal:(id) aMessage;
 
-- (void) lineNumber: (int) lineNumber
-		   fileName: (char *) fileName
-		 methodName: (char *) methodName
-			  fatal: (id) aMessage
-		  exception: (NSException *) e;
+- (void) lineNumber:(int) lineNumber
+		   fileName:(char *) fileName
+		 methodName:(char *) methodName
+			  fatal:(id) aMessage
+		  exception:(NSException *) e;
 
 /* Legacy primitive logging methods			   */
-/* See below, forcedLog: (L4LoggingEvent *) event */
+/* See below, forcedLog:(L4LoggingEvent *) event */
 
-- (void) log: (id) aMessage
-	   level: (L4Level *) aLevel;
+- (void) log:(id) aMessage
+	   level:(L4Level *) aLevel;
 
-- (void) log: (id) aMessage
-	   level: (L4Level *) aLevel
-   exception: (NSException *) e;
+- (void) log:(id) aMessage
+	   level:(L4Level *) aLevel
+   exception:(NSException *) e;
 
-- (void) log: (id) aMessage
-	   level: (L4Level *) aLevel
-   exception: (NSException *) e
-  lineNumber: (int) lineNumber
-	fileName: (char *) fileName
-  methodName: (char *) methodName;
+- (void) log:(id) aMessage
+	   level:(L4Level *) aLevel
+   exception:(NSException *) e
+  lineNumber:(int) lineNumber
+	fileName:(char *) fileName
+  methodName:(char *) methodName;
 
-- (void) forcedLog: (id) aMessage
-			 level: (L4Level *) aLevel
-		 exception: (NSException *) e
-		lineNumber: (int) lineNumber
-		  fileName: (char *) fileName
-		methodName: (char *) methodName;
+- (void) forcedLog:(id) aMessage
+			 level:(L4Level *) aLevel
+		 exception:(NSException *) e
+		lineNumber:(int) lineNumber
+		  fileName:(char *) fileName
+		methodName:(char *) methodName;
 
 /* This is the designated logging method that the others invoke. */
 
-- (void) forcedLog: (L4LoggingEvent *) event;
+- (void) forcedLog:(L4LoggingEvent *) event;
 
 @end
 
@@ -242,13 +294,13 @@ void log4Log(id object, int line, char *file, const char *method,
 
 + (L4Logger *) rootLogger;
 
-+ (L4Logger *) loggerForClass: (Class) aClass;
-+ (L4Logger *) loggerForName: (NSString *) aName;
-+ (L4Logger *) loggerForName: (NSString *) aName
-					 factory: (id <L4LoggerFactory>) aFactory;
++ (L4Logger *) loggerForClass:(Class) aClass;
++ (L4Logger *) loggerForName:(NSString *) aName;
++ (L4Logger *) loggerForName:(NSString *) aName
+					 factory:(id <L4LoggerFactory>) aFactory;
 
 /* returns logger if it exists, otherise nil */
-+ (L4Logger *) exists: (NSString *) loggerName;
++ (L4Logger *) exists:(NSString *) loggerName;
 
 + (NSArray *) currentLoggersArray;
 + (NSEnumerator *) currentLoggers;
