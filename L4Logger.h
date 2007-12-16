@@ -299,9 +299,6 @@ void log4Log(id object, int line, char *file, const char *method,
 + (L4Logger *) loggerForName:(NSString *) aName
 					 factory:(id <L4LoggerFactory>) aFactory;
 
-/* returns logger if it exists, otherise nil */
-+ (L4Logger *) exists:(NSString *) loggerName;
-
 + (NSArray *) currentLoggers;
 
 @end

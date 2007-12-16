@@ -204,12 +204,6 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 							   factory: aFactory];
 }
 
-/* returns logger if it exists, otherise nil */
-+ (L4Logger *) exists: (NSString *) loggerName
-{
-	return [L4LogManager exists: loggerName];
-}
-
 + (NSArray *) currentLoggers
 {
 	return [L4LogManager currentLoggers];

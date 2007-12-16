@@ -82,11 +82,6 @@ static NSLock *_storeLock = nil;
 	return thresholdInt > aLevel;
 }
 
-- (L4Logger *) exists: (id) loggerNameOrLoggerClass
-{
-	return (L4Logger *) [repository objectForKey: loggerNameOrLoggerClass];
-}
-
 - (L4Level *) threshold
 {
 	return threshold;

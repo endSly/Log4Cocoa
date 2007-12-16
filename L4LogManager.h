@@ -46,13 +46,6 @@
 + (L4Logger *) loggerForName: (NSString *) aName factory: (id <L4LoggerFactory>) aFactory;
 
 /**
- * USed to determine if a given logger exists.
- * @param loggerNameOrLoggerClass the class or name of the logger of interest.
- * @return the logger of interest.
- */
-+ (L4Logger *) exists: (id)loggerNameOrLoggerClass;
-
-/**
  * The array of loggers.
  * @return the current loggers.
  */

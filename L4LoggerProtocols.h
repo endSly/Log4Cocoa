@@ -17,7 +17,6 @@ on the repository threshold and the <code>level</code>
 parameter. See also {@link #setThreshold} method.  */
 
 - (BOOL) isDisabled: (int) aLevel;
-- (L4Logger *) exists: (id) loggerNameOrLoggerClass;
 
 - (L4Level *) threshold;
 - (void) setThreshold: (L4Level *) aLevel;

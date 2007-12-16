@@ -44,11 +44,6 @@ static L4LoggerStore *_loggerRepository = nil;
 	return [_loggerRepository loggerForName: aName factory: aFactory];
 }
 
-+ (L4Logger *) exists: (id) loggerNameOrLoggerClass
-{
-	return [_loggerRepository exists: loggerNameOrLoggerClass];
-}
-
 + (NSArray *) currentLoggers
 {
 	return [_loggerRepository currentLoggers];
