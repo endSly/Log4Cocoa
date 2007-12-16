@@ -48,10 +48,6 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 
 + (void) initialize
 {
-	// Making sure that we capture the startup time of
-	// this application.  This sanity check is also in
-	// +[L4Configurator initialize] too.
-	//
 	[L4LoggingEvent startTime];
 
 	_debug = [L4Level debug];
@@ -70,7 +66,8 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 	}
 }
 
-+ (void) taskNowMultiThreaded: (NSNotification *) event {
++ (void) taskNowMultiThreaded: (NSNotification *) event 
+{
 	if (!_loggerLock) {
 		_loggerLock = [[NSLock alloc] init];
 		// we can add other things here.
@@ -87,8 +84,7 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 - (id) initWithName: (NSString *) aName
 {
 	self = [super init];
-	if( self != nil )
-	{
+	if( self != nil ) {
 		name = [aName retain];
 		additive = YES;
 	}
@@ -115,7 +111,6 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 	additive = newAdditivity;
 }
 
-/* root Logger returs nil */
 - (L4Logger *) parent
 {
 	return parent;
@@ -139,8 +134,7 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 
 - (void) setLoggerRepository: (id <L4LoggerRepository>) aRepository
 {
-	if( repository != aRepository )
-	{
+	if( repository != aRepository ) {
 		[repository autorelease];
 		repository = [aRepository retain];
 	}
@@ -149,19 +143,16 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 // NO METHOD CALLING - PERFORMANCE TWEAKED METHOD
 - (L4Level *) effectiveLevel
 {
+	L4Level *effectiveLevel;
 	L4Logger *aLogger = (L4Logger *)self;
-	for(; aLogger != nil; aLogger = aLogger->parent)
-	{
-		if((aLogger->level) != nil)
-		{
-			return aLogger->level;
+	for(; aLogger != nil; aLogger = aLogger->parent) {
+		if((aLogger->level) != nil) {
+			effectiveLevel = aLogger->level;
+			break;
 		}
 	}
-	// should we have an emit once only error message here?
-	// cause root logger wasn't found.
-	// ### TODO ???
 	[L4LogLog error: @"Root Logger Not Found!"];
-	return nil;
+	return effectiveLevel;
 }
 
 - (L4Level *) level
@@ -172,8 +163,7 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 /* nil is ok, because then we just pick up the parent's level */
 - (void) setLevel: (L4Level *) aLevel
 {
-	if( level != aLevel )
-	{
+	if( level != aLevel ) {
 		[level autorelease];
 		level = [aLevel retain];
 	}
@@ -197,11 +187,9 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 	return [L4LogManager loggerForName: loggerName];
 }
 
-+ (L4Logger *) loggerForName: (NSString *) loggerName
-					 factory: (id <L4LoggerFactory>) aFactory
++ (L4Logger *) loggerForName: (NSString *) loggerName factory: (id <L4LoggerFactory>) aFactory
 {
-	return [L4LogManager loggerForName: loggerName
-							   factory: aFactory];
+	return [L4LogManager loggerForName: loggerName factory: aFactory];
 }
 
 + (NSArray *) currentLoggers
@@ -213,29 +201,25 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 #pragma mark AppenderRelatedMethods methods
 /* ********************************************************************* */
 
-- (void) callAppenders: (L4LoggingEvent *) event
+- (void) callAppenders:(L4LoggingEvent *) event
 {
 	L4Logger *aLogger = self;
 	int writes = 0;
 	
 	//	[_loggerLock lock];  // ### LOCKING
 	
-	for( aLogger = self; aLogger != nil; aLogger = [aLogger parent] )
-	{
-		if( [aLogger aai] != nil )
-		{
+	for( aLogger = self; aLogger != nil; aLogger = [aLogger parent] ) {
+		if( [aLogger aai] != nil ) {
 			writes += [[aLogger aai] appendLoopOnAppenders: event];
 		}
-		if( ![aLogger additivity] )
-		{
+		if( ![aLogger additivity] ) {
 			break;
 		}
 	}
 	
 	//	[_loggerLock unlock];  // ### LOCKING
 	
-	if( writes == 0 )
-	{
+	if( writes == 0 ) {
 		[repository emitNoAppenderWarning: self];
 	}
 }
@@ -250,17 +234,15 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 	return [aai allAppenders];
 }
 
-/* Returns appender if in list, otherwise nil */
 - (id <L4Appender>) appenderWithName: (NSString *) aName
 {
 	return [aai appenderWithName: aName];
 }
 
-- (void) addAppender: (id <L4Appender>) appender // SYNCHRONIZED
+- (void) addAppender: (id <L4Appender>) appender
 {
 	//	[_loggerLock lock];  // ### LOCKING
-	if( aai == nil )
-	{
+	if( aai == nil ) {
 		aai = [[L4AppenderAttachableImpl alloc] init];
 	}
 	
@@ -270,38 +252,19 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 
 - (BOOL) isAttached: (id <L4Appender>) appender
 {
-	if((appender == nil) || (aai == nil))
-	{
+	if((appender == nil) || (aai == nil)) {
 		return NO;
 	}
 	return [aai isAttached: appender];
 }
 
-// This is weird ... don't normally call this method directly.
-// It is designed to be called form L4LoggerStore:shutdown
-// I don't quite understand the semantics of calling close,
-// but I've ported it directly for now.  I will play with this
-// more later.
-//
 - (void) closeNestedAppenders
 {
 	NSEnumerator *enumerator = [[self allAppenders] objectEnumerator];
 	id <L4Appender> anObject;
 	
-	while ((anObject = (id <L4Appender>)[enumerator nextObject]))
-	{
-		if([anObject conformsToProtocol: @protocol(L4AppenderAttachable)])
-		{
-			// ### ???
-			// I DON'T UNDERSTAND THIS ??? why just AppenderAttachables?
-			// if an appender needs to get sent close before it shutdowns
-			// it should implement the L4AppenderAttachable protocol
-			// weird?!?!?!
-			//
-			//			[_loggerLock lock];  // ### LOCKING
-			[anObject close];
-			//			[_loggerLock unlock];  // ### LOCKING
-		}
+	while ((anObject = (id <L4Appender>)[enumerator nextObject])) {
+		[anObject close];
 	}
 }
 
@@ -344,18 +307,15 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 
 - (BOOL) isEnabledFor: (L4Level *) aLevel
 {
-	if([repository isDisabled: [aLevel intValue]])
-	{
+	if([repository isDisabled: [aLevel intValue]]) {
 		return NO;
 	}
 	return [aLevel isGreaterOrEqual: [self effectiveLevel]];
 }
 
-- (void) assert: (BOOL) anAssertion
-			log: (NSString *) aMessage
+- (void) assert: (BOOL) anAssertion log: (NSString *) aMessage
 {
-	if( !anAssertion )
-	{
+	if( !anAssertion ) {
 		[self error: aMessage];
 	}
 }
@@ -366,13 +326,8 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 			 assert: (BOOL) anAssertion
 				log: (NSString *) aMessage
 {
-	if( !anAssertion )
-	{
-		[self lineNumber: lineNumber
-				fileName: fileName
-			  methodName: methodName
-				   error: aMessage
-			   exception: nil];
+	if( !anAssertion ) {
+		[self lineNumber: lineNumber fileName: fileName methodName: methodName error: aMessage exception: nil];
 	}
 }
 
@@ -380,21 +335,12 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 
 - (void) debug: (id) aMessage
 {
-	[self lineNumber: NO_LINE_NUMBER
-			fileName: NO_FILE_NAME
-		  methodName: NO_METHOD_NAME
-			   debug: aMessage
-		   exception: nil];
+	[self lineNumber: NO_LINE_NUMBER fileName: NO_FILE_NAME methodName: NO_METHOD_NAME debug: aMessage exception: nil];
 }
 
-- (void) debug: (id) aMessage
-	 exception: (NSException *) e
+- (void) debug: (id) aMessage exception: (NSException *) e
 {
-	[self lineNumber: NO_LINE_NUMBER
-			fileName: NO_FILE_NAME
-		  methodName: NO_METHOD_NAME
-			   debug: aMessage
-		   exception: e];
+	[self lineNumber: NO_LINE_NUMBER fileName: NO_FILE_NAME methodName: NO_METHOD_NAME debug: aMessage exception: e];
 }
 
 - (void) lineNumber: (int) lineNumber
@@ -402,11 +348,7 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 		 methodName: (char *) methodName
 			  debug: (id) aMessage
 {
-	[self lineNumber: lineNumber
-			fileName: fileName
-		  methodName: methodName
-			   debug: aMessage
-		   exception: nil];
+	[self lineNumber: lineNumber fileName: fileName methodName: methodName debug: aMessage exception: nil];
 }
 
 - (void) lineNumber: (int) lineNumber
@@ -415,17 +357,13 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 			  debug: (id) aMessage
 		  exception: (NSException *) e
 {
-	// Check repository threshold level
-	//
-	if([repository isDisabled: [_debug intValue]])
-	{
+	if([repository isDisabled: [_debug intValue]]) {
 		return;
 	}
 	
 	// Check this particular loggers level
 	//
-	if([_debug isGreaterOrEqual: [self effectiveLevel]])
-	{
+	if([_debug isGreaterOrEqual: [self effectiveLevel]]) {
 		[self forcedLog: [L4LoggingEvent logger: self
 										  level: _debug
 									 lineNumber: lineNumber
@@ -440,21 +378,12 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 
 - (void) info: (id) aMessage
 {
-	[self lineNumber: NO_LINE_NUMBER
-			fileName: NO_FILE_NAME
-		  methodName: NO_METHOD_NAME
-				info: aMessage
-		   exception: nil];
+	[self lineNumber: NO_LINE_NUMBER fileName: NO_FILE_NAME methodName: NO_METHOD_NAME info: aMessage exception: nil];
 }
 
-- (void) info: (id) aMessage
-	exception: (NSException *) e
+- (void) info: (id) aMessage exception: (NSException *) e
 {
-	[self lineNumber: NO_LINE_NUMBER
-			fileName: NO_FILE_NAME
-		  methodName: NO_METHOD_NAME
-				info: aMessage
-		   exception: e];
+	[self lineNumber: NO_LINE_NUMBER fileName: NO_FILE_NAME methodName: NO_METHOD_NAME info: aMessage exception: e];
 }
 
 - (void) lineNumber: (int) lineNumber
@@ -462,11 +391,7 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 		 methodName: (char *) methodName
 			   info: (id) aMessage
 {
-	[self lineNumber: lineNumber
-			fileName: fileName
-		  methodName: methodName
-				info: aMessage
-		   exception: nil];
+	[self lineNumber: lineNumber fileName: fileName methodName: methodName info: aMessage exception: nil];
 }
 
 - (void) lineNumber: (int) lineNumber
@@ -475,17 +400,11 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 			   info: (id) aMessage
 		  exception: (NSException *) e
 {
-	// Check repository threshold level
-	//
-	if([repository isDisabled: [_info intValue]])
-	{
+	if([repository isDisabled: [_info intValue]]) {
 		return;
 	}
 	
-	// Check this particular loggers level
-	//
-	if([_info isGreaterOrEqual: [self effectiveLevel]])
-	{
+	if([_info isGreaterOrEqual: [self effectiveLevel]]) {
 		[self forcedLog: [L4LoggingEvent logger: self
 										  level: _info
 									 lineNumber: lineNumber
@@ -500,21 +419,12 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 
 - (void) warn: (id) aMessage
 {
-	[self lineNumber: NO_LINE_NUMBER
-			fileName: NO_FILE_NAME
-		  methodName: NO_METHOD_NAME
-				warn: aMessage
-		   exception: nil];
+	[self lineNumber: NO_LINE_NUMBER fileName: NO_FILE_NAME methodName: NO_METHOD_NAME warn: aMessage exception: nil];
 }
 
-- (void) warn: (id) aMessage
-	exception: (NSException *) e
+- (void) warn: (id) aMessage exception: (NSException *) e
 {
-	[self lineNumber: NO_LINE_NUMBER
-			fileName: NO_FILE_NAME
-		  methodName: NO_METHOD_NAME
-				warn: aMessage
-		   exception: e];
+	[self lineNumber: NO_LINE_NUMBER fileName: NO_FILE_NAME methodName: NO_METHOD_NAME warn: aMessage exception: e];
 }
 
 - (void) lineNumber: (int) lineNumber
@@ -522,11 +432,7 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 		 methodName: (char *) methodName
 			   warn: (id) aMessage
 {
-	[self lineNumber: lineNumber
-			fileName: fileName
-		  methodName: methodName
-				warn: aMessage
-		   exception: nil];
+	[self lineNumber: lineNumber fileName: fileName methodName: methodName warn: aMessage exception: nil];
 }
 
 - (void) lineNumber: (int) lineNumber
@@ -535,17 +441,11 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 			   warn: (id) aMessage
 		  exception: (NSException *) e
 {
-	// Check repository threshold level
-	//
-	if([repository isDisabled: [_warn intValue]])
-	{
+	if([repository isDisabled: [_warn intValue]]) {
 		return;
 	}
 	
-	// Check this particular loggers level
-	//
-	if([_warn isGreaterOrEqual: [self effectiveLevel]])
-	{
+	if([_warn isGreaterOrEqual: [self effectiveLevel]]) {
 		[self forcedLog: [L4LoggingEvent logger: self
 										  level: _warn
 									 lineNumber: lineNumber
@@ -560,21 +460,12 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 
 - (void) error: (id) aMessage
 {
-	[self lineNumber: NO_LINE_NUMBER
-			fileName: NO_FILE_NAME
-		  methodName: NO_METHOD_NAME
-			   error: aMessage
-		   exception: nil];
+	[self lineNumber: NO_LINE_NUMBER fileName: NO_FILE_NAME methodName: NO_METHOD_NAME error: aMessage exception: nil];
 }
 
-- (void) error: (id) aMessage
-	 exception: (NSException *) e
+- (void) error: (id) aMessage exception: (NSException *) e
 {
-	[self lineNumber: NO_LINE_NUMBER
-			fileName: NO_FILE_NAME
-		  methodName: NO_METHOD_NAME
-			   error: aMessage
-		   exception: e];
+	[self lineNumber: NO_LINE_NUMBER fileName: NO_FILE_NAME methodName: NO_METHOD_NAME error: aMessage exception: e];
 }
 
 - (void) lineNumber: (int) lineNumber
@@ -582,11 +473,7 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 		 methodName: (char *) methodName
 			  error: (id) aMessage
 {
-	[self lineNumber: lineNumber
-			fileName: fileName
-		  methodName: methodName
-			   error: aMessage
-		   exception: nil];
+	[self lineNumber: lineNumber fileName: fileName methodName: methodName error: aMessage exception: nil];
 }
 
 - (void) lineNumber: (int) lineNumber
@@ -595,17 +482,11 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 			  error: (id) aMessage
 		  exception: (NSException *) e
 {
-	// Check repository threshold level
-	//
-	if([repository isDisabled: [_error intValue]])
-	{
+	if([repository isDisabled: [_error intValue]]) {
 		return;
 	}
 	
-	// Check this particular loggers level
-	//
-	if([_error isGreaterOrEqual: [self effectiveLevel]])
-	{
+	if([_error isGreaterOrEqual: [self effectiveLevel]]) {
 		[self forcedLog: [L4LoggingEvent logger: self
 										  level: _error
 									 lineNumber: lineNumber
@@ -620,21 +501,12 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 
 - (void) fatal: (id) aMessage
 {
-	[self lineNumber: NO_LINE_NUMBER
-			fileName: NO_FILE_NAME
-		  methodName: NO_METHOD_NAME
-			   fatal: aMessage
-		   exception: nil];
+	[self lineNumber: NO_LINE_NUMBER fileName: NO_FILE_NAME methodName: NO_METHOD_NAME fatal: aMessage exception: nil];
 }
 
-- (void) fatal: (id) aMessage
-	 exception: (NSException *) e
+- (void) fatal: (id) aMessage exception: (NSException *) e
 {
-	[self lineNumber: NO_LINE_NUMBER
-			fileName: NO_FILE_NAME
-		  methodName: NO_METHOD_NAME
-			   fatal: aMessage
-		   exception: e];
+	[self lineNumber: NO_LINE_NUMBER fileName: NO_FILE_NAME methodName: NO_METHOD_NAME fatal: aMessage exception: e];
 }
 
 - (void) lineNumber: (int) lineNumber
@@ -642,11 +514,7 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 		 methodName: (char *) methodName
 			  fatal: (id) aMessage
 {
-	[self lineNumber: lineNumber
-			fileName: fileName
-		  methodName: methodName
-			   fatal: aMessage
-		   exception: nil];
+	[self lineNumber: lineNumber fileName: fileName methodName: methodName fatal: aMessage exception: nil];
 }
 
 - (void) lineNumber: (int) lineNumber
@@ -655,17 +523,11 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 			  fatal: (id) aMessage
 		  exception: (NSException *) e
 {
-	// Check repository threshold level
-	//
-	if([repository isDisabled: [_fatal intValue]])
-	{
+	if([repository isDisabled: [_fatal intValue]]) {
 		return;
 	}
 	
-	// Check this particular loggers level
-	//
-	if([_fatal isGreaterOrEqual: [self effectiveLevel]])
-	{
+	if([_fatal isGreaterOrEqual: [self effectiveLevel]]) {
 		[self forcedLog: [L4LoggingEvent logger: self
 										  level: _fatal
 									 lineNumber: lineNumber
@@ -677,23 +539,15 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 }
 
 /* legacy method, see forcedLog: (L4LoggingEvent *) event */
-- (void) log: (id) aMessage
-	   level: (L4Level *) aLevel
+- (void) log: (id) aMessage level: (L4Level *) aLevel
 {
-	[self forcedLog: [L4LoggingEvent logger: self
-									  level: aLevel
-									message: aMessage]];
+	[self forcedLog: [L4LoggingEvent logger: self level: aLevel message: aMessage]];
 }
 
 /* legacy method, see forcedLog: (L4LoggingEvent *) event */
-- (void) log: (id) aMessage
-	   level: (L4Level *) aLevel
-   exception: (NSException *) e
+- (void) log: (id) aMessage level: (L4Level *) aLevel exception: (NSException *) e
 {
-	[self forcedLog: [L4LoggingEvent logger: self
-									  level: aLevel
-									message: aMessage
-								  exception: e]];
+	[self forcedLog: [L4LoggingEvent logger: self level: aLevel message: aMessage exception: e]];
 }
 
 /* legacy method, see forcedLog: (L4LoggingEvent *) event */
