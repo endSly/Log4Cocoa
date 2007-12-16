@@ -1,9 +1,6 @@
 #import <Foundation/Foundation.h>
 #import "L4LoggerProtocols.h"
 
-// key component is that it is serializable
-// there is something going on with NDC & MDC's that I don't understand
-
 @class L4Level, L4Logger;
 
 @interface L4LoggingEvent : NSObject {
@@ -20,8 +17,6 @@
 	char *rawFileName; /**< The raw filename for where the event was generated.*/
 	char *rawMethodName; /**< The raw method name for where the event was generated. */
 	int   rawLineNumber; /**< The raw line number for where the event was generated. */
-	
-	// NOTE: ALSO FOR NOW I'VE SKIPPED ALL OF THE NDC & MDC STUFF
 }
 
 /**

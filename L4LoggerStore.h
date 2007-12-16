@@ -43,7 +43,7 @@
  * @param loggerNameOrLoggerClass the name of the logger to find.
  * @return the logger if it exists; nil if it does not.
  */
-- (L4Logger *) exists:(id) loggerNameOrLoggerClass;
+//- (L4Logger *) exists:(id) loggerNameOrLoggerClass;
 
 /**
  * Accessor for the threshold attribute.
