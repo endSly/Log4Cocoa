@@ -49,12 +49,7 @@ static L4LoggerStore *_loggerRepository = nil;
 	return [_loggerRepository exists: loggerNameOrLoggerClass];
 }
 
-+ (NSArray *) currentLoggersArray
-{
-	return [_loggerRepository currentLoggersArray];
-}
-
-+ (NSEnumerator *) currentLoggers
++ (NSArray *) currentLoggers
 {
 	return [_loggerRepository currentLoggers];
 }

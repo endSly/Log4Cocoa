@@ -6,7 +6,7 @@
 // ### TODO Add support the L4RendererSupport protocol,
 // called from the L4LoggingEvent:renderedMessage method
 //
-@interface L4LoggerStore : NSObject <L4LoggerRepository,L4LoggerFactory> {
+@interface L4LoggerStore : NSObject <L4LoggerRepository, L4LoggerFactory> {
 	L4Logger *root; /**< The root logger.*/
 	NSMutableDictionary *repository; /**< The collection of loggers by id.*/
 	NSMutableArray *loggers;/**< The collection of loggers.*/
@@ -90,13 +90,7 @@
  * Accessor for the collection of loggers.
  * @return the array of loggers.
  */
-- (NSArray *) currentLoggersArray;
-
-/**
- * An enumerator for the collection of loggers.
- * @return the enumerator of the loggers.
- */
-- (NSEnumerator *) currentLoggers;
+- (NSArray *) currentLoggers;
 
 /**
  * Warn that aLogger has no appenders configured; only if no warning has already

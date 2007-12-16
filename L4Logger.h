@@ -302,8 +302,7 @@ void log4Log(id object, int line, char *file, const char *method,
 /* returns logger if it exists, otherise nil */
 + (L4Logger *) exists:(NSString *) loggerName;
 
-+ (NSArray *) currentLoggersArray;
-+ (NSEnumerator *) currentLoggers;
++ (NSArray *) currentLoggers;
 
 @end
 // For copyright & license, see COPYRIGHT.txt.

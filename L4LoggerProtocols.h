@@ -28,8 +28,7 @@ parameter. See also {@link #setThreshold} method.  */
 - (L4Logger *) loggerForName: (NSString *) aName;
 - (L4Logger *) loggerForName: (NSString *) aName factory: (id <L4LoggerFactory>) aFactory;
 
-- (NSArray *) currentLoggersArray;
-- (NSEnumerator *) currentLoggers;
+- (NSArray *) currentLoggers;
 
 - (void) emitNoAppenderWarning: (L4Logger *) aLogger;
 

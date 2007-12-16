@@ -235,14 +235,9 @@ static NSLock *_storeLock = nil;
 	return (L4Logger *) theLogger;
 }
 
-- (NSArray *) currentLoggersArray
+- (NSArray *) currentLoggers
 {
 	return [loggers copy];
-}
-
-- (NSEnumerator *) currentLoggers
-{
-	return [[loggers copy] objectEnumerator];
 }
 
 - (void) emitNoAppenderWarning: (L4Logger *) aLogger

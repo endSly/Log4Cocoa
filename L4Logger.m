@@ -210,12 +210,7 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 	return [L4LogManager exists: loggerName];
 }
 
-+ (NSArray *) currentLoggersArray
-{
-	return [L4LogManager currentLoggersArray];
-}
-
-+ (NSEnumerator *) currentLoggers
++ (NSArray *) currentLoggers
 {
 	return [L4LogManager currentLoggers];
 }

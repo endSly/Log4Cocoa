@@ -56,12 +56,7 @@
  * The array of loggers.
  * @return the current loggers.
  */
-+ (NSArray *) currentLoggersArray;
-
-/**
- * blah
- */
-+ (NSEnumerator *) currentLoggers;
++ (NSArray *) currentLoggers;
 
 /**
  * Shut down logging.
