@@ -144,14 +144,16 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 - (L4Level *) effectiveLevel
 {
 	L4Level *effectiveLevel;
-	L4Logger *aLogger = (L4Logger *)self;
-	for(; aLogger != nil; aLogger = aLogger->parent) {
+	L4Logger *aLogger = self;
+	while (aLogger != nil) {
 		if((aLogger->level) != nil) {
 			effectiveLevel = aLogger->level;
 			break;
 		}
+		aLogger = aLogger->parent;
 	}
-	if (effectiveLevel = nil) {
+	
+	if (effectiveLevel == nil) {
 		[L4LogLog error: @"Root Logger Not Found!"];
 	}
 	return effectiveLevel;
