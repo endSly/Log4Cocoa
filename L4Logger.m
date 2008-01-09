@@ -151,7 +151,9 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 			break;
 		}
 	}
-	[L4LogLog error: @"Root Logger Not Found!"];
+	if (effectiveLevel = nil) {
+		[L4LogLog error: @"Root Logger Not Found!"];
+	}
 	return effectiveLevel;
 }
 
