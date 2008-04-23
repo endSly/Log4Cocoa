@@ -1,6 +1,6 @@
 // For copyright & license, see COPYRIGHT.txt.
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 @class L4Logger;
 
 /**
