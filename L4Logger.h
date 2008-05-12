@@ -1,3 +1,4 @@
+// For copyright & license, see COPYRIGHT.txt.
 #import <Foundation/Foundation.h>
 #import "L4AppenderProtocols.h"
 #import "L4LoggerProtocols.h"
@@ -27,23 +28,62 @@ void log4Log(id object, int line, char *file, const char *method,
 			  id exception, id message, ...);
 
 
+/* ********************************************************************* */
+#pragma mark Base macros used for logging from objects
+/* ********************************************************************* */
 #define L4_PLAIN(type) self, __LINE__, __FILE__, __PRETTY_FUNCTION__, @selector(lineNumber:fileName:methodName:type:), NO, YES, nil
 #define L4_EXCEPTION(type, e) self, __LINE__, __FILE__, __PRETTY_FUNCTION__, @selector(lineNumber:fileName:methodName:type:exception:), NO, YES, e
 #define L4_ASSERTION(assertion) self, __LINE__, __FILE__, __PRETTY_FUNCTION__, @selector(lineNumber:fileName:methodName:assert:log:), YES, assertion, nil
+/* ********************************************************************* */
+#pragma mark Base macros used for logging from C functions
+/* ********************************************************************* */
+#define L4C_PLAIN(type) [L4FunctionLogger instance], __LINE__, __FILE__, __PRETTY_FUNCTION__, @selector(lineNumber:fileName:methodName:type:), NO, YES, nil
+#define L4C_EXCEPTION(type, e) [L4FunctionLogger instance], __LINE__, __FILE__, __PRETTY_FUNCTION__, @selector(lineNumber:fileName:methodName:type:exception:), NO, YES, e
+#define L4C_ASSERTION(assertion) [L4FunctionLogger instance], __LINE__, __FILE__, __PRETTY_FUNCTION__, @selector(lineNumber:fileName:methodName:assert:log:), YES, assertion, nil
 
+/* ********************************************************************* */
+#pragma mark Macros that log from objects
+/* ********************************************************************* */
 #define log4Debug(message, ...) if([[self l4Logger] isDebugEnabled]) log4Log(L4_PLAIN(debug), message, ##__VA_ARGS__)
 #define log4Info(message, ...)  if([[self l4Logger] isInfoEnabled]) log4Log(L4_PLAIN(info), message, ##__VA_ARGS__)
 #define log4Warn(message, ...)  log4Log(L4_PLAIN(warn), message, ##__VA_ARGS__)
 #define log4Error(message, ...) log4Log(L4_PLAIN(error), message, ##__VA_ARGS__)
 #define log4Fatal(message, ...) log4Log(L4_PLAIN(fatal), message, ##__VA_ARGS__)
+/* ********************************************************************* */
+#pragma mark Macros that log from C functions
+/* ********************************************************************* */
+#define log4CDebug(message, ...) if([[[L4FunctionLogger instance] l4Logger] isDebugEnabled]) log4Log(L4C_PLAIN(debug), message, ##__VA_ARGS__)
+#define log4CInfo(message, ...)  if([[[L4FunctionLogger instance] l4Logger] isInfoEnabled]) log4Log(L4C_PLAIN(info), message, ##__VA_ARGS__)
+#define log4CWarn(message, ...)  log4Log(L4C_PLAIN(warn), message, ##__VA_ARGS__)
+#define log4CError(message, ...) log4Log(L4C_PLAIN(error), message, ##__VA_ARGS__)
+#define log4CFatal(message, ...) log4Log(L4C_PLAIN(fatal), message, ##__VA_ARGS__)
 
+
+/* ********************************************************************* */
+#pragma mark Macros that log with an exception from objects
+/* ********************************************************************* */
 #define log4DebugWithException(message, e, ...) if([[self l4Logger] isDebugEnabled]) log4Log(L4_EXCEPTION(debug, e), message, ##__VA_ARGS__)
 #define log4InfoWithException(message, e, ...)  if([[self l4Logger] isInfoEnabled]) log4Log(L4_EXCEPTION(info, e), message, ##__VA_ARGS__)
 #define log4WarnWithException(message, e, ...)  log4Log(L4_EXCEPTION(warn, e), message, ##__VA_ARGS__)
 #define log4ErrorWithException(message, e, ...) log4Log(L4_EXCEPTION(error, e), message, ##__VA_ARGS__)
 #define log4FatalWithException(message, e, ...) log4Log(L4_EXCEPTION(fatal, e), message, ##__VA_ARGS__)
+/* ********************************************************************* */
+#pragma mark Macros that log with an exception from C functions
+/* ********************************************************************* */
+#define log4CDebugWithException(message, e, ...) if([[[L4FunctionLogger instance] l4Logger] isDebugEnabled]) log4Log(L4C_EXCEPTION(debug, e), message, ##__VA_ARGS__)
+#define log4CInfoWithException(message, e, ...)  if([[[L4FunctionLogger instance] l4Logger] isInfoEnabled]) log4Log(L4C_EXCEPTION(info, e), message, ##__VA_ARGS__)
+#define log4CWarnWithException(message, e, ...)  log4Log(L4C_EXCEPTION(warn, e), message, ##__VA_ARGS__)
+#define log4CErrorWithException(message, e, ...) log4Log(L4C_EXCEPTION(error, e), message, ##__VA_ARGS__)
+#define log4CFatalWithException(message, e, ...) log4Log(L4C_EXCEPTION(fatal, e), message, ##__VA_ARGS__)
 
+/* ********************************************************************* */
+#pragma mark Macro that log when an assertion is false from objects
+/* ********************************************************************* */
 #define log4Assert(assertion, message, ...) log4Log(L4_ASSERTION(assertion), message, ##__VA_ARGS__)
+/* ********************************************************************* */
+#pragma mark Macro that log when an assertion is false from C functions
+/* ********************************************************************* */
+#define log4CAssert(assertion, message, ...) log4Log(L4C_ASSERTION(assertion), message, ##__VA_ARGS__)
 
 @interface L4Logger : NSObject {
 	NSString *name; /**< The name of this logger.*/
@@ -302,4 +342,18 @@ void log4Log(id object, int line, char *file, const char *method,
 + (NSArray *) currentLoggers;
 
 @end
-// For copyright & license, see COPYRIGHT.txt.
+
+/**
+ * This class is a dummy class; its only purpose is to facilitate logging from
+ * methods.  It serves as the 'self' argument.  Log level for methods can be 
+ * adjusted with this, but keep in mind that it applies to all function logging.
+ */
+@interface L4FunctionLogger : NSObject
+{
+	L4FunctionLogger *instance;
+}
+/**
+ * Accessor for the singleton instance.
+ */
++ (L4FunctionLogger *)instance;
+@end

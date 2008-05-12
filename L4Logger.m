@@ -596,3 +596,15 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 	[self callAppenders: event];
 }
 @end
+
+
+@implementation L4FunctionLogger
+static L4FunctionLogger *instance;
++ (L4FunctionLogger *)instance
+{
+	if (instance == nil) {
+		instance = [[L4FunctionLogger alloc] init];
+	}
+	return instance;
+}
+@end
