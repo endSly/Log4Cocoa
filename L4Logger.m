@@ -174,34 +174,6 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 }
 
 /* ********************************************************************* */
-#pragma mark LogManagerCoverMethods methods
-/* ********************************************************************* */
-+ (L4Logger *) rootLogger
-{
-	return [L4LogManager rootLogger];
-}
-
-+ (L4Logger *) loggerForClass: (Class) aClass
-{
-	return [L4LogManager loggerForClass: aClass];
-}
-
-+ (L4Logger *) loggerForName: (NSString *) loggerName
-{
-	return [L4LogManager loggerForName: loggerName];
-}
-
-+ (L4Logger *) loggerForName: (NSString *) loggerName factory: (id <L4LoggerFactory>) aFactory
-{
-	return [L4LogManager loggerForName: loggerName factory: aFactory];
-}
-
-+ (NSArray *) currentLoggers
-{
-	return [L4LogManager currentLoggers];
-}
-
-/* ********************************************************************* */
 #pragma mark AppenderRelatedMethods methods
 /* ********************************************************************* */
 
@@ -540,55 +512,6 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 	}
 }
 
-/* legacy method, see forcedLog: (L4LoggingEvent *) event */
-- (void) log: (id) aMessage level: (L4Level *) aLevel
-{
-	[self forcedLog: [L4LoggingEvent logger: self level: aLevel message: aMessage]];
-}
-
-/* legacy method, see forcedLog: (L4LoggingEvent *) event */
-- (void) log: (id) aMessage level: (L4Level *) aLevel exception: (NSException *) e
-{
-	[self forcedLog: [L4LoggingEvent logger: self level: aLevel message: aMessage exception: e]];
-}
-
-/* legacy method, see forcedLog: (L4LoggingEvent *) event */
-- (void) log: (id) aMessage
-	   level: (L4Level *) aLevel
-   exception: (NSException *) e
-  lineNumber: (int) lineNumber
-	fileName: (char *) fileName
-  methodName: (char *) methodName
-{
-	[self forcedLog: [L4LoggingEvent logger: self
-									  level: aLevel
-								 lineNumber: lineNumber
-								   fileName: fileName
-								 methodName: methodName
-									message: aMessage
-								  exception: e]];
-}
-
-/* legacy method, see forcedLog: (L4LoggingEvent *) event */
-- (void) forcedLog: (id) aMessage
-			 level: (L4Level *) aLevel
-		 exception: (NSException *) e
-		lineNumber: (int) lineNumber
-		  fileName: (char *) fileName
-		methodName: (char *) methodName
-{
-	[self callAppenders: [L4LoggingEvent logger: self
-										  level: aLevel
-									 lineNumber: lineNumber
-									   fileName: fileName
-									 methodName: methodName
-										message: aMessage
-									  exception: e]];
-}
-
-// THIS IS THE MAIN METHOD, the other few above methods are still here due to the porting process
-// I'm not entirely sure if they're going to stick around, but definately for now.
-//
 - (void) forcedLog: (L4LoggingEvent *) event
 {
 	[self callAppenders: event];

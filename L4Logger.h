@@ -562,30 +562,6 @@ void log4Log(id object, int line, char *file, const char *method,
 			  fatal:(id) aMessage
 		  exception:(NSException *) e;
 
-/* Legacy primitive logging methods			   */
-/* See below, forcedLog:(L4LoggingEvent *) event */
-
-- (void) log:(id) aMessage
-	   level:(L4Level *) aLevel;
-
-- (void) log:(id) aMessage
-	   level:(L4Level *) aLevel
-   exception:(NSException *) e;
-
-- (void) log:(id) aMessage
-	   level:(L4Level *) aLevel
-   exception:(NSException *) e
-  lineNumber:(int) lineNumber
-	fileName:(char *) fileName
-  methodName:(char *) methodName;
-
-- (void) forcedLog:(id) aMessage
-			 level:(L4Level *) aLevel
-		 exception:(NSException *) e
-		lineNumber:(int) lineNumber
-		  fileName:(char *) fileName
-		methodName:(char *) methodName;
-
 /* This is the designated logging method that the others invoke. */
 /**
  * Forwards the L4LoggingEvent to all attached appenders; the other methods in this class create
@@ -597,17 +573,6 @@ void log4Log(id object, int line, char *file, const char *method,
 - (void) forcedLog:(L4LoggingEvent *) event;
 
 
-/* ********************************************************************* */
-#pragma mark LogManagerCoverMethods methods
-/* ********************************************************************* */
-+ (L4Logger *) rootLogger;
-
-+ (L4Logger *) loggerForClass:(Class) aClass;
-+ (L4Logger *) loggerForName:(NSString *) aName;
-+ (L4Logger *) loggerForName:(NSString *) aName
-					 factory:(id <L4LoggerFactory>) aFactory;
-
-+ (NSArray *) currentLoggers;
 @end
 
 /**

@@ -7,6 +7,7 @@
 #import "L4FactoryManager.h"
 #import "L4Level.h"
 #import "L4LogLog.h"
+#import "L4LogManager.h"
 #import "L4Properties.h"
 #import "L4RootLogger.h"
 
@@ -138,7 +139,7 @@ static int DELIM_STOP_LEN = 1;
  	NSEnumerator *keyEnum = [[additivityProperties allKeys] objectEnumerator];
  	NSString *key = nil;
  	while ( ( key = [keyEnum nextObject] ) != nil ) {
-  		L4Logger *logger = [L4Logger loggerForName: key];
+  		L4Logger *logger = [L4LogManager loggerForName: key];
   		NSString *actualValue = [additivityProperties stringForKey: key];
   		NSString *value = [actualValue lowercaseString];
   		if ( [value isEqualToString: @"true"] ) {
@@ -184,14 +185,14 @@ static int DELIM_STOP_LEN = 1;
 {
  	NSString *rootLoggerProperty = [properties stringForKey: @"rootLogger"];
  	if ( [properties stringForKey: @"rootLogger"] != nil ) {
-  		[self configureLogger: [L4Logger rootLogger] withProperty: rootLoggerProperty];
+  		[self configureLogger: [L4LogManager rootLogger] withProperty: rootLoggerProperty];
  	}
  	
  	L4Properties *loggerProperties = [properties subsetForPrefix: @"logger."];
  	NSEnumerator *keyEnum = [[loggerProperties allKeys] objectEnumerator];
  	NSString *key = nil;
  	while ( ( key = [keyEnum nextObject] ) != nil ) {
-  		[self configureLogger: [L4Logger loggerForName: key] withProperty: [loggerProperties stringForKey: key]];
+  		[self configureLogger: [L4LogManager loggerForName: key] withProperty: [loggerProperties stringForKey: key]];
  	}
 }
 
