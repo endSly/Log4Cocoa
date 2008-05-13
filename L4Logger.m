@@ -303,8 +303,6 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 
 - (BOOL) isDebugEnabled { return [self isEnabledFor: _debug]; }
 - (BOOL) isInfoEnabled  { return [self isEnabledFor: _info]; }
-
-// I added these convience methods, they're not in Log4J
 - (BOOL) isWarnEnabled  { return [self isEnabledFor: _warn]; }
 - (BOOL) isErrorEnabled { return [self isEnabledFor: _error]; }
 - (BOOL) isFatalEnabled { return [self isEnabledFor: _fatal]; }
@@ -331,7 +329,7 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 				log: (NSString *) aMessage
 {
 	if( !anAssertion ) {
-		[self lineNumber: lineNumber fileName: fileName methodName: methodName error: aMessage exception: nil];
+		[self lineNumber:lineNumber fileName:fileName methodName:methodName error:aMessage exception: nil];
 	}
 }
 

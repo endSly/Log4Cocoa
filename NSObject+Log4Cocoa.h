@@ -42,6 +42,14 @@
  */
 @interface NSObject (Log4Cocoa)
 
+/**
+ * Accessor for the L4Logger instance to be used for all instances of the class.
+ */
 + (L4Logger *) l4Logger;
+
+/**
+ * Accessor for the L4Logger instance to be used for this particular instance.
+ * The default implementation returns the L4Logger for the class.
+ */
 - (L4Logger *) l4Logger;
 @end
