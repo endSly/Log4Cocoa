@@ -5,14 +5,17 @@
 #import "L4Logger.h"
 #import "L4AppenderAttachableImpl.h"
 #import "L4Level.h"
+#import "L4LoggerStore.h"
 #import "L4LoggingEvent.h"
 #import "L4LogLog.h"
-#import "L4LogManager.h"
+#import "L4RootLogger.h"
 #import "NSObject+Log4Cocoa.h"
 
 static int   NO_LINE_NUMBER = -1;
 static char *NO_FILE_NAME   = "";
 static char *NO_METHOD_NAME = "";
+
+static L4LoggerStore *_loggerRepository = nil;
 
 static L4Level *_fatal = nil;
 static L4Level *_error = nil;
@@ -48,6 +51,10 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 
 + (void) initialize
 {
+	id rootLogger = [[L4RootLogger alloc] initWithLevel: [L4Level debug]];
+	_loggerRepository = [[L4LoggerStore alloc] initWithRoot: rootLogger];
+	[rootLogger autorelease];
+
 	[L4LoggingEvent startTime];
 
 	_debug = [L4Level debug];
@@ -516,6 +523,50 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 {
 	[self callAppenders: event];
 }
+
+/* ********************************************************************* */
+#pragma mark Logger management methods
+/* ********************************************************************* */
++ (id <L4LoggerRepository>) loggerRepository
+{
+	return _loggerRepository;
+}
+
++ (L4Logger *) rootLogger
+{
+	return [_loggerRepository rootLogger];
+}
+
++ (L4Logger *) loggerForClass: (Class) aClass
+{
+	return [_loggerRepository loggerForClass: aClass];
+}
+
++ (L4Logger *) loggerForName: (NSString *) aName
+{
+	return [_loggerRepository loggerForName: aName];
+}
+
++ (L4Logger *) loggerForName: (NSString *) aName factory: (id <L4LoggerFactory>) aFactory
+{
+	return [_loggerRepository loggerForName: aName factory: aFactory];
+}
+
++ (NSArray *) currentLoggers
+{
+	return [_loggerRepository currentLoggers];
+}
+
++ (void) shutdown
+{
+	return [_loggerRepository shutdown];
+}
+
++ (void) resetConfiguration
+{
+	return [_loggerRepository resetConfiguration];
+}
+
 @end
 
 

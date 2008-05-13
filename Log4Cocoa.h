@@ -17,7 +17,6 @@
 #import "L4Layout.h"
 #import "L4Level.h"
 #import "L4LogLog.h"
-#import "L4LogManager.h"
 #import "L4Logger.h"
 #import "L4LoggerProtocols.h"
 #import "L4LoggerStore.h"
