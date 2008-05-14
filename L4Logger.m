@@ -9,7 +9,6 @@
 #import "L4LoggingEvent.h"
 #import "L4LogLog.h"
 #import "L4RootLogger.h"
-#import "NSObject+Log4Cocoa.h"
 
 static int   NO_LINE_NUMBER = -1;
 static char *NO_FILE_NAME   = "";
@@ -23,29 +22,6 @@ static L4Level *_warn  = nil;
 static L4Level *_info  = nil;
 static L4Level *_debug = nil;
 static NSLock *_loggerLock = nil;
-
-id objc_msgSend(id self, SEL op, ...);
-
-void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL isAssertion, BOOL assertion,  id exception, id message, ...)
-{
-	NSString *combinedMessage;
-	if ( [message isKindOfClass:[NSString class]] ) {
-		va_list args;
-		va_start(args, message);
-		combinedMessage = [[NSString alloc] initWithFormat:message arguments:args];
-		va_end(args);
-	} else {
-		combinedMessage = [message retain];
-	}
-
-	if ( isAssertion ) {
-		objc_msgSend([object l4Logger], sel, line, file, method, assertion, combinedMessage);
-	} else {
-		objc_msgSend([object l4Logger], sel, line, file, method, combinedMessage, exception);
-	}
-	
-	[combinedMessage release];
-}
 
 @implementation L4Logger
 
@@ -308,209 +284,84 @@ void log4Log(id object, int line, char *file, const char *method, SEL sel, BOOL 
 				log: (NSString *) aMessage
 {
 	if( !anAssertion ) {
-		[self lineNumber:lineNumber fileName:fileName methodName:methodName error:aMessage exception: nil];
+		[self lineNumber:lineNumber fileName:fileName methodName:methodName message:aMessage level:_error exception: nil];
 	}
 }
 
 /* debug */
-
 - (void) debug: (id) aMessage
 {
-	[self lineNumber: NO_LINE_NUMBER fileName: NO_FILE_NAME methodName: NO_METHOD_NAME debug: aMessage exception: nil];
+	[self lineNumber:NO_LINE_NUMBER fileName:NO_FILE_NAME methodName:NO_METHOD_NAME message:aMessage level:_debug exception:nil];
 }
 
 - (void) debug: (id) aMessage exception: (NSException *) e
 {
-	[self lineNumber: NO_LINE_NUMBER fileName: NO_FILE_NAME methodName: NO_METHOD_NAME debug: aMessage exception: e];
+	[self lineNumber:NO_LINE_NUMBER fileName:NO_FILE_NAME methodName:NO_METHOD_NAME message:aMessage level:_debug exception:e];
 }
 
-- (void) lineNumber: (int) lineNumber
-		   fileName: (char *) fileName
-		 methodName: (char *) methodName
-			  debug: (id) aMessage
-{
-	[self lineNumber: lineNumber fileName: fileName methodName: methodName debug: aMessage exception: nil];
-}
-
-- (void) lineNumber: (int) lineNumber
-		   fileName: (char *) fileName
-		 methodName: (char *) methodName
-			  debug: (id) aMessage
-		  exception: (NSException *) e
-{
-	if([repository isDisabled: [_debug intValue]]) {
-		return;
-	}
-	
-	// Check this particular loggers level
-	//
-	if([_debug isGreaterOrEqual: [self effectiveLevel]]) {
-		[self forcedLog: [L4LoggingEvent logger: self
-										  level: _debug
-									 lineNumber: lineNumber
-									   fileName: fileName
-									 methodName: methodName
-										message: aMessage
-									  exception: e]];
-	}
-}
 
 /* info */
 
 - (void) info: (id) aMessage
 {
-	[self lineNumber: NO_LINE_NUMBER fileName: NO_FILE_NAME methodName: NO_METHOD_NAME info: aMessage exception: nil];
+	[self lineNumber:NO_LINE_NUMBER fileName:NO_FILE_NAME methodName:NO_METHOD_NAME message:aMessage level:_info exception:nil];
 }
 
 - (void) info: (id) aMessage exception: (NSException *) e
 {
-	[self lineNumber: NO_LINE_NUMBER fileName: NO_FILE_NAME methodName: NO_METHOD_NAME info: aMessage exception: e];
+	[self lineNumber:NO_LINE_NUMBER fileName:NO_FILE_NAME methodName:NO_METHOD_NAME message:aMessage level:_info exception:e];
 }
 
-- (void) lineNumber: (int) lineNumber
-		   fileName: (char *) fileName
-		 methodName: (char *) methodName
-			   info: (id) aMessage
-{
-	[self lineNumber: lineNumber fileName: fileName methodName: methodName info: aMessage exception: nil];
-}
-
-- (void) lineNumber: (int) lineNumber
-		   fileName: (char *) fileName
-		 methodName: (char *) methodName
-			   info: (id) aMessage
-		  exception: (NSException *) e
-{
-	if([repository isDisabled: [_info intValue]]) {
-		return;
-	}
-	
-	if([_info isGreaterOrEqual: [self effectiveLevel]]) {
-		[self forcedLog: [L4LoggingEvent logger: self
-										  level: _info
-									 lineNumber: lineNumber
-									   fileName: fileName
-									 methodName: methodName
-										message: aMessage
-									  exception: e]];
-	}
-}
 
 /* warn */
-
 - (void) warn: (id) aMessage
 {
-	[self lineNumber: NO_LINE_NUMBER fileName: NO_FILE_NAME methodName: NO_METHOD_NAME warn: aMessage exception: nil];
+	[self lineNumber:NO_LINE_NUMBER fileName:NO_FILE_NAME methodName:NO_METHOD_NAME message:aMessage level:_warn exception:nil];
 }
 
 - (void) warn: (id) aMessage exception: (NSException *) e
 {
-	[self lineNumber: NO_LINE_NUMBER fileName: NO_FILE_NAME methodName: NO_METHOD_NAME warn: aMessage exception: e];
+	[self lineNumber:NO_LINE_NUMBER fileName:NO_FILE_NAME methodName:NO_METHOD_NAME message:aMessage level:_warn exception:e];
 }
 
-- (void) lineNumber: (int) lineNumber
-		   fileName: (char *) fileName
-		 methodName: (char *) methodName
-			   warn: (id) aMessage
-{
-	[self lineNumber: lineNumber fileName: fileName methodName: methodName warn: aMessage exception: nil];
-}
-
-- (void) lineNumber: (int) lineNumber
-		   fileName: (char *) fileName
-		 methodName: (char *) methodName
-			   warn: (id) aMessage
-		  exception: (NSException *) e
-{
-	if([repository isDisabled: [_warn intValue]]) {
-		return;
-	}
-	
-	if([_warn isGreaterOrEqual: [self effectiveLevel]]) {
-		[self forcedLog: [L4LoggingEvent logger: self
-										  level: _warn
-									 lineNumber: lineNumber
-									   fileName: fileName
-									 methodName: methodName
-										message: aMessage
-									  exception: e]];
-	}
-}
 
 /* error */
-
 - (void) error: (id) aMessage
 {
-	[self lineNumber: NO_LINE_NUMBER fileName: NO_FILE_NAME methodName: NO_METHOD_NAME error: aMessage exception: nil];
+	[self lineNumber:NO_LINE_NUMBER fileName:NO_FILE_NAME methodName:NO_METHOD_NAME message:aMessage level:_error exception:nil];
 }
 
 - (void) error: (id) aMessage exception: (NSException *) e
 {
-	[self lineNumber: NO_LINE_NUMBER fileName: NO_FILE_NAME methodName: NO_METHOD_NAME error: aMessage exception: e];
+	[self lineNumber:NO_LINE_NUMBER fileName:NO_FILE_NAME methodName:NO_METHOD_NAME message:aMessage level:_error exception:e];
 }
 
-- (void) lineNumber: (int) lineNumber
-		   fileName: (char *) fileName
-		 methodName: (char *) methodName
-			  error: (id) aMessage
-{
-	[self lineNumber: lineNumber fileName: fileName methodName: methodName error: aMessage exception: nil];
-}
-
-- (void) lineNumber: (int) lineNumber
-		   fileName: (char *) fileName
-		 methodName: (char *) methodName
-			  error: (id) aMessage
-		  exception: (NSException *) e
-{
-	if([repository isDisabled: [_error intValue]]) {
-		return;
-	}
-	
-	if([_error isGreaterOrEqual: [self effectiveLevel]]) {
-		[self forcedLog: [L4LoggingEvent logger: self
-										  level: _error
-									 lineNumber: lineNumber
-									   fileName: fileName
-									 methodName: methodName
-										message: aMessage
-									  exception: e]];
-	}
-}
 
 /* fatal */
-
-- (void) fatal: (id) aMessage
+- (void) fatal:(id) aMessage
 {
-	[self lineNumber: NO_LINE_NUMBER fileName: NO_FILE_NAME methodName: NO_METHOD_NAME fatal: aMessage exception: nil];
+	[self lineNumber:NO_LINE_NUMBER fileName:NO_FILE_NAME methodName:NO_METHOD_NAME message:aMessage level:_fatal exception:nil];
 }
 
-- (void) fatal: (id) aMessage exception: (NSException *) e
+- (void) fatal:(id) aMessage exception:(NSException *) e
 {
-	[self lineNumber: NO_LINE_NUMBER fileName: NO_FILE_NAME methodName: NO_METHOD_NAME fatal: aMessage exception: e];
-}
-
-- (void) lineNumber: (int) lineNumber
-		   fileName: (char *) fileName
-		 methodName: (char *) methodName
-			  fatal: (id) aMessage
-{
-	[self lineNumber: lineNumber fileName: fileName methodName: methodName fatal: aMessage exception: nil];
+	[self lineNumber:NO_LINE_NUMBER fileName:NO_FILE_NAME methodName:NO_METHOD_NAME message:aMessage level:_fatal exception:e];
 }
 
 - (void) lineNumber: (int) lineNumber
 		   fileName: (char *) fileName
 		 methodName: (char *) methodName
-			  fatal: (id) aMessage
+			message: (id) aMessage
+			  level: (L4Level *) aLevel
 		  exception: (NSException *) e
 {
-	if([repository isDisabled: [_fatal intValue]]) {
+	if([repository isDisabled: [aLevel intValue]]) {
 		return;
 	}
 	
-	if([_fatal isGreaterOrEqual: [self effectiveLevel]]) {
+	if([aLevel isGreaterOrEqual: [self effectiveLevel]]) {
 		[self forcedLog: [L4LoggingEvent logger: self
-										  level: _fatal
+										  level: aLevel
 									 lineNumber: lineNumber
 									   fileName: fileName
 									 methodName: methodName

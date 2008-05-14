@@ -4,88 +4,9 @@
 #import <Foundation/Foundation.h>
 #import "L4AppenderProtocols.h"
 #import "L4LoggerProtocols.h"
+#import "L4Level.h"
 
 @class L4AppenderAttachableImpl, L4Level, L4LoggingEvent;
-
-/**
- * LOGGING MACROS: These macros are convience macros that easily
- * allow the capturing of line number, source file, and method
- * name information without interupting the flow of your
- * source code.
- *
- * To use these macros, instead of
- *   [[self log] info: @"Your Log message."];
- * use
- *   L4Info( @"Your Log message." );
- * or
- *   L4InfoWithException( @"Your Log message.", andException);
- *
- * Frankly, I don't know why you would not want to use these macros, but
- * I've left the simple methods in place just in case that's what you want
- * to do or can't use these macros for some reason.
- */
-
-void log4Log(id object, int line, char *file, const char *method,
-			  SEL sel, BOOL isAssertion, BOOL assertion, 
-			  id exception, id message, ...);
-
-
-/* ********************************************************************* */
-#pragma mark Base macros used for logging from objects
-/* ********************************************************************* */
-#define L4_PLAIN(type) self, __LINE__, __FILE__, __PRETTY_FUNCTION__, @selector(lineNumber:fileName:methodName:type:), NO, YES, nil
-#define L4_EXCEPTION(type, e) self, __LINE__, __FILE__, __PRETTY_FUNCTION__, @selector(lineNumber:fileName:methodName:type:exception:), NO, YES, e
-#define L4_ASSERTION(assertion) self, __LINE__, __FILE__, __PRETTY_FUNCTION__, @selector(lineNumber:fileName:methodName:assert:log:), YES, assertion, nil
-/* ********************************************************************* */
-#pragma mark Base macros used for logging from C functions
-/* ********************************************************************* */
-#define L4C_PLAIN(type) [L4FunctionLogger instance], __LINE__, __FILE__, __PRETTY_FUNCTION__, @selector(lineNumber:fileName:methodName:type:), NO, YES, nil
-#define L4C_EXCEPTION(type, e) [L4FunctionLogger instance], __LINE__, __FILE__, __PRETTY_FUNCTION__, @selector(lineNumber:fileName:methodName:type:exception:), NO, YES, e
-#define L4C_ASSERTION(assertion) [L4FunctionLogger instance], __LINE__, __FILE__, __PRETTY_FUNCTION__, @selector(lineNumber:fileName:methodName:assert:log:), YES, assertion, nil
-
-/* ********************************************************************* */
-#pragma mark Macros that log from objects
-/* ********************************************************************* */
-#define log4Debug(message, ...) if([[self l4Logger] isDebugEnabled]) log4Log(L4_PLAIN(debug), message, ##__VA_ARGS__)
-#define log4Info(message, ...)  if([[self l4Logger] isInfoEnabled]) log4Log(L4_PLAIN(info), message, ##__VA_ARGS__)
-#define log4Warn(message, ...)  log4Log(L4_PLAIN(warn), message, ##__VA_ARGS__)
-#define log4Error(message, ...) log4Log(L4_PLAIN(error), message, ##__VA_ARGS__)
-#define log4Fatal(message, ...) log4Log(L4_PLAIN(fatal), message, ##__VA_ARGS__)
-/* ********************************************************************* */
-#pragma mark Macros that log from C functions
-/* ********************************************************************* */
-#define log4CDebug(message, ...) if([[[L4FunctionLogger instance] l4Logger] isDebugEnabled]) log4Log(L4C_PLAIN(debug), message, ##__VA_ARGS__)
-#define log4CInfo(message, ...)  if([[[L4FunctionLogger instance] l4Logger] isInfoEnabled]) log4Log(L4C_PLAIN(info), message, ##__VA_ARGS__)
-#define log4CWarn(message, ...)  log4Log(L4C_PLAIN(warn), message, ##__VA_ARGS__)
-#define log4CError(message, ...) log4Log(L4C_PLAIN(error), message, ##__VA_ARGS__)
-#define log4CFatal(message, ...) log4Log(L4C_PLAIN(fatal), message, ##__VA_ARGS__)
-
-
-/* ********************************************************************* */
-#pragma mark Macros that log with an exception from objects
-/* ********************************************************************* */
-#define log4DebugWithException(message, e, ...) if([[self l4Logger] isDebugEnabled]) log4Log(L4_EXCEPTION(debug, e), message, ##__VA_ARGS__)
-#define log4InfoWithException(message, e, ...)  if([[self l4Logger] isInfoEnabled]) log4Log(L4_EXCEPTION(info, e), message, ##__VA_ARGS__)
-#define log4WarnWithException(message, e, ...)  log4Log(L4_EXCEPTION(warn, e), message, ##__VA_ARGS__)
-#define log4ErrorWithException(message, e, ...) log4Log(L4_EXCEPTION(error, e), message, ##__VA_ARGS__)
-#define log4FatalWithException(message, e, ...) log4Log(L4_EXCEPTION(fatal, e), message, ##__VA_ARGS__)
-/* ********************************************************************* */
-#pragma mark Macros that log with an exception from C functions
-/* ********************************************************************* */
-#define log4CDebugWithException(message, e, ...) if([[[L4FunctionLogger instance] l4Logger] isDebugEnabled]) log4Log(L4C_EXCEPTION(debug, e), message, ##__VA_ARGS__)
-#define log4CInfoWithException(message, e, ...)  if([[[L4FunctionLogger instance] l4Logger] isInfoEnabled]) log4Log(L4C_EXCEPTION(info, e), message, ##__VA_ARGS__)
-#define log4CWarnWithException(message, e, ...)  log4Log(L4C_EXCEPTION(warn, e), message, ##__VA_ARGS__)
-#define log4CErrorWithException(message, e, ...) log4Log(L4C_EXCEPTION(error, e), message, ##__VA_ARGS__)
-#define log4CFatalWithException(message, e, ...) log4Log(L4C_EXCEPTION(fatal, e), message, ##__VA_ARGS__)
-
-/* ********************************************************************* */
-#pragma mark Macro that log when an assertion is false from objects
-/* ********************************************************************* */
-#define log4Assert(assertion, message, ...) log4Log(L4_ASSERTION(assertion), message, ##__VA_ARGS__)
-/* ********************************************************************* */
-#pragma mark Macro that log when an assertion is false from C functions
-/* ********************************************************************* */
-#define log4CAssert(assertion, message, ...) log4Log(L4C_ASSERTION(assertion), message, ##__VA_ARGS__)
 
 /**
  * This is the primary interface into the logging framework. 
@@ -341,36 +262,6 @@ void log4Log(id object, int line, char *file, const char *method,
 	 exception:(NSException *) e;
 
 /**
- * Logs a message with a level of debug.
- * <b>This is considered a framework method, and probably should not be called from outside the framework.</b>
- *
- * @param lineNumber the line number in the source file where the log statement is.
- * @param fileName the name of the source file containing the log statement.
- * @param methodName the name of the method containing the log statement.
- * @param aMessage the message to be logged.
- */
-- (void) lineNumber:(int) lineNumber
-		   fileName:(char *) fileName
-		 methodName:(char *) methodName
-			  debug:(id) aMessage;
-
-/**
- * Logs a message with an excpetion at a level of debug.
- * <b>This is considered a framework method, and probably should not be called from outside the framework.</b>
- *
- * @param lineNumber the line number in the source file where the log statement is.
- * @param fileName the name of the source file containing the log statement.
- * @param methodName the name of the method containing the log statement.
- * @param aMessage the message to be logged.
- * @param e the exception to be logged.
- */
-- (void) lineNumber:(int) lineNumber
-		   fileName:(char *) fileName
-		 methodName:(char *) methodName
-			  debug:(id) aMessage
-		  exception:(NSException *) e;
-
-/**
  * Logs a message with a level of info.
  * <b>This is considered a framework method, and probably should not be called from outside the framework.</b>
  *
@@ -387,36 +278,6 @@ void log4Log(id object, int line, char *file, const char *method,
  */
 - (void) info:(id) aMessage
 	exception:(NSException *) e;
-
-/**
- * Logs a message with a level of info.
- * <b>This is considered a framework method, and probably should not be called from outside the framework.</b>
- *
- * @param lineNumber the line number in the source file where the log statement is.
- * @param fileName the name of the source file containing the log statement.
- * @param methodName the name of the method containing the log statement.
- * @param aMessage the message to be logged.
- */
-- (void) lineNumber:(int) lineNumber
-		   fileName:(char *) fileName
-		 methodName:(char *) methodName
-			   info:(id) aMessage;
-
-/**
- * Logs a message with an excpetion at a level of info.
- * <b>This is considered a framework method, and probably should not be called from outside the framework.</b>
- *
- * @param lineNumber the line number in the source file where the log statement is.
- * @param fileName the name of the source file containing the log statement.
- * @param methodName the name of the method containing the log statement.
- * @param aMessage the message to be logged.
- * @param e the exception to be logged.
- */
-- (void) lineNumber:(int) lineNumber
-		   fileName:(char *) fileName
-		 methodName:(char *) methodName
-			   info:(id) aMessage
-		  exception:(NSException *) e;
 
 /**
  * Logs a message with a level of warn.
@@ -437,36 +298,6 @@ void log4Log(id object, int line, char *file, const char *method,
 	exception:(NSException *) e;
 
 /**
- * Logs a message with a level of warn.
- * <b>This is considered a framework method, and probably should not be called from outside the framework.</b>
- *
- * @param lineNumber the line number in the source file where the log statement is.
- * @param fileName the name of the source file containing the log statement.
- * @param methodName the name of the method containing the log statement.
- * @param aMessage the message to be logged.
- */
-- (void) lineNumber:(int) lineNumber
-		   fileName:(char *) fileName
-		 methodName:(char *) methodName
-			   warn:(id) aMessage;
-
-/**
- * Logs a message with an excpetion at a level of warn.
- * <b>This is considered a framework method, and probably should not be called from outside the framework.</b>
- *
- * @param lineNumber the line number in the source file where the log statement is.
- * @param fileName the name of the source file containing the log statement.
- * @param methodName the name of the method containing the log statement.
- * @param aMessage the message to be logged.
- * @param e the exception to be logged.
- */
-- (void) lineNumber:(int) lineNumber
-		   fileName:(char *) fileName
-		 methodName:(char *) methodName
-			   warn:(id) aMessage
-		  exception:(NSException *) e;
-
-/**
  * Logs a message with a level of error.
  * <b>This is considered a framework method, and probably should not be called from outside the framework.</b>
  *
@@ -483,36 +314,6 @@ void log4Log(id object, int line, char *file, const char *method,
  */
 - (void) error:(id) aMessage
 	 exception:(NSException *) e;
-
-/**
- * Logs a message with a level of error.
- * <b>This is considered a framework method, and probably should not be called from outside the framework.</b>
- *
- * @param lineNumber the line number in the source file where the log statement is.
- * @param fileName the name of the source file containing the log statement.
- * @param methodName the name of the method containing the log statement.
- * @param aMessage the message to be logged.
- */
-- (void) lineNumber:(int) lineNumber
-		   fileName:(char *) fileName
-		 methodName:(char *) methodName
-			  error:(id) aMessage;
-
-/**
- * Logs a message with an excpetion at a level of error.
- * <b>This is considered a framework method, and probably should not be called from outside the framework.</b>
- *
- * @param lineNumber the line number in the source file where the log statement is.
- * @param fileName the name of the source file containing the log statement.
- * @param methodName the name of the method containing the log statement.
- * @param aMessage the message to be logged.
- * @param e the exception to be logged.
- */
-- (void) lineNumber:(int) lineNumber
-		   fileName:(char *) fileName
-		 methodName:(char *) methodName
-			  error:(id) aMessage
-		  exception:(NSException *) e;
 
 /**
  * Logs a message with a level of fatal.
@@ -533,20 +334,6 @@ void log4Log(id object, int line, char *file, const char *method,
 	 exception:(NSException *) e;
 
 /**
- * Logs a message with a level of fatal.
- * <b>This is considered a framework method, and probably should not be called from outside the framework.</b>
- *
- * @param lineNumber the line number in the source file where the log statement is.
- * @param fileName the name of the source file containing the log statement.
- * @param methodName the name of the method containing the log statement.
- * @param aMessage the message to be logged.
- */
-- (void) lineNumber:(int) lineNumber
-		   fileName:(char *) fileName
-		 methodName:(char *) methodName
-			  fatal:(id) aMessage;
-
-/**
  * Logs a message with an excpetion at a level of fatal.
  * <b>This is considered a framework method, and probably should not be called from outside the framework.</b>
  *
@@ -554,13 +341,15 @@ void log4Log(id object, int line, char *file, const char *method,
  * @param fileName the name of the source file containing the log statement.
  * @param methodName the name of the method containing the log statement.
  * @param aMessage the message to be logged.
+ * @param aLevel the L4Level for this log message.
  * @param e the exception to be logged.
  */
-- (void) lineNumber:(int) lineNumber
-		   fileName:(char *) fileName
-		 methodName:(char *) methodName
-			  fatal:(id) aMessage
-		  exception:(NSException *) e;
+- (void) lineNumber: (int) lineNumber
+		   fileName: (char *) fileName
+		 methodName: (char *) methodName
+			message: (id) aMessage
+			  level: (L4Level *) aLevel
+		  exception: (NSException *) e;
 
 /* This is the designated logging method that the others invoke. */
 /**
