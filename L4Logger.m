@@ -10,9 +10,6 @@
 #import "L4LogLog.h"
 #import "L4RootLogger.h"
 
-static int   NO_LINE_NUMBER = -1;
-static char *NO_FILE_NAME   = "";
-static char *NO_METHOD_NAME = "";
 
 static L4LoggerStore *_loggerRepository = nil;
 
@@ -270,13 +267,6 @@ static NSLock *_loggerLock = nil;
 	return [aLevel isGreaterOrEqual: [self effectiveLevel]];
 }
 
-- (void) assert: (BOOL) anAssertion log: (NSString *) aMessage
-{
-	if( !anAssertion ) {
-		[self error: aMessage];
-	}
-}
-
 - (void) lineNumber: (int) lineNumber
 		   fileName: (char *) fileName
 		 methodName: (char *) methodName
@@ -286,66 +276,6 @@ static NSLock *_loggerLock = nil;
 	if( !anAssertion ) {
 		[self lineNumber:lineNumber fileName:fileName methodName:methodName message:aMessage level:_error exception: nil];
 	}
-}
-
-/* debug */
-- (void) debug: (id) aMessage
-{
-	[self lineNumber:NO_LINE_NUMBER fileName:NO_FILE_NAME methodName:NO_METHOD_NAME message:aMessage level:_debug exception:nil];
-}
-
-- (void) debug: (id) aMessage exception: (NSException *) e
-{
-	[self lineNumber:NO_LINE_NUMBER fileName:NO_FILE_NAME methodName:NO_METHOD_NAME message:aMessage level:_debug exception:e];
-}
-
-
-/* info */
-
-- (void) info: (id) aMessage
-{
-	[self lineNumber:NO_LINE_NUMBER fileName:NO_FILE_NAME methodName:NO_METHOD_NAME message:aMessage level:_info exception:nil];
-}
-
-- (void) info: (id) aMessage exception: (NSException *) e
-{
-	[self lineNumber:NO_LINE_NUMBER fileName:NO_FILE_NAME methodName:NO_METHOD_NAME message:aMessage level:_info exception:e];
-}
-
-
-/* warn */
-- (void) warn: (id) aMessage
-{
-	[self lineNumber:NO_LINE_NUMBER fileName:NO_FILE_NAME methodName:NO_METHOD_NAME message:aMessage level:_warn exception:nil];
-}
-
-- (void) warn: (id) aMessage exception: (NSException *) e
-{
-	[self lineNumber:NO_LINE_NUMBER fileName:NO_FILE_NAME methodName:NO_METHOD_NAME message:aMessage level:_warn exception:e];
-}
-
-
-/* error */
-- (void) error: (id) aMessage
-{
-	[self lineNumber:NO_LINE_NUMBER fileName:NO_FILE_NAME methodName:NO_METHOD_NAME message:aMessage level:_error exception:nil];
-}
-
-- (void) error: (id) aMessage exception: (NSException *) e
-{
-	[self lineNumber:NO_LINE_NUMBER fileName:NO_FILE_NAME methodName:NO_METHOD_NAME message:aMessage level:_error exception:e];
-}
-
-
-/* fatal */
-- (void) fatal:(id) aMessage
-{
-	[self lineNumber:NO_LINE_NUMBER fileName:NO_FILE_NAME methodName:NO_METHOD_NAME message:aMessage level:_fatal exception:nil];
-}
-
-- (void) fatal:(id) aMessage exception:(NSException *) e
-{
-	[self lineNumber:NO_LINE_NUMBER fileName:NO_FILE_NAME methodName:NO_METHOD_NAME message:aMessage level:_fatal exception:e];
 }
 
 - (void) lineNumber: (int) lineNumber

@@ -221,16 +221,6 @@
  * Logs an error message in an NSAssert is false.
  * <b>This is considered a framework method, and probably should not be called from outside the framework.</b>
  *
- * @param anAssertion the NSAssert to be tested.
- * @param aMessage the message to be logged if the assertion is false.
- */
-- (void) assert:(BOOL) anAssertion
-			log:(NSString *) aMessage;
-
-/**
- * Logs an error message in an NSAssert is false.
- * <b>This is considered a framework method, and probably should not be called from outside the framework.</b>
- *
  * @param lineNumber the line number in the source file where the assertion is.
  * @param fileName the name of the source file containing the assertion.
  * @param methodName the name of the method containing the assertion.
@@ -243,95 +233,6 @@
 			 assert:(BOOL) anAssertion
 				log:(NSString *) aMessage;
 
-/**
- * Logs a message with a level of debug.
- * <b>This is considered a framework method, and probably should not be called from outside the framework.</b>
- *
- * @param aMessage the message to be logged.
- */
-- (void) debug:(id) aMessage;
-
-/**
- * Logs a message with an excpetion at a level of debug.
- * <b>This is considered a framework method, and probably should not be called from outside the framework.</b>
- *
- * @param aMessage the message to be logged.
- * @param e the exception to be logged.
- */
-- (void) debug:(id) aMessage
-	 exception:(NSException *) e;
-
-/**
- * Logs a message with a level of info.
- * <b>This is considered a framework method, and probably should not be called from outside the framework.</b>
- *
- * @param aMessage the message to be logged.
- */
-- (void) info:(id) aMessage;
-
-/**
- * Logs a message with an excpetion at a level of info.
- * <b>This is considered a framework method, and probably should not be called from outside the framework.</b>
- *
- * @param aMessage the message to be logged.
- * @param e the exception to be logged.
- */
-- (void) info:(id) aMessage
-	exception:(NSException *) e;
-
-/**
- * Logs a message with a level of warn.
- * <b>This is considered a framework method, and probably should not be called from outside the framework.</b>
- *
- * @param aMessage the message to be logged.
- */
-- (void) warn:(id) aMessage;
-
-/**
- * Logs a message with an excpetion at a level of warn.
- * <b>This is considered a framework method, and probably should not be called from outside the framework.</b>
- *
- * @param aMessage the message to be logged.
- * @param e the exception to be logged.
- */
-- (void) warn:(id) aMessage
-	exception:(NSException *) e;
-
-/**
- * Logs a message with a level of error.
- * <b>This is considered a framework method, and probably should not be called from outside the framework.</b>
- *
- * @param aMessage the message to be logged.
- */
-- (void) error:(id) aMessage;
-
-/**
- * Logs a message with an excpetion at a level of error.
- * <b>This is considered a framework method, and probably should not be called from outside the framework.</b>
- *
- * @param aMessage the message to be logged.
- * @param e the exception to be logged.
- */
-- (void) error:(id) aMessage
-	 exception:(NSException *) e;
-
-/**
- * Logs a message with a level of fatal.
- * <b>This is considered a framework method, and probably should not be called from outside the framework.</b>
- *
- * @param aMessage the message to be logged.
- */
-- (void) fatal:(id) aMessage;
-
-/**
- * Logs a message with an excpetion at a level of fatal.
- * <b>This is considered a framework method, and probably should not be called from outside the framework.</b>
- *
- * @param aMessage the message to be logged.
- * @param e the exception to be logged.
- */
-- (void) fatal:(id) aMessage
-	 exception:(NSException *) e;
 
 /**
  * Logs a message with an excpetion at a level of fatal.
