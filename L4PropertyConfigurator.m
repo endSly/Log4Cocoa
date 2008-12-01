@@ -19,7 +19,7 @@ static int DELIM_STOP_LEN = 1;
 - (void) configureAdditivity;
 - (void) configureAppenders;
 - (void) configureLoggers;
-- (void) replaceEnvironemntVariables;
+- (void) replaceEnvironmentVariables;
 - (NSString *) substituteEnvironmentVariablesForString:(NSString *) aString;
 @end
 
@@ -105,7 +105,7 @@ static int DELIM_STOP_LEN = 1;
  	if ( self = [super init]) {
   		fileName = [aName retain];
   		properties = aProperties;
-  		[self replaceEnvironemntVariables];
+  		[self replaceEnvironmentVariables];
   		properties = [[properties subsetForPrefix: @"log4cocoa."] retain];
   		appenders = [[NSMutableDictionary alloc] init];
  	}
@@ -195,7 +195,7 @@ static int DELIM_STOP_LEN = 1;
  	}
 }
 
-- (void) replaceEnvironemntVariables
+- (void) replaceEnvironmentVariables
 {
  	NSEnumerator *keyEnum = [[properties allKeys] objectEnumerator];
  	NSString *key = nil;
@@ -213,7 +213,7 @@ static int DELIM_STOP_LEN = 1;
  	}
 }
 
-- (NSString *) substEnvironVarsForString:(NSString *) aString
+- (NSString *) substituteEnvironmentVariablesForString:(NSString *) aString
 {
  	int len = [aString length];
  	NSMutableString *buf = [NSMutableString string];
