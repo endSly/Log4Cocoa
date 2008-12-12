@@ -11,7 +11,9 @@
 
 static NSLock *_storeLock = nil;
 
-
+/**
+ * Private methods.
+ */
 @interface L4LoggerStore (Private)
 - (NSString *) pseudoFqcnForClass: (Class) aClass;
 - (void) updateParentsOfLogger: (L4Logger *) aLogger;

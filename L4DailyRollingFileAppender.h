@@ -42,6 +42,15 @@ typedef enum L4RollingFrequency
 - (id)initWithLayout:(L4Layout*)aLayout fileName:(NSString*)aName rollingFrequency:(L4RollingFrequency)aRollingFrequency;
 
 /**
+ * Initializes an instance from properties.  The properties supported are:
+ *	RollingFrequency: specifies the frequency when the log file should be rolled.  See L4RollingFrequency.
+ * If the values are being set in a file, this is how they could look:
+ *	log4cocoa.appender.A2.RollingFrequency=daily
+ * @param initProperties the proterties to use.
+ */
+- (id) initWithProperties: (L4Properties *) initProperties;
+
+/**
  * Returns this object's rolling frequency.
  * @return This object's rolling frequency
  */

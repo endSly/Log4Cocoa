@@ -8,6 +8,11 @@
 
 @implementation L4Filter
 
+- (id) initWithProperties: (L4Properties *) initProperties
+{
+	return [super init];
+}
+
 - (int) decide: (L4LoggingEvent *) event
 {
 	return FILTER_NEUTRAL;

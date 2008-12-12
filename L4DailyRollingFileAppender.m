@@ -5,6 +5,7 @@
 #import "L4DailyRollingFileAppender.h"
 #import "L4Layout.h"
 #import <math.h>
+#import "L4LogLog.h"
 
 @interface L4DailyRollingFileAppender (PrivateMethods)
 
@@ -52,6 +53,41 @@
 }
 
 /* ********************************************************************* */
+#pragma mark L4PropertiesConfigurable protocol methods
+/* ********************************************************************* */
+- (id) initWithProperties: (L4Properties *) initProperties
+{    
+    self = [super initWithProperties: initProperties];
+    
+    if ( self != nil ) {
+        // Support for appender.RollingFrequency in properties configuration file
+        L4RollingFrequency newRollingFrequency = daily;
+        if ( [initProperties stringForKey: @"RollingFrequency"] != nil ) {
+            NSString *buf = [[initProperties stringForKey: @"RollingFrequency"] lowercaseString];
+            
+            if( [buf isEqualToString: @"monthly"] ) {
+                newRollingFrequency = monthly;
+            } else if( [buf isEqualToString: @"weekly"] ) {
+                newRollingFrequency = weekly;
+            } else if( [buf isEqualToString: @"daily"] ) {
+                newRollingFrequency = daily;
+            } else if( [buf isEqualToString: @"half_daily"] ) {
+                newRollingFrequency = half_daily;
+            } else if( [buf isEqualToString: @"hourly"] ) {
+                newRollingFrequency = hourly;
+            } else if( [buf isEqualToString: @"minutely"] ) {
+                newRollingFrequency = minutely;
+            } else {
+                [L4LogLog warn: [NSString stringWithFormat:@"Invalid RollingFrequency: \"%@\".", buf]];
+            }
+            [self setRollingFrequency: newRollingFrequency];
+        }
+    }
+    
+    return self;
+}
+
+/* ********************************************************************* */
 #pragma mark Protected methods
 /* ********************************************************************* */
 - (void)subAppend: (L4LoggingEvent*)event
@@ -59,7 +95,6 @@
 	[self rollOver];	
 	[super subAppend: event];
 }
-
 
 /* ********************************************************************* */
 #pragma mark Private methods

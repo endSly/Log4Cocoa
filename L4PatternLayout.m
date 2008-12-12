@@ -6,6 +6,8 @@
 #import "L4PatternLayout.h"
 #import "L4Layout.h"
 #import "L4LoggingEvent.h"
+#import "L4Properties.h"
+#import "L4LogLog.h"
 
 NSString* const L4PatternLayoutDefaultConversionPattern	= @"%m%n";
 NSString* const L4InvalidSpecifierException = @"L4InvalidSpecifierException";
@@ -19,18 +21,29 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
 	return [self initWithConversionPattern: L4PatternLayoutDefaultConversionPattern];
 }
 
-- (id)initWithConversionPattern: (NSString*)cp
+- (id) initWithProperties: (L4Properties *) initProperties
 {
-	self = [super init];
-	
-	if (self != nil) {
-		[self setConversionPattern: cp];
+    self = [super initWithProperties: initProperties];
+    
+    if ( self != nil ) {
+        // Support for layout.ConversionPattern in properties configuration file
+        NSString *buf = [initProperties stringForKey:@"ConversionPattern"];
+        if ( buf == nil ) {
+            [L4LogLog warn: @"ConversionPattern not specified in properties."];
+			buf = L4PatternLayoutDefaultConversionPattern;
+        }
+		[self setConversionPattern: buf];
 		tokenArray = [[NSMutableArray alloc] initWithCapacity: 3];
-		
-		return self;
-	}
-	
-	return nil;
+    }
+    
+    return self;
+}
+
+- (id)initWithConversionPattern: (NSString*)aConversionPattern
+{
+	L4Properties *properties = [[L4Properties alloc] init];
+	[properties setString:aConversionPattern forKey:@"ConversionPattern"];
+	return [self initWithProperties:properties];
 }
 
 - (void)dealloc

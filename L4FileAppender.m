@@ -4,13 +4,39 @@
 
 #import "L4FileAppender.h"
 #import "L4Layout.h"
-
+#import "L4LogLog.h"
 
 @implementation L4FileAppender
 
 - (id) init
 {
 	return [self initWithLayout:nil fileName:nil append:NO];
+}
+
+- (id) initWithProperties: (L4Properties *) initProperties
+{    
+    self = [super initWithProperties: initProperties];
+    
+    if ( self != nil ) {
+        // Support for appender.File in properties configuration file
+        NSString *buf = [[initProperties stringForKey: @"File"] lowercaseString];
+        if ( buf == nil ) {
+            [L4LogLog error: @"Invalid filename."];
+            [self release];
+            return nil;
+        }
+        fileName = [buf retain];
+        
+        // Support for appender.Append in properties configuration file
+        append = YES;
+        if ( [initProperties stringForKey: @"Append"] != nil ) {
+            NSString *buf = [[initProperties stringForKey: @"Append"] lowercaseString];
+            append = [buf isEqualToString: @"true"];
+        }
+		[self setupFile];
+    }
+    
+    return self;
 }
 
 - (id) initWithLayout:(L4Layout *) aLayout fileName:(NSString *) aName
@@ -40,7 +66,7 @@
 
 - (void)setupFile
 {
-	NSFileManager*	fm = nil;
+	NSFileManager*	fileManager = nil;
 	
 	if (fileName == nil || [fileName length] <= 0) {
 		[self closeFile];
@@ -50,12 +76,12 @@
 		return;
 	}
 	
-	fm = [NSFileManager defaultManager];
+	fileManager = [NSFileManager defaultManager];
 	
 	// if file doesn't exist, try to create the file
-	if (![fm fileExistsAtPath: fileName]) {
+	if (![fileManager fileExistsAtPath: fileName]) {
 		// if the we cannot create the file, raise a FileNotFoundException
-		if (![fm createFileAtPath: fileName contents: nil attributes: nil]) {
+		if (![fileManager createFileAtPath: fileName contents: nil attributes: nil]) {
 			[NSException raise: @"FileNotFoundException" format: @"Couldn't create a file at %@", fileName];
 		}
 	}

@@ -22,6 +22,39 @@ const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize = (1024 * 1024
 	return [self initWithLayout: nil fileName: nil append: YES];
 }
 
+- (id) initWithProperties: (L4Properties *) initProperties
+{    
+    self = [super initWithProperties: initProperties];
+    
+    if ( self != nil ) {
+        unsigned int newMaxFileSize = kL4RollingFileAppenderDefaultMaxFileSize;
+        unsigned int newMaxBackupIndex = 1;
+        
+        // Support for appender.MaximumFileSize in properties configuration file
+        if ( [initProperties stringForKey: @"MaximumFileSize"] != nil ) {
+            NSString *buf = [[initProperties stringForKey: @"MaximumFileSize"] uppercaseString];
+            newMaxFileSize = atoi([buf UTF8String]);
+            if ( [buf rangeOfString: @"MB"].location == ([buf length] - 2) ) {
+                newMaxFileSize *= (1024 * 1024); // convert to megabytes
+            }
+            if ( [buf rangeOfString: @"KB"].location == ([buf length] - 2) ) {
+                newMaxFileSize *= 1024; // convert to kilobytes
+            }
+        }
+		
+        // Support for appender.MaxBackupIndex in properties configuration file
+        if ( [initProperties stringForKey: @"MaxBackupIndex"] != nil ) {
+            NSString *buf = [[initProperties stringForKey: @"MaxBackupIndex"] uppercaseString];
+            newMaxBackupIndex = atoi([buf UTF8String]);
+        }
+		
+        [self setMaximumFileSize: newMaxFileSize];
+        [self setMaxBackupIndex: newMaxBackupIndex];
+    }
+    
+    return self;
+}
+
 - (id) initWithLayout: (L4Layout *) aLayout fileName: (NSString *) aName
 {
 	return [self initWithLayout: aLayout fileName: aName append: YES];

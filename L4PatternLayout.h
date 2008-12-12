@@ -1,6 +1,7 @@
 #import <Foundation/Foundation.h>
 #import "L4Layout.h"
 
+
 /**
  *Defines the default conversion pattern for <code>L4PatternLayout</code> objects created with the <code>init</code> method
  */
@@ -243,11 +244,18 @@ extern NSString* const L4InvalidBraceClauseException;
 - (id)init;
 
 /**
+ * Initializes an instance from properties.  The properties supported are:
+ *	ConversionPattern: the conversion pattern to use in this instance.
+ * @param initProperties the proterties to use.
+ */
+- (id) initWithProperties: (L4Properties *) initProperties;
+
+/**
  * Initializes an L4PatternLayout with a custom conversion pattern.
  * @param cp The custom conversion pattern.
  * @return A newly initialized L4PatternLayout object.
  */
-- (id)initWithConversionPattern: (NSString*)cp;
+- (id)initWithConversionPattern: (NSString*) aConversionPattern;
 
 /**
  * Uses this class's conversion pattern to format logging messages

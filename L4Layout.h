@@ -1,12 +1,12 @@
 #import <Foundation/Foundation.h>
 #import "L4AppenderProtocols.h"
 
-@class L4LoggingEvent, L4SimpleLayout;
+@class L4LoggingEvent, L4SimpleLayout, L4Properties;
 
 /**
  * This class represents formating a line of log output.
  */
-@interface L4Layout : NSObject {
+@interface L4Layout : NSObject{
 
 }
 
@@ -16,6 +16,12 @@
  * @return the new instance of L4SimpleLayout.
  */
 + (L4Layout *) simpleLayout;
+
+/**
+ * Initializes an instance from properties.  Currently there are no properties that apply to this class.
+ * @param initProperties the proterties to use.
+ */
+- (id) initWithProperties: (L4Properties *) initProperties;
 
 /**
  * Format a log event.

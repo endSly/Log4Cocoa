@@ -3,7 +3,6 @@
 @class L4Properties;
 
 @interface L4PropertyConfigurator : NSObject {
-    NSString* fileName; /**< The name of the file we read the configuration properties from.*/
     L4Properties* properties; /**< The internal collection in which individual properties are stored.*/
     NSMutableDictionary* appenders; /**< The internal collection in which individual configured appenders are stored.*/
 }

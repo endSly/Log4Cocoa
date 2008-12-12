@@ -2,6 +2,9 @@
 #import "L4AppenderProtocols.h"
 #import "L4AppenderSkeleton.h"
 
+/**
+ * An extension of L4Appender that knows how to append by writing to a filehandle.
+ */
 @interface L4WriterAppender : L4AppenderSkeleton
 {
 	BOOL immediateFlush; /**< Flush after write; default is YES. */
@@ -22,13 +25,22 @@
  * @param aFileHandle an exisiting file handle to write to.
  * @return the new instance.
  */
-- (id) initWithLayout:(L4Layout *) aLayout fileHandle:(NSFileHandle *) aFileHandle;
+- (id) initWithLayout:(L4Layout *)aLayout fileHandle:(NSFileHandle *)aFileHandle;
+
+/**
+ * Initializes an instance from properties.  The properties supported are:
+ * <ul><li>ImmediateFlush - see setImmediateFlush:(BOOL)flush.</li></ul> 
+ * If the values are being set in a file, this is how they could look:
+ *	<code>log4cocoa.appender.A2.ImmediateFlush=false</code>
+ * @param initProperties the proterties to use.
+ */
+- (id) initWithProperties:(L4Properties *)initProperties;
 
 /**
  * Mutator for immediateFlush attribute.
  * @param flush YES to flush immediatly, NO to not do so.
  */
-- (void) setImmediateFlush: (BOOL)flush;
+- (void) setImmediateFlush:(BOOL)flush;
 
 /**
  *  Reminder: the nesting of calls is:
@@ -40,7 +52,7 @@
  * 		- checkEntryConditions();
  * 		- subAppend();
  */
-- (void) append: (L4LoggingEvent *) anEvent;
+- (void) append:(L4LoggingEvent *)anEvent;
 
 /**
  * Actual writing occurs here.
@@ -48,19 +60,19 @@
  * <p>Most subclasses of <code>WriterAppender</code> will need to
  * override this method.
  */
-- (void) subAppend: (L4LoggingEvent *) anEvent;
+- (void) subAppend:(L4LoggingEvent *)anEvent;
 
 /**
  * NOTE --- this method adds a lineBreakChar between log messages.
  * So layouts & log messages do not need to add a trailing line break.
  */
-- (void) write: (NSString *) theString;
+- (void) write:(NSString *)theString;
 
 /**
  * Sets the NSFileHandle where the log output will go.
  * @param fh The NSFileHandle where you want the log output to go.
  */
-- (void)setFileHandle: (NSFileHandle *) fh;
+- (void)setFileHandle:(NSFileHandle *)fh;
 
 /**
  * This method determines if there is a sense in attempting to append.
@@ -106,13 +118,22 @@
  * Mutator for the encoding attribute.
  * @param newEncoding the new string encoding to use.
  */
-- (void) setEncoding: (NSStringEncoding) newEncoding;
+- (void) setEncoding:(NSStringEncoding) newEncoding;
 
 @end
 
+/**
+ * The methods needed to conform to the L4AppenderCategory catagory.
+ */
 @interface L4WriterAppender (L4AppenderCategory)
-
+/**
+ * Causes this writer to close.
+ */
 - (void) close;
+
+/**
+ * Determines if this appender requires a layout.
+ */
 - (BOOL) requiresLayout;
 
 @end

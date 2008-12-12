@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 #import "L4AppenderProtocols.h"
 
-@class L4Filter, L4Level, L4LoggingEvent;
+@class L4Filter, L4Level, L4LoggingEvent, L4Properties;
 
 /**
  * This class acts as a superclass for classes that want to log. It is not intended
@@ -18,6 +18,12 @@
 	id errorHandler; /**< The error handler for this appender.*/
 	BOOL closed; /**< Tracks if this appender has been closed.*/
 }
+
+/**
+ * Initializes an instance from properties.  Currently there are no properties that apply to this class.
+ * @param initProperties the proterties to use.
+ */
+- (id) initWithProperties: (L4Properties *) initProperties;
 
 /**
  * Appends an event to the log.

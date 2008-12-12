@@ -5,7 +5,7 @@
 #define FILTER_NEUTRAL  0
 #define FILTER_ACCEPT   1
 
-@class L4LoggingEvent;
+@class L4LoggingEvent, L4Properties;
 
 /**
  * Filter for log events.
@@ -13,9 +13,16 @@
  * the only way a flter would actually be used would be to subclass it and over-ride the 
  * decide: method.
  */
-@interface L4Filter : NSObject  {
+@interface L4Filter : NSObject 
+{
 	L4Filter *next; /**< The next filter in the chain.*/
 }
+
+/**
+ * Initializes an instance from properties.  Currently there are no properties that apply to this class.
+ * @param initProperties the proterties to use.
+ */
+- (id) initWithProperties: (L4Properties *) initProperties;
 
 /**
  * Decide what this filter should do with event.

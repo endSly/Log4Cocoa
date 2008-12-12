@@ -10,6 +10,11 @@
 
 @implementation L4AppenderSkeleton
 
+- (id) initWithProperties: (L4Properties *) initProperties
+{
+	return [super init];
+}
+
 - (void) dealloc
 {
 	[name release];

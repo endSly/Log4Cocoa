@@ -1,7 +1,11 @@
 #import <Foundation/Foundation.h>
 #import "L4WriterAppender.h"
 
-@interface L4ConsoleAppender : L4WriterAppender {
+/**
+ * An implementation of L4Appender that writes messages to the console; either stdout or stderr.
+ */
+@interface L4ConsoleAppender : L4WriterAppender
+{
 	BOOL isStandardOut; /**< Tracks if this appender is for stdout.*/
 }
 
@@ -32,6 +36,17 @@
  * @return the new instance.
  */
 - (id) initTarget: (BOOL) standardOut withLayout: (L4Layout *) aLayout;
+
+
+/**
+ * Initializes an instance from properties.  The properties supported are:
+ *	LogToStandardOut: specifies if this appender should append to stdout or stderr.  If the value is true, then
+ *		stdout will be used.  Otherwise stderr will be used.
+ * If the values are being set in a file, this is how they could look:
+ *	log4cocoa.appender.A2.LogToStandardOut=false
+ * @param initProperties the proterties to use.
+ */
+- (id) initWithProperties: (L4Properties *) initProperties;
 
 /**
  * Accesor for isStandardOut attribute.

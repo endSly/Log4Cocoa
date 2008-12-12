@@ -19,7 +19,28 @@ static NSData *lineBreakChar;
 	return self;
 }
 
-- (id) initWithLayout: (L4Layout *) aLayout fileHandle: (NSFileHandle *) aFileHandle
+- (id) initWithProperties: (L4Properties *) initProperties
+{    
+    self = [super initWithProperties: initProperties];
+    
+    if ( self != nil ) {
+        BOOL newImmediateFlush = YES;
+        
+        // Support for appender.ImmediateFlush in properties configuration file
+        if ( [initProperties stringForKey: @"ImmediateFlush"] != nil ) {
+            NSString *buf = [[initProperties stringForKey: @"ImmediateFlush"] lowercaseString];
+            newImmediateFlush = [buf isEqualToString: @"true"];
+        }
+		if (lineBreakChar == nil) {
+			lineBreakChar = [[@"\n" dataUsingEncoding: NSASCIIStringEncoding allowLossyConversion: YES] retain];
+		}
+        [self setImmediateFlush: newImmediateFlush];
+    }
+    
+    return self;
+}
+
+- (id) initWithLayout:(L4Layout *)aLayout fileHandle:(NSFileHandle *)aFileHandle
 {
 	[self init]; // call designated initializer
 	fileHandle= [aFileHandle retain];
@@ -32,8 +53,6 @@ static NSData *lineBreakChar;
 	[fileHandle release];
 	[super dealloc];
 }
-
-/*******  NEED TO FIGURE OUT INITIALIZATION STRATAGEY  *********/ 
 
 - (BOOL) immediateFlush
 {

@@ -3,9 +3,10 @@
 
 @class L4Level, L4Logger;
 
-// ### TODO Add support the L4RendererSupport protocol,
-// called from the L4LoggingEvent:renderedMessage method
-//
+/**
+ * Manages all logger instances.
+ * TODO Add support the L4RendererSupport protocol, called from the L4LoggingEvent:renderedMessage method.
+ */
 @interface L4LoggerStore : NSObject <L4LoggerRepository, L4LoggerFactory> {
 	L4Logger *root; /**< The root logger.*/
 	NSMutableDictionary *repository; /**< The collection of loggers by id.*/

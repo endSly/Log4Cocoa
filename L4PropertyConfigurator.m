@@ -4,23 +4,24 @@
 
 #import "L4PropertyConfigurator.h"
 #import "L4AppenderProtocols.h"
-#import "L4FactoryManager.h"
+#import "L4Layout.h"
 #import "L4Level.h"
 #import "L4LogLog.h"
 #import "L4Properties.h"
 #import "L4RootLogger.h"
 
-static NSString *DELIM_START = @"${";
-static int DELIM_START_LEN = 2;
-static NSString *DELIM_STOP = @"}";
-static int DELIM_STOP_LEN = 1;
-
 @interface L4PropertyConfigurator (Private)
+- (id<L4Appender>) appenderForClassName:(NSString *)appenderClassName andProperties:(L4Properties *)appenderProperties;
 - (void) configureAdditivity;
+
+/**
+ * Reads through the properties one at a time looking for  a named appender.  If one is found, the properties
+ * for that appender are seperated out, and sent to the appender to initialize & configure the appender.
+ */
 - (void) configureAppenders;
+- (void) configureLayoutForAppender:(id <L4Appender>)theAppender withProperties:(L4Properties *)theProperties;
 - (void) configureLoggers;
-- (void) replaceEnvironmentVariables;
-- (NSString *) substituteEnvironmentVariablesForString:(NSString *) aString;
+- (L4Layout *) layoutForClassName:(NSString *)layoutClassName andProperties:(L4Properties *)layoutProperties;
 @end
 
 
@@ -51,47 +52,45 @@ static int DELIM_STOP_LEN = 1;
  	[appenders removeAllObjects];
 }
 
-- (void) configureLogger:(L4Logger *) aLogger withProperty:(NSString *) aProperty
+- (void) configureLogger:(L4Logger *)aLogger withProperty:(NSString *)aProperty
 {
  	// Remove all whitespace characters from config
- 	NSArray *components = [aProperty componentsSeparatedByCharactersInSet: [NSCharacterSet whitespaceCharacterSet]];
+ 	NSArray *components = [aProperty componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
  	NSEnumerator *componentEnum = [components objectEnumerator];
  	NSString *component = nil;
  	NSString *configString = @"";
  	while ( ( component = [componentEnum nextObject] ) != nil ) {
-  		configString = [configString stringByAppendingString: component];
+  		configString = [configString stringByAppendingString:component];
  	}
  	
  	// "Tokenize" configString
- 	components = [configString componentsSeparatedByString: @","];
+ 	components = [configString componentsSeparatedByString:@","];
  	
  	if ( [components count] == 0 ) {
-  		[L4LogLog error: [NSString stringWithFormat: @"Invalid config string(Logger = %@): \"%@\".", [aLogger name], aProperty]];
+  		[L4LogLog error:[NSString stringWithFormat:@"Invalid config string(Logger = %@): \"%@\".", [aLogger name], aProperty]];
   		return;
  	}
  	
  	// Set the loglevel
  	componentEnum = [components objectEnumerator];
  	NSString *logLevel = [[componentEnum nextObject] uppercaseString];
- 	if ( ![logLevel isEqualToString: @"INHERITED"] ) {
-  		[aLogger setLevel: [L4Level levelWithName: logLevel]];
+ 	if ( ![logLevel isEqualToString:@"INHERITED"] ) {
+  		[aLogger setLevel:[L4Level levelWithName:logLevel]];
  	}
 
  	// Set the Appenders
  	while ( ( component = [componentEnum nextObject] ) != nil ) {
-  		id <L4Appender> appender = [appenders objectForKey: component];
+  		id <L4Appender> appender = [appenders objectForKey:component];
   		if ( appender == nil ) {
-			[L4LogLog error: [NSString stringWithFormat: @"Invalid appender: \"%@\".", component]];
+			[L4LogLog error:[NSString stringWithFormat:@"Invalid appender: \"%@\".", component]];
 			continue;
   		}
-  		[aLogger addAppender: appender];
+  		[aLogger addAppender:appender];
  	}
 }
 
 - (void)dealloc
 {
- 	[fileName release];
- 	fileName = nil;
 	[properties release];
 	properties = nil;
  	[appenders release];
@@ -100,37 +99,54 @@ static int DELIM_STOP_LEN = 1;
 	[super dealloc];
 }
 
-- (id) initWithFileName:(NSString *) aName properties:(L4Properties *) aProperties
+- (id) init
+{
+	return nil; // never use this constructor
+}
+
+- (id) initWithFileName:(NSString *)aName
+{
+ 	return [self initWithProperties:[L4Properties propertiesWithFileName:aName]];
+}
+
+- (id) initWithProperties:(L4Properties *)theProperties
 {
  	if ( self = [super init]) {
-  		fileName = [aName retain];
-  		properties = aProperties;
-  		[self replaceEnvironmentVariables];
-  		properties = [[properties subsetForPrefix: @"log4cocoa."] retain];
+  		properties = [[theProperties subsetForPrefix:@"log4cocoa."] retain];
   		appenders = [[NSMutableDictionary alloc] init];
  	}
  	
  	return self;
 }
 
-- (id) init
-{
-	return nil; // never use this constructor
-}
-
-- (id) initWithFileName:(NSString *) aName
-{
- 	return [self initWithFileName: aName properties: [L4Properties propertiesWithFileName: aName]];
-}
-
-- (id) initWithProperties:(L4Properties *) aProperties
-{
- 	return [self initWithFileName: @"UNAVAILABLE" properties: aProperties];
-}
-
 /* ********************************************************************* */
 #pragma mark Private methods
 /* ********************************************************************* */
+- (id<L4Appender>) appenderForClassName:(NSString *)appenderClassName andProperties:(L4Properties *)appenderProperties
+{
+	id <L4Appender> newAppender = nil;
+	Class appenderClass = NSClassFromString(appenderClassName);
+	Protocol *appenderProtocol = @protocol(L4Appender);
+	NSString *apenderProtocolName = NSStringFromProtocol(@protocol(L4Appender));
+	
+	if ( appenderClass == nil ) {
+	 	[L4LogLog error:[NSString stringWithFormat:@"Cannot find %@ class with name: \"%@\".", 
+						 apenderProtocolName, appenderClassName]];
+	} else {	  		
+	 	if ( ![appenderClass conformsToProtocol: appenderProtocol] ) {
+	  		[L4LogLog error: 
+			 [NSString stringWithFormat:
+			  @"Failed to create instance with name \"%@\" since it does not conform to the %@ protocol.", 
+			  apenderProtocolName, appenderProtocol]];
+	 	} else {
+	  		newAppender = [[(id <L4Appender>)[appenderClass alloc] initWithProperties:appenderProperties] autorelease];
+			// Now we need to handle the layout
+			[self configureLayoutForAppender:newAppender withProperties:appenderProperties];
+	 	}
+	}
+	return newAppender;
+}
+
 - (void) configureAdditivity
 {
  	L4Properties *additivityProperties = [properties subsetForPrefix: @"additivity."];
@@ -151,6 +167,39 @@ static int DELIM_STOP_LEN = 1;
  	}
 }
 
+- (void) configureLayoutForAppender:(id <L4Appender>)theAppender withProperties:(L4Properties *)theProperties
+{
+	for (NSString *key in [theProperties allKeys]) {
+		if ([@"layout" isEqualToString:key]) {
+			L4Properties *layoutProperties = [theProperties subsetForPrefix:[key stringByAppendingString:@"."]];
+			NSString *className = [theProperties stringForKey:key];
+			L4Layout *theLayout = [self layoutForClassName:className andProperties:layoutProperties];
+			if (theLayout != nil) {
+				[theAppender setLayout:theLayout];
+			}
+		}
+	}
+}
+
+- (L4Layout *) layoutForClassName:(NSString *)layoutClassName andProperties:(L4Properties *)layoutProperties
+{
+	L4Layout *newLayout = nil;
+	Class layoutClass = NSClassFromString(layoutClassName);
+	
+	if ( layoutClass == nil ) {
+	 	[L4LogLog error:[NSString stringWithFormat:@"Cannot find L4Layout class with name: \"%@\".", layoutClassName]];
+	} else {	  		
+	 	if ( ![[[[layoutClass alloc] init] autorelease] isKindOfClass:[L4Layout class]] ) {
+	  		[L4LogLog error: 
+			 [NSString stringWithFormat:
+			  @"Failed to create instance with name \"%@\" since it is not of kind L4Layout.", layoutClass]];
+	 	} else {
+	  		newLayout = [[[layoutClass alloc] initWithProperties:layoutProperties] autorelease];
+	 	}
+	}
+	return newLayout;
+}
+
 - (void) configureAppenders
 {
  	L4Properties *appendersProperties = [properties subsetForPrefix: @"appender."];
@@ -158,22 +207,22 @@ static int DELIM_STOP_LEN = 1;
  	NSEnumerator *keyEnum = [[appendersProperties allKeys] objectEnumerator];
  	NSString *key = nil;
  	while ( ( key = [keyEnum nextObject] ) != nil ) {
-  		NSRange range = [key rangeOfString: @"." options: 0 range: NSMakeRange(0, [key length])];
+  		NSRange range = [key rangeOfString:@"." options:0 range:NSMakeRange(0, [key length])];
   		if ( range.location == NSNotFound ) {
-			id <L4Appender> newAppender = nil;
-			NSString *className = [appendersProperties stringForKey: key];
-			id <L4Factory> appenderFactory = [L4FactoryManager appenderFactory: className];
+			// NSNotFound indicates that the key is for a new appender (i.e A1 - where there is no dot after the 
+			// appender name). We now need to get the subset of properties for the named appender.
+			L4Properties *appenderProperties = [appendersProperties subsetForPrefix:[key stringByAppendingString:@"."]];
 			
-			if ( appenderFactory != nil ) {
-				L4Properties *appenderProperties = [appendersProperties subsetForPrefix: [key stringByAppendingString: @"."]];
-				newAppender = (id <L4Appender>) [appenderFactory factoryObjectWithProperties: appenderProperties];
-			}
+			NSString *className = [appendersProperties stringForKey:key];
+			id <L4Appender> newAppender = [self appenderForClassName:className andProperties:appenderProperties];
 			
 			if ( newAppender != nil ) {
-				[newAppender setName: key];
-				[appenders setObject: newAppender forKey: key];
+				[newAppender setName:key];
+				[appenders setObject:newAppender forKey:key];
 			} else {
-				[L4LogLog error: [NSString stringWithFormat: @"Error while creating appender \"%@\" with name \"%@\".", className, key]];
+				[L4LogLog error:
+				 [NSString stringWithFormat: 
+				  @"Error while creating appender \"%@\" with name \"%@\".", className, key]];
 				continue;
 			}
   		}
@@ -194,62 +243,5 @@ static int DELIM_STOP_LEN = 1;
   		[self configureLogger: [L4Logger loggerForName: key] withProperty: [loggerProperties stringForKey: key]];
  	}
 }
-
-- (void) replaceEnvironmentVariables
-{
- 	NSEnumerator *keyEnum = [[properties allKeys] objectEnumerator];
- 	NSString *key = nil;
- 	while ( ( key = [keyEnum nextObject] ) != nil ) {
-  		NSString *value = [properties stringForKey: key];
-  		NSString *subKey = [self substituteEnvironmentVariablesForString: key];
-  		if ( ![subKey isEqualToString: key] ) {
-			[properties removeStringForKey: key];
-			[properties setString: subKey forKey: value];
-  		}
-  		NSString *subVal = [self substituteEnvironmentVariablesForString: value];
-  		if ( ![subVal isEqualToString: value] ) {
-			[properties setString: subVal forKey: subKey];
-  		}
- 	}
-}
-
-- (NSString *) substituteEnvironmentVariablesForString:(NSString *) aString
-{
- 	int len = [aString length];
- 	NSMutableString *buf = [NSMutableString string];
- 	NSRange i = NSMakeRange(0, len);
- 	NSRange j, k;
- 	while ( true ) {
-  		j = [aString rangeOfString: DELIM_START options: 0 range: i];
-  		if ( j.location == NSNotFound ) {
-			if ( i.location == 0 ) {
-				return aString;
-			} else {
-				[buf appendString: [aString substringFromIndex: i.location]];
-				return buf;
-			}
-  		} else {
-			[buf appendString: [aString substringWithRange: NSMakeRange(i.location, j.location - i.location)]];
-			k = [aString rangeOfString: DELIM_STOP options: 0 range: NSMakeRange(j.location, len - j.location)];
-			if ( k.location == NSNotFound ) {
-				[L4LogLog error: 
-				 [NSString stringWithFormat: @"\"%@\" has no closing brace. Opening brace at position %@.", 
-				  aString, [NSNumber numberWithInt: j.location]]];
-				return aString;
-			} else {
-				j.location += DELIM_START_LEN;
-				j = NSMakeRange(j.location, k.location - j.location);
-				NSString *key = [aString substringWithRange: j];
-				char *replacement = getenv([key UTF8String]);
-				if ( replacement != NULL ) {
-					[buf appendString: [NSString stringWithUTF8String: replacement]];
-				}
-				i.location += (k.location + DELIM_STOP_LEN);
-				i.length -= i.location;
-			}
-  		}
- 	}
-}
-
 
 @end

@@ -13,7 +13,12 @@
 	return [[[L4SimpleLayout alloc] init] autorelease];
 }
 
-- (NSString *) format: (L4LoggingEvent *) event
+- (id) initWithProperties:(L4Properties *)initProperties
+{
+   return [super init];
+}
+
+- (NSString *) format:(L4LoggingEvent *)event
 {
 	return [event description];
 }

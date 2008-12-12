@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 
-@class L4Logger, L4Filter, L4Layout, L4LoggingEvent;
+@class L4Logger, L4Filter, L4Layout, L4LoggingEvent, L4Properties;
 
 @protocol L4ErrorHandler
 - (void) error: (NSString *) message;
@@ -23,6 +23,13 @@
  * This formal protocol defines the messages a class used for appending needs to support.
  */
 @protocol L4Appender <NSObject>
+/**
+ * Initializes an instance from properties.  This allows instances of appenders to be instantiated at runtime.  For the
+ * porperties each appender supports, see the documentation for the particular class.
+ * @param initProperties the proterties to use.
+ */
+- (id) initWithProperties: (L4Properties *) initProperties;
+
 /**
  * Appender log this event.
  * @param anEvent the event to append.
