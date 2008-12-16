@@ -4,7 +4,6 @@
 
 #import "L4PropertyConfigurator.h"
 #import "L4AppenderProtocols.h"
-#import "L4Layout.h"
 #import "L4Level.h"
 #import "L4LogLog.h"
 #import "L4Properties.h"
@@ -13,15 +12,12 @@
 @interface L4PropertyConfigurator (Private)
 - (id<L4Appender>) appenderForClassName:(NSString *)appenderClassName andProperties:(L4Properties *)appenderProperties;
 - (void) configureAdditivity;
-
 /**
- * Reads through the properties one at a time looking for  a named appender.  If one is found, the properties
+ * Reads through the properties one at a time looking for a named appender.  If one is found, the properties
  * for that appender are seperated out, and sent to the appender to initialize & configure the appender.
  */
 - (void) configureAppenders;
-- (void) configureLayoutForAppender:(id <L4Appender>)theAppender withProperties:(L4Properties *)theProperties;
 - (void) configureLoggers;
-- (L4Layout *) layoutForClassName:(NSString *)layoutClassName andProperties:(L4Properties *)layoutProperties;
 @end
 
 
@@ -109,10 +105,11 @@
  	return [self initWithProperties:[L4Properties propertiesWithFileName:aName]];
 }
 
-- (id) initWithProperties:(L4Properties *)theProperties
+- (id) initWithProperties:(L4Properties *)initProperties
 {
- 	if ( self = [super init]) {
-  		properties = [[theProperties subsetForPrefix:@"log4cocoa."] retain];
+    self = [super init];
+ 	if ( self != nil ) {
+  		properties = [[initProperties subsetForPrefix:@"log4cocoa."] retain];
   		appenders = [[NSMutableDictionary alloc] init];
  	}
  	
@@ -140,8 +137,6 @@
 			  apenderProtocolName, appenderProtocol]];
 	 	} else {
 	  		newAppender = [[(id <L4Appender>)[appenderClass alloc] initWithProperties:appenderProperties] autorelease];
-			// Now we need to handle the layout
-			[self configureLayoutForAppender:newAppender withProperties:appenderProperties];
 	 	}
 	}
 	return newAppender;
@@ -165,39 +160,6 @@
 			[L4LogLog error: [NSString stringWithFormat: @"Invalid additivity value for logger %@: \"%@\".", key, actualValue]];
   		}
  	}
-}
-
-- (void) configureLayoutForAppender:(id <L4Appender>)theAppender withProperties:(L4Properties *)theProperties
-{
-	for (NSString *key in [theProperties allKeys]) {
-		if ([@"layout" isEqualToString:key]) {
-			L4Properties *layoutProperties = [theProperties subsetForPrefix:[key stringByAppendingString:@"."]];
-			NSString *className = [theProperties stringForKey:key];
-			L4Layout *theLayout = [self layoutForClassName:className andProperties:layoutProperties];
-			if (theLayout != nil) {
-				[theAppender setLayout:theLayout];
-			}
-		}
-	}
-}
-
-- (L4Layout *) layoutForClassName:(NSString *)layoutClassName andProperties:(L4Properties *)layoutProperties
-{
-	L4Layout *newLayout = nil;
-	Class layoutClass = NSClassFromString(layoutClassName);
-	
-	if ( layoutClass == nil ) {
-	 	[L4LogLog error:[NSString stringWithFormat:@"Cannot find L4Layout class with name: \"%@\".", layoutClassName]];
-	} else {	  		
-	 	if ( ![[[[layoutClass alloc] init] autorelease] isKindOfClass:[L4Layout class]] ) {
-	  		[L4LogLog error: 
-			 [NSString stringWithFormat:
-			  @"Failed to create instance with name \"%@\" since it is not of kind L4Layout.", layoutClass]];
-	 	} else {
-	  		newLayout = [[[layoutClass alloc] initWithProperties:layoutProperties] autorelease];
-	 	}
-	}
-	return newLayout;
 }
 
 - (void) configureAppenders

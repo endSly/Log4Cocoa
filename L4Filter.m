@@ -13,6 +13,12 @@
 	return [super init];
 }
 
+- (void)dealloc
+{
+    [next release];
+    [super dealloc];
+}
+
 - (int) decide: (L4LoggingEvent *) event
 {
 	return FILTER_NEUTRAL;

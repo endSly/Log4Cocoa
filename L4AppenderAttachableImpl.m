@@ -21,6 +21,13 @@
 	return size;
 }
 
+- (void) dealloc
+{
+	[appenderList release];
+	appenderList = nil;
+	[super dealloc];
+}
+
 /* ********************************************************************* */
 #pragma mark L4AppenderAttachableMethods protocol methods
 /* ********************************************************************* */

@@ -6,73 +6,73 @@
 
 @implementation L4Level
 
-// ALL < DEBUG < INFO < WARN < ERROR < FATAL < OFF
+// gALL < gDEBUG < gINFO < gWARN < gERROR < gFATAL < gOFF
 
-static L4Level *OFF   = nil;
-static L4Level *FATAL = nil;
-static L4Level *ERROR = nil;
-static L4Level *WARN  = nil;
-static L4Level *INFO  = nil;
-static L4Level *DEBUG = nil;
-static L4Level *ALL   = nil;
+static L4Level *L4_OFF   = nil;
+static L4Level *L4_FATAL = nil;
+static L4Level *L4_ERROR = nil;
+static L4Level *L4_WARN  = nil;
+static L4Level *L4_INFO  = nil;
+static L4Level *L4_DEBUG = nil;
+static L4Level *L4_ALL   = nil;
 
 /* ********************************************************************* */
 #pragma mark Class methods
 /* ********************************************************************* */
 + (void) initialize
 {
-	OFF		= [L4Level withLevel:OFF_INT	withName:@"OFF"		syslogEquivalent:0 ];
-	FATAL	= [L4Level withLevel:FATAL_INT	withName:@"FATAL"	syslogEquivalent:0 ];
-	ERROR	= [L4Level withLevel:ERROR_INT	withName:@"ERROR"	syslogEquivalent:3 ];
-	WARN	= [L4Level withLevel:WARN_INT	withName:@"WARN"	syslogEquivalent:4 ];
-	INFO	= [L4Level withLevel:INFO_INT	withName:@"INFO"	syslogEquivalent:6 ];
-	DEBUG	= [L4Level withLevel:DEBUG_INT	withName:@"DEBUG"	syslogEquivalent:7 ];
-	ALL		= [L4Level withLevel:ALL_INT	withName:@"ALL"		syslogEquivalent:7 ];
+	L4_OFF		= [L4Level level:OFF_INT    withName:@"OFF"		syslogEquivalent:0 ];
+	L4_FATAL	= [L4Level level:FATAL_INT	withName:@"FATAL"	syslogEquivalent:0 ];
+	L4_ERROR	= [L4Level level:ERROR_INT	withName:@"ERROR"	syslogEquivalent:3 ];
+	L4_WARN		= [L4Level level:WARN_INT	withName:@"WARN"	syslogEquivalent:4 ];
+	L4_INFO		= [L4Level level:INFO_INT	withName:@"INFO"	syslogEquivalent:6 ];
+	L4_DEBUG	= [L4Level level:DEBUG_INT	withName:@"DEBUG"	syslogEquivalent:7 ];
+	L4_ALL		= [L4Level level:ALL_INT    withName:@"ALL"		syslogEquivalent:7 ];
 }
 
-+ (L4Level *) withLevel:(int)aLevel withName:(NSString *)aName syslogEquivalent:(int)sysLogLevel
++ (L4Level *) level:(int)aLevel withName:(NSString *)aName syslogEquivalent:(int)sysLogLevel
 {
-	return [[L4Level alloc] initLevel: aLevel withName: aName syslogEquivalent: sysLogLevel];
+	return [[[L4Level alloc] initLevel: aLevel withName: aName syslogEquivalent: sysLogLevel] autorelease];
 }
 
 + (L4Level *) off
 {
-	return OFF;
+	return L4_OFF;
 }
 
 + (L4Level *) fatal
 {
-	return FATAL;
+	return L4_FATAL;
 }
 
 + (L4Level *) error
 {
-	return ERROR;
+	return L4_ERROR;
 }
 
 + (L4Level *) warn
 {
-	return WARN;
+	return L4_WARN;
 }
 
 + (L4Level *) info
 {
-	return INFO;
+	return L4_INFO;
 }
 
 + (L4Level *) debug
 {
-	return DEBUG;
+	return L4_DEBUG;
 }
 
 + (L4Level *) all
 {
-	return ALL;
+	return L4_ALL;
 }
 
 + (L4Level *) levelWithName:(NSString *) aLevel
 {
-	return [L4Level levelWithName: aLevel defaultLevel: DEBUG];
+	return [L4Level levelWithName: aLevel defaultLevel: L4_DEBUG];
 }
 
 + (L4Level *) levelWithName:(NSString *) aLevel defaultLevel:(L4Level *) defaultLevel
@@ -83,13 +83,13 @@ static L4Level *ALL   = nil;
 
 	theLevel = [aLevel uppercaseString];
 
-	if( [theLevel isEqualToString: @"ALL"] )   { return ALL; }
-	if( [theLevel isEqualToString: @"DEBUG"] ) { return DEBUG; }
-	if( [theLevel isEqualToString: @"INFO"] )  { return INFO; }
-	if( [theLevel isEqualToString: @"WARN"] )  { return WARN; }
-	if( [theLevel isEqualToString: @"ERROR"] ) { return ERROR; }
-	if( [theLevel isEqualToString: @"FATAL"] ) { return FATAL; }
-	if( [theLevel isEqualToString: @"OFF"] )   { return OFF; }
+	if( [theLevel isEqualToString: @"ALL"] )   { return L4_ALL; }
+	if( [theLevel isEqualToString: @"DEBUG"] ) { return L4_DEBUG; }
+	if( [theLevel isEqualToString: @"INFO"] )  { return L4_INFO; }
+	if( [theLevel isEqualToString: @"WARN"] )  { return L4_WARN; }
+	if( [theLevel isEqualToString: @"ERROR"] ) { return L4_ERROR; }
+	if( [theLevel isEqualToString: @"FATAL"] ) { return L4_FATAL; }
+	if( [theLevel isEqualToString: @"OFF"] )   { return L4_OFF; }
 
 	return defaultLevel;
 }
@@ -97,19 +97,19 @@ static L4Level *ALL   = nil;
 
 + (L4Level *) levelWithInt: (int) aLevel
 {
-	return [L4Level levelWithInt: aLevel defaultLevel: DEBUG];
+	return [L4Level levelWithInt: aLevel defaultLevel: L4_DEBUG];
 }
 
 + (L4Level *) levelWithInt: (int) aLevel defaultLevel: (L4Level *) defaultLevel
 {
 	switch( aLevel ) {
-		case ALL_INT:   return ALL;
-		case DEBUG_INT: return DEBUG;
-		case INFO_INT:  return INFO;
-		case WARN_INT:  return WARN;
-		case ERROR_INT: return ERROR;
-		case FATAL_INT: return FATAL;
-		case OFF_INT:   return OFF;
+		case ALL_INT:   return L4_ALL;
+		case DEBUG_INT: return L4_DEBUG;
+		case INFO_INT:  return L4_INFO;
+		case WARN_INT:  return L4_WARN;
+		case ERROR_INT: return L4_ERROR;
+		case FATAL_INT: return L4_FATAL;
+		case OFF_INT:   return L4_OFF;
 
 		default:
 			return defaultLevel;

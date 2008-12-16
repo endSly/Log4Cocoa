@@ -108,7 +108,7 @@ static NSLock *_storeLock = nil;
 
 - (L4Logger *) loggerForClass: (Class) aClass
 {
-	id theLogger;
+	id theLogger = nil;
 	if( aClass != nil ) {
 		theLogger = [repository objectForKey: aClass];
 		
@@ -144,7 +144,7 @@ static NSLock *_storeLock = nil;
 		// if the node is nil, then its a new logger & therefore 
 		// a new leaf node, since no placeholder node was found.
 		//
-		theLogger = [aFactory makeNewLoggerInstance: aName];
+		theLogger = [aFactory newLoggerInstance: aName];
 		[theLogger setLoggerRepository: self];
 		[repository setObject: theLogger forKey: aName];
 		[self updateParentsOfLogger: theLogger];
@@ -160,7 +160,7 @@ static NSLock *_storeLock = nil;
 		// a parent, so when we insert this logger, we need to update all of the children to point to this node
 		// and to point to their parent.
 		//
-		theLogger = [aFactory makeNewLoggerInstance: aName];
+		theLogger = [aFactory newLoggerInstance: aName];
 		[theLogger setLoggerRepository: self];
 		[repository setObject: theLogger forKey: aName];
 		[self updateChildren: theNode withParent: theLogger ];
@@ -183,7 +183,7 @@ static NSLock *_storeLock = nil;
 
 - (NSArray *) currentLoggers
 {
-	return [loggers copy];
+	return [[loggers copy] autorelease];
 }
 
 - (void) emitNoAppenderWarning: (L4Logger *) aLogger
@@ -236,7 +236,7 @@ static NSLock *_storeLock = nil;
 #pragma mark L4LoggerFactoryCategory methods
 /* ********************************************************************* */
 
-- (L4Logger *) makeNewLoggerInstance: (NSString *) aName
+- (L4Logger *) newLoggerInstance: (NSString *) aName
 {
 	return [[L4Logger alloc] initWithName: aName];
 }
@@ -261,7 +261,7 @@ static NSLock *_storeLock = nil;
 		[pseudoFqcn insertString: @"." atIndex: 0];
 		[pseudoFqcn insertString: NSStringFromClass(theClass) atIndex: 0];
 	}
-	return pseudoFqcn;
+	return [pseudoFqcn autorelease];
 }
 
 /**
@@ -276,7 +276,7 @@ static NSLock *_storeLock = nil;
 - (void) updateParentsOfLogger: (L4Logger *) aLogger
 {
 	int i;
-	id node = aLogger;
+	id node;
 	L4Logger *parent = root;
 	NSString *keyPath;
 	NSArray *keys = [[aLogger name] componentsSeparatedByString: @"."];

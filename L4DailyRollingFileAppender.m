@@ -4,8 +4,8 @@
 
 #import "L4DailyRollingFileAppender.h"
 #import "L4Layout.h"
-#import <math.h>
 #import "L4LogLog.h"
+#import <math.h>
 
 @interface L4DailyRollingFileAppender (PrivateMethods)
 

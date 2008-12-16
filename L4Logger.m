@@ -54,8 +54,6 @@ static NSLock *_loggerLock = nil;
 	}
 }
 
-
-
 - init
 {
 	return nil; // never use this constructor
@@ -123,7 +121,7 @@ static NSLock *_loggerLock = nil;
 // NO METHOD CALLING - PERFORMANCE TWEAKED METHOD
 - (L4Level *) effectiveLevel
 {
-	L4Level *effectiveLevel;
+	L4Level *effectiveLevel = nil;
 	L4Logger *aLogger = self;
 	while (aLogger != nil) {
 		if((aLogger->level) != nil) {
@@ -159,12 +157,11 @@ static NSLock *_loggerLock = nil;
 
 - (void) callAppenders:(L4LoggingEvent *) event
 {
-	L4Logger *aLogger = self;
 	int writes = 0;
 	
 	//	[_loggerLock lock];  // ### LOCKING
 	
-	for( aLogger = self; aLogger != nil; aLogger = [aLogger parent] ) {
+	for( L4Logger *aLogger = self; aLogger != nil; aLogger = [aLogger parent] ) {
 		if( [aLogger aai] != nil ) {
 			writes += [[aLogger aai] appendLoopOnAppenders: event];
 		}
@@ -359,5 +356,12 @@ static L4FunctionLogger *instance;
 		instance = [[L4FunctionLogger alloc] init];
 	}
 	return instance;
+}
+
+- (void) dealloc
+{
+	[instance release];
+	instance = nil;
+	[super dealloc];
 }
 @end

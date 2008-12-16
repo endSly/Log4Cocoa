@@ -46,7 +46,8 @@
 
 - (id) initWithLayout:(L4Layout *) aLayout fileName:(NSString *) aName append:(BOOL) flag
 {
-	if (self = [super init])
+    self = [super init];
+	if (self != nil)
 	{
 		[self setLayout: aLayout];
 		fileName = [aName retain];

@@ -7,14 +7,16 @@ static NSData *lineBreakChar;
 
 @implementation L4WriterAppender
 
++ (void) initialize
+{
+    lineBreakChar = [[@"\n" dataUsingEncoding: NSASCIIStringEncoding allowLossyConversion: YES] retain];
+}
+
 - (id) init
 {
 	self = [super init];
 	if( self != nil ) {
 		immediateFlush = YES;
-	}
-	if (lineBreakChar == nil) {
-		lineBreakChar = [[@"\n" dataUsingEncoding: NSASCIIStringEncoding allowLossyConversion: YES] retain];
 	}
 	return self;
 }
@@ -31,9 +33,7 @@ static NSData *lineBreakChar;
             NSString *buf = [[initProperties stringForKey: @"ImmediateFlush"] lowercaseString];
             newImmediateFlush = [buf isEqualToString: @"true"];
         }
-		if (lineBreakChar == nil) {
-			lineBreakChar = [[@"\n" dataUsingEncoding: NSASCIIStringEncoding allowLossyConversion: YES] retain];
-		}
+        
         [self setImmediateFlush: newImmediateFlush];
     }
     

@@ -24,9 +24,9 @@
  */
 @protocol L4Appender <NSObject>
 /**
- * Initializes an instance from properties.  This allows instances of appenders to be instantiated at runtime.  For the
- * porperties each appender supports, see the documentation for the particular class.
- * @param initProperties the proterties to use.
+ * Initializes an instance from a collection of configuration properties.  
+ * For more information on the specific appender properties, see the documentation for the particular class.
+ * @param initProperties the properties to use.
  */
 - (id) initWithProperties: (L4Properties *) initProperties;
 

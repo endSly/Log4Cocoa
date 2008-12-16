@@ -13,30 +13,41 @@ static int DELIM_STOP_LEN = 1;
 
 
 @interface L4Properties (Private)
-- (void) replaceEnvironmentVariables;
-
 /**
- * A helper method that takes a string - typically a token from the properties file - and returnes the value
- * of the environment variable with the same name.
- *
- * @param the token to obtain the environemnt value for.
- * @return the value of the environemnt variable, or aString if no environment variable exists.
+ * A helper method that enumerates all the stored properties, and for each one,
+ * invokes the substituteEnvironmentVariablesForString: helper method on both
+ * its key and its value.
  */
-- (NSString *) substituteEnvironmentVariablesForString:(NSString *) aString;
+- (void) replaceEnvironmentVariables;
+/**
+ * A helper method that takes a string that may contain any number of named
+ * environment variable references, such as ${TEMP_DIR} and substitutes each
+ * named environment variable reference with its actual value instead.
+ *
+ * @param a string that may contain zero or more named environment variable references
+ * @return a copy of the input string, with all the named environment variable references
+ *         having been replaced by their actual values.
+ */
+- (NSString *) substituteEnvironmentVariablesForString:(NSString *)aString;
 @end
 
 @implementation L4Properties
 /* ********************************************************************* */
 #pragma mark Class methods
 /* ********************************************************************* */
-+ (id) propertiesWithFileName:(NSString *) aName
++ (id) properties
 {
- 	return [[[L4Properties alloc] initWithFileName: aName] autorelease];
+ 	return [self propertiesWithProperties:[NSMutableDictionary dictionary]];
 }
 
-+ (id) propertiesWithProperties:(NSDictionary *) aProperties
++ (id) propertiesWithFileName:(NSString *)aName
 {
- 	return [[[L4Properties alloc] initWithProperties: aProperties] autorelease];
+ 	return [[[L4Properties alloc] initWithFileName:aName] autorelease];
+}
+
++ (id) propertiesWithProperties:(NSDictionary *)aProperties
+{
+ 	return [[[L4Properties alloc] initWithProperties:aProperties] autorelease];
 }
 
 /* ********************************************************************* */
@@ -68,12 +79,13 @@ static int DELIM_STOP_LEN = 1;
 
 - (id) init
 {
-	return [self initWithFileName: nil];
+	return [self initWithFileName:nil];
 }
 
-- (id) initWithFileName:(NSString *) aName
+- (id) initWithFileName:(NSString *)aName
 {
-	if ( self = [super init] ) {
+    self = [super init];
+	if ( self != nil ) {
 		properties = [[NSMutableDictionary dictionary] retain];
   		
   		NSString *fileContents = [NSString stringWithContentsOfFile:aName];
@@ -97,38 +109,40 @@ static int DELIM_STOP_LEN = 1;
 				}
 			}
   		}
+  		[self replaceEnvironmentVariables];
 	}
-	[self replaceEnvironmentVariables];
+	
 	return self;
 }
 
-- (id) initWithProperties:(NSDictionary *) aProperties
+- (id) initWithProperties:(NSDictionary *)aProperties
 {
-	if ( self = [super init] ) {
+    self = [super init];
+	if ( self != nil ) {
   		properties = [aProperties retain];
  	}
  	
  	return self;
 }
 
-- (void) removeStringForKey:(NSString *) aKey
+- (void) removeStringForKey:(NSString *)aKey
 {
- 	[properties removeObjectForKey: aKey];
+ 	[properties removeObjectForKey:aKey];
 }
 
-- (void) setString:(NSString *) aString forKey:(NSString *) aKey
+- (void) setString:(NSString *)aString forKey:(NSString *)aKey
 {
- 	[properties setObject: aString forKey: aKey];
+ 	[properties setObject:aString forKey:aKey];
 }
 
-- (NSString *) stringForKey:(NSString *) aKey
+- (NSString *) stringForKey:(NSString *)aKey
 {
- 	return [self stringForKey: aKey withDefaultValue: nil];
+ 	return [self stringForKey:aKey withDefaultValue:nil];
 }
 
-- (NSString *) stringForKey:(NSString *) aKey withDefaultValue:(NSString *) aDefaultVal
+- (NSString *) stringForKey:(NSString *)aKey withDefaultValue:(NSString *)aDefaultVal
 {
- 	NSString *string = [properties objectForKey: aKey];
+ 	NSString *string = [properties objectForKey:aKey];
  	
  	if ( string == nil ) {
   		return aDefaultVal;
@@ -137,21 +151,21 @@ static int DELIM_STOP_LEN = 1;
  	}
 }
 
-- (L4Properties *) subsetForPrefix:(NSString *) aPrefix
+- (L4Properties *) subsetForPrefix:(NSString *)aPrefix
 {
- 	NSMutableDictionary *subset = [NSMutableDictionary dictionaryWithCapacity: [properties count]];
+ 	NSMutableDictionary *subset = [NSMutableDictionary dictionaryWithCapacity:[properties count]];
  	
  	NSEnumerator *keyEnum = [[properties allKeys] objectEnumerator];
  	NSString *key = nil;
  	while ( ( key = [keyEnum nextObject] ) != nil ) {
-  		NSRange range = [key rangeOfString: aPrefix options: 0 range: NSMakeRange(0, [key length])];
+  		NSRange range = [key rangeOfString:aPrefix options:0 range:NSMakeRange(0, [key length])];
   		if ( range.location != NSNotFound ) {
-			NSString *subKey = [key substringFromIndex: range.length];
-			[subset setObject: [properties objectForKey: key] forKey: subKey];
+			NSString *subKey = [key substringFromIndex:range.length];
+			[subset setObject:[properties objectForKey:key] forKey:subKey];
   		}
  	}
  	
- 	return [L4Properties propertiesWithProperties: subset];
+ 	return [L4Properties propertiesWithProperties:subset];
 }
 
 /* ********************************************************************* */
@@ -175,7 +189,7 @@ static int DELIM_STOP_LEN = 1;
  	}
 }
 
-- (NSString *) substituteEnvironmentVariablesForString:(NSString *) aString
+- (NSString *) substituteEnvironmentVariablesForString:(NSString *)aString
 {
  	int len = [aString length];
  	NSMutableString *buf = [NSMutableString string];
@@ -187,15 +201,15 @@ static int DELIM_STOP_LEN = 1;
 			if ( i.location == 0 ) {
 				return aString;
 			} else {
-				[buf appendString: [aString substringFromIndex:i.location]];
+				[buf appendString:[aString substringFromIndex:i.location]];
 				return buf;
 			}
   		} else {
-			[buf appendString: [aString substringWithRange:NSMakeRange(i.location, j.location - i.location)]];
+			[buf appendString:[aString substringWithRange:NSMakeRange(i.location, j.location - i.location)]];
 			k = [aString rangeOfString:DELIM_STOP options:0 range:NSMakeRange(j.location, len - j.location)];
 			if ( k.location == NSNotFound ) {
-				[L4LogLog error: 
-				 [NSString stringWithFormat: @"\"%@\" has no closing brace. Opening brace at position %@.", 
+				[L4LogLog error:
+				 [NSString stringWithFormat:@"\"%@\" has no closing brace. Opening brace at position %@.", 
 				  aString, [NSNumber numberWithInt:j.location]]];
 				return aString;
 			} else {
@@ -204,7 +218,7 @@ static int DELIM_STOP_LEN = 1;
 				NSString *key = [aString substringWithRange:j];
 				char *replacement = getenv([key UTF8String]);
 				if ( replacement != NULL ) {
-					[buf appendString: [NSString stringWithUTF8String: replacement]];
+					[buf appendString:[NSString stringWithUTF8String:replacement]];
 				}
 				i.location += (k.location + DELIM_STOP_LEN);
 				i.length -= i.location;

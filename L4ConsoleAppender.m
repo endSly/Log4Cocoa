@@ -21,7 +21,7 @@
 /* ********************************************************************* */
 #pragma mark Class methods
 /* ********************************************************************* */
-+ (L4ConsoleAppender *) standardOutWithLayout: (L4Layout *) aLayout
++ (L4ConsoleAppender *) standardOutWithLayout: (L4Layout *)aLayout
 {
 	return [[[L4ConsoleAppender alloc] initTarget: YES withLayout: aLayout] autorelease];
 }
@@ -36,7 +36,7 @@
 /* ********************************************************************* */
 - (id) init
 {
-	return [self initTarget:YES withLayout:nil];
+	return [self initTarget: YES withLayout: [L4Layout simpleLayout]];
 }
 
 - (id) initTarget:(BOOL)standardOut withLayout:(L4Layout *)aLayout

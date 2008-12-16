@@ -4,7 +4,7 @@
 
 @protocol L4LoggerFactory
 
-- (L4Logger *) makeNewLoggerInstance: (NSString *) aName;
+- (L4Logger *) newLoggerInstance: (NSString *) aName;
 
 @end
 

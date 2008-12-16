@@ -29,7 +29,7 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
         // Support for layout.ConversionPattern in properties configuration file
         NSString *buf = [initProperties stringForKey:@"ConversionPattern"];
         if ( buf == nil ) {
-            [L4LogLog warn: @"ConversionPattern not specified in properties."];
+            [L4LogLog warn: @"ConversionPattern not specified in properties, will use default."];
 			buf = L4PatternLayoutDefaultConversionPattern;
         }
 		[self setConversionPattern: buf];
@@ -41,7 +41,7 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
 
 - (id)initWithConversionPattern: (NSString*)aConversionPattern
 {
-	L4Properties *properties = [[L4Properties alloc] init];
+	L4Properties *properties = [L4Properties properties];
 	[properties setString:aConversionPattern forKey:@"ConversionPattern"];
 	return [self initWithProperties:properties];
 }

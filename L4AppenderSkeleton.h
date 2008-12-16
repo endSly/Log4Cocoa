@@ -10,7 +10,7 @@
  * standard, generic logging behaviour.
  */
 @interface L4AppenderSkeleton : NSObject <L4Appender> {
-	NSString *name; /**< The name for this appneder.*/
+	NSString *name; /**< The name for this appender.*/
 	L4Layout *layout; /**< The layout used by this appender.*/
 	L4Level *threshold; /**< The level below which this appender will not log.*/
 	L4Filter *headFilter; /**< The firsst filter used by this appender.*/
@@ -20,7 +20,9 @@
 }
 
 /**
- * Initializes an instance from properties.  Currently there are no properties that apply to this class.
+ * Initializes an instance from properties.
+ * Refer to the L4PropertyConfigurator class for more information
+ * about standard configuration properties.
  * @param initProperties the proterties to use.
  */
 - (id) initWithProperties: (L4Properties *) initProperties;

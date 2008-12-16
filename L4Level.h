@@ -28,7 +28,7 @@
  * @param sysLogLevel the system log level for this instance.
  * @return the new instance.
  */
-+ (L4Level *) withLevel:(int) aLevel withName:(NSString *) aName syslogEquivalent:(int) sysLogLevel;
++ (L4Level *) level:(int) aLevel withName:(NSString *) aName syslogEquivalent:(int) sysLogLevel;
 
 /**
  * Accessor for the default instance with a level of off.
