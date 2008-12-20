@@ -1,7 +1,6 @@
 #import <Foundation/Foundation.h>
 #import "L4Layout.h"
 
-
 /**
  *Defines the default conversion pattern for <code>L4PatternLayout</code> objects created with the <code>init</code> method
  */

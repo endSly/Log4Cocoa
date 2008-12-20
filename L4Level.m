@@ -6,7 +6,7 @@
 
 @implementation L4Level
 
-// gALL < gDEBUG < gINFO < gWARN < gERROR < gFATAL < gOFF
+// L4_ALL < L4_DEBUG < L4_INFO < L4_WARN < L4_ERROR < L4_FATAL < L4_OFF
 
 static L4Level *L4_OFF   = nil;
 static L4Level *L4_FATAL = nil;
