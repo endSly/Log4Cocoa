@@ -19,6 +19,7 @@
  	if ( self != nil ) {
   		[properties setString: @"DEBUG, STDOUT" forKey: @"rootLogger"];
   		[properties setString: @"L4ConsoleAppender" forKey: @"appender.STDOUT"];
+		[properties setString: @"L4SimpleLayout" forKey:@"appender.STDOUT.layout"];
  	}
  	
  	return self;

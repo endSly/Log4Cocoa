@@ -27,6 +27,7 @@
 #import "L4RootLogger.h"
 #import "L4SimpleLayout.h"
 #import "L4WriterAppender.h"
+#import "Log4CocoaDefines.h"
 #import "NSObject+Log4Cocoa.h"
 
 
