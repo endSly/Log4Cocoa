@@ -3,7 +3,7 @@
  */
 
 #import "L4Logger.h"
-#import "L4AppenderAttachableImpl.h"
+#import "L4AppenderAttachable.h"
 #import "L4Level.h"
 #import "L4LoggerStore.h"
 #import "L4LoggingEvent.h"
@@ -177,7 +177,7 @@ static NSLock *_loggerLock = nil;
 	}
 }
 
-- (L4AppenderAttachableImpl *) aai
+- (L4AppenderAttachable *) aai
 {
 	return aai;
 }
@@ -196,7 +196,7 @@ static NSLock *_loggerLock = nil;
 {
 	//	[_loggerLock lock];  // ### LOCKING
 	if( aai == nil ) {
-		aai = [[L4AppenderAttachableImpl alloc] init];
+		aai = [[L4AppenderAttachable alloc] init];
 	}
 	
 	[aai addAppender: appender];

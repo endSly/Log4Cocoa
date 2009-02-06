@@ -27,13 +27,13 @@ extern NSString* const L4InvalidBraceClauseException;
 /**
  * An NSCharacterSet that contains the default format specifier characters
  */
-#define L4PatternLayoutDefaultSpecifiers	[NSCharacterSet characterSetWithCharactersInString: @"CdFlLmMnpr%"]
+#define L4PatternLayoutDefaultSpecifiers	[NSCharacterSet characterSetWithCharactersInString:@"CdFlLmMnpr%"]
 
 /**
  * An NSCharacterSet that contains the subset of characters from L4PatternLayoutDefaultSpecifiers that can have a brace clause 
  * after the character
  */
-#define L4PatternLayoutTrailingBracesSpecifiers	[NSCharacterSet characterSetWithCharactersInString: @"Cd"]
+#define L4PatternLayoutTrailingBracesSpecifiers	[NSCharacterSet characterSetWithCharactersInString:@"Cd"]
 
 @class L4LoggingEvent;
 @class L4PatternParser;
@@ -53,7 +53,7 @@ extern NSString* const L4InvalidBraceClauseException;
  * character</em>. The specifier character specifies the type of data, e.g. priority, date. The format modifiers control such things
  * as field width, padding, left and right justification. The following is a simple example.
  * 
- * Let the conversion pattern be <b>"%-5p : %m%n"</b> and assume that the Log4Cocoa environment was set to use a L4PatternLayout. Then the
+ * Let the conversion pattern be <b>"%-5p :%m%n"</b> and assume that the Log4Cocoa environment was set to use a L4PatternLayout. Then the
  * statements
  * <pre>
  * log4Debug("Message 1");
@@ -61,8 +61,8 @@ extern NSString* const L4InvalidBraceClauseException;
  * </pre>
  * would yield the output
  * <pre>
- * DEBUG : Message 1
- * WARN  : Message 2
+ * DEBUG :Message 1
+ * WARN  :Message 2
  * </pre>
  * 
  * Note that there is no explicit separator between text and conversion specifiers. The pattern parser knows when it has reached
@@ -96,7 +96,7 @@ extern NSString* const L4InvalidBraceClauseException;
  * "%Y-%m-%d %H:%M:%S %z" is used.
  * 
  * The date format specifier admits the same syntax as the calendar format string in <CODE>NSCalendarDate</CODE>'s 
- * descriptionWithCalendarFormat: method.
+ * descriptionWithCalendarFormat:method.
  * </td>
  * </tr>
  * 
@@ -225,7 +225,7 @@ extern NSString* const L4InvalidBraceClauseException;
  * </table>
  * 
  */
-@interface L4PatternLayout : L4Layout
+@interface L4PatternLayout :L4Layout
 {
 	NSString*			conversionPattern; /**< conversionPattern*/
 	id					parserDelegate; /**< parserDelegate*/
@@ -237,35 +237,35 @@ extern NSString* const L4InvalidBraceClauseException;
 
 /**
  * Initializes an L4PatternLayout with the default conversion pattern, %m%n
- * Calls initWthConversionPattern: with the string defined by <code>L4PatternLayoutDefaultConversionPattern</code>
+ * Calls initWthConversionPattern:with the string defined by <code>L4PatternLayoutDefaultConversionPattern</code>
  * @return A newly initialized L4PatternLayout object
  */
 - (id)init;
 
 /**
  * Initializes an instance from properties.  The properties supported are:
- *	ConversionPattern: the conversion pattern to use in this instance.
+ * - <c>ConversionPattern:</c> the conversion pattern to use in this instance.
  * @param initProperties the proterties to use.
  */
-- (id) initWithProperties: (L4Properties *) initProperties;
+- (id) initWithProperties:(L4Properties *)initProperties;
 
 /**
  * Initializes an L4PatternLayout with a custom conversion pattern.
- * @param cp The custom conversion pattern.
+ * @param aConversionPattern The custom conversion pattern.
  * @return A newly initialized L4PatternLayout object.
  */
-- (id)initWithConversionPattern: (NSString*) aConversionPattern;
+- (id)initWithConversionPattern:(NSString*)aConversionPattern;
 
 /**
  * Uses this class's conversion pattern to format logging messages
  * @param event A logging event that contains information that the layout needs to format the logging message.
  * @throw L4InvalidSpecifierException if the pattern layout's conversion pattern contains an invalid conversion specifier.
  * @throw L4NoConversionPatternException if the pattern layout's conversion pattern is nil.  This should only happen if you
- *		have code like the following:<code>[patternLayout setConversionPattern: nil];</code>
+ *		have code like the following:<code>[patternLayout setConversionPattern:nil];</code>
  * @throw L4InvalidBraceClauseException when a conversion specifier's brace clause is invalid for any reason. 
  * @return	A formatted logging message that adheres to the L4PatternLayout's conversion pattern.
 */
-- (NSString *)format: (L4LoggingEvent *)event;
+- (NSString *)format:(L4LoggingEvent *)event;
 
 /**
  * Returns the pattern layout's conversion pattern
@@ -277,7 +277,7 @@ extern NSString* const L4InvalidBraceClauseException;
  * Sets the pattern layout's conversion pattern.
  * @param cp The new conversion pattern.
  */
-- (void)setConversionPattern: (NSString*)cp;
+- (void)setConversionPattern:(NSString*)cp;
 
 /**
  * Returns the pattern layout's parser delegate object.
@@ -290,10 +290,10 @@ extern NSString* const L4InvalidBraceClauseException;
  * When the pattern layout formats logging messages, it first takes the conversion pattern and parses it into token strings.  
  * You can provide a parser delegate to override how a pattern layout parses the conversion pattern into token strings.  By 
  * default, the pattern layout divides the conversion pattern into a series of literal strings and format specifiers.
- * The parser delegate must respond to the parseConversionPattern:intoArray: method.
+ * The parser delegate must respond to the parseConversionPattern:intoArray:method.
  * @param pd The new parser delegate
  */
-- (void)setParserDelegate: (id)pd;
+- (void)setParserDelegate:(id)pd;
 
 /** 
  * Returns the pattern layout's converter delegate object.
@@ -304,10 +304,10 @@ extern NSString* const L4InvalidBraceClauseException;
 /**
  * Sets the optional converter delegate object for this pattern layout.
  * When the pattern layout formats logging messages, it first takes the conversion pattern and parses it into token strings.  Then, it takes each token string and converts it into the corresponding part of the final formatted message.  You can provide a converter delegate to override or extend how a pattern layout converts its token strings.  By default, the pattern layout does nothing to literal string tokens and converts format specifiers as explained in the description of this class.
- * The converter delegate must respond to the convertTokenString:withLoggingEvent:intoString: method.
+ * The converter delegate must respond to the convertTokenString:withLoggingEvent:intoString:method.
  * @param cd The new converter delegate.
 */
-- (void)setConverterDelegate: (id)cd;
+- (void)setConverterDelegate:(id)cd;
 
 @end
 
@@ -324,7 +324,7 @@ extern NSString* const L4InvalidBraceClauseException;
  * @param convertedString A reference to an NSString that will contain the result of the token string's conversion upon exiting the method
  * @return Return YES to indicate that you have converted the token string.  Return NO to let the pattern layout's default behavior attempt to convert it.
  */
-- (BOOL)convertTokenString: (NSString*)token withLoggingEvent: (L4LoggingEvent*)logEvent intoString: (NSString**)convertedString;
+- (BOOL)convertTokenString:(NSString*)token withLoggingEvent:(L4LoggingEvent*)logEvent intoString:(NSString**)convertedString;
 
 @end
 

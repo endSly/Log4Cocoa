@@ -40,10 +40,10 @@
 
 /**
  * Initializes an instance from properties.  The properties supported are:
- *	LogToStandardOut: specifies if this appender should append to stdout or stderr.  If the value is true, then
+ * - <c>LogToStandardOut:</c> specifies if this appender should append to stdout or stderr.  If the value is true, then
  *		stdout will be used.  Otherwise stderr will be used.
  * If the values are being set in a file, this is how they could look:
- *	log4cocoa.appender.A2.LogToStandardOut=false
+ *	<code>log4cocoa.appender.A2.LogToStandardOut=false</code>
  * @param initProperties the proterties to use.
  */
 - (id) initWithProperties: (L4Properties *) initProperties;

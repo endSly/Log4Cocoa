@@ -7,7 +7,7 @@
 /**
  * This (poorly named) class servers as the basis for the L4AppenderAttachable protocol.
  */
-@interface L4AppenderAttachableImpl : NSObject <L4AppenderAttachable> {
+@interface L4AppenderAttachable : NSObject <L4AppenderAttachable> {
 	NSMutableArray *appenderList; /**< The collection of log appenders.*/
 }
 /**

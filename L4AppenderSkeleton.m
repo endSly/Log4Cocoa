@@ -14,7 +14,17 @@
  * Private methods.
  */
 @interface L4AppenderSkeleton (Private)
+/**
+ * Returns a new subclass of L4Filter specified by the class name, configured with the supplied properties.
+ * @param filterClassName the name of the L4Filter subclass to instantiate.
+ * @param filterProperties the properties used to configure the new instance.
+ */
 - (L4Filter *) filterForClassName:(NSString *)filterClassName andProperties:(L4Properties *)filterProperties;
+/**
+ * Returns a new subclass of L4Layout specified by the class name, configured with the supplied properties.
+ * @param layoutClassName the name of the L4Layout subclass to instantiate.
+ * @param layoutProperties the properties used to configure the new instance.
+ */
 - (L4Layout *) layoutForClassName:(NSString *)layoutClassName andProperties:(L4Properties *)layoutProperties;
 @end
 
@@ -243,18 +253,4 @@
 	}
 }
 
-- (id <L4ErrorHandler>) errorHandler
-{
-	return errorHandler;
-}
-
-- (void) setErrorHandler: (id <L4ErrorHandler>) anErrorHandler
-{
-	if( anErrorHandler == nil ) {
-		[L4LogLog warn: @"You have tried to set a null error-handler."];
-	} else if( errorHandler != (id) anErrorHandler ) {
-		[errorHandler autorelease];
-		errorHandler = [anErrorHandler retain];
-	}
-}
 @end

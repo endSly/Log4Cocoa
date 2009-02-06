@@ -14,11 +14,25 @@ extern NSString* const L4PropertyMissingException;
     NSMutableDictionary* properties; /**< The internal dictionary in which individual properties are stored.*/
 }
 
-+ (id) properties;
+/**
+ * Returns an empty properties instance.
+ * @return the newly created, empty properties instance.
+ */
++ (L4Properties *) properties;
 
-+ (id) propertiesWithFileName:(NSString *) aName;
+/**
+ * Creates and returns a new instance, reading in properties from the specified file.
+ * @param aName the name of the file containing the properties to use.
+ * @return the newly created, configured properties instance.
+ */
++ (L4Properties *) propertiesWithFileName:(NSString *) aName;
 
-+ (id) propertiesWithProperties:(NSDictionary *) aProperties;
+/**
+ * Creates and returns a new instance, using the supplied dictionary for the property values.
+ * @param aProperties the dictionary containing the properties to use.
+ * @return the newly created, configured properties instance.
+ */
++ (L4Properties *) propertiesWithProperties:(NSDictionary *) aProperties;
 
 /**
  * Returns all the keys in this property list.
@@ -67,7 +81,7 @@ extern NSString* const L4PropertyMissingException;
  * @param aDefaultValue the default value to be returned if the specified property was not found.
  * @return the value of the requested property or the default value argument if the specified property was not found.
  */
-- (NSString *) stringForKey:(NSString *)aKey withDefaultValue:(NSString *)aDefaultVal;
+- (NSString *) stringForKey:(NSString *)aKey withDefaultValue:(NSString *)aDefaultValue;
 
 /**
  * Inserts <code>aString</code> into this property list indexed by <code>aKey</code>.

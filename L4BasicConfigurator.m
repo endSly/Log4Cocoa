@@ -7,7 +7,7 @@
 
 @implementation L4BasicConfigurator
 
-+ (id) basicConfigurator 
++ (L4BasicConfigurator *) basicConfigurator 
 {
  	return [[[L4BasicConfigurator alloc] init] autorelease];
 }

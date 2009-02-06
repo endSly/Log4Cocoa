@@ -6,7 +6,7 @@
 #import "L4LoggerProtocols.h"
 #import "L4Level.h"
 
-@class L4AppenderAttachableImpl, L4Level, L4LoggingEvent;
+@class L4AppenderAttachable, L4Level, L4LoggingEvent;
 
 /**
  * This is the primary interface into the logging framework. 
@@ -33,7 +33,7 @@
 	  * If NO, parents are not called. 
 	  */
 	BOOL additive;
-	L4AppenderAttachableImpl *aai; /**< What does the actual appending for this logger.*/
+	L4AppenderAttachable *aai; /**< What does the actual appending for this logger.*/
 }
 
 /**
@@ -126,7 +126,7 @@
 /**
  * Accessor for the appender attached to this logger.
  */
-- (L4AppenderAttachableImpl *) aai;
+- (L4AppenderAttachable *) aai;
 
 /**
  * Accessor for the appenders attached to this logger. A L4AppenderAttachableImpl can have more than one

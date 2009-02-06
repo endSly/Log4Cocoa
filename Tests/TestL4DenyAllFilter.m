@@ -3,6 +3,9 @@
 #import "L4DenyAllFilter.h"
 #import "L4Filter.h"
 
+/**
+ * Unit tests for the L4DenyAllFilter clas.
+ */
 @interface TestL4DenyAllFilter : SenTestCase {	
 }
 

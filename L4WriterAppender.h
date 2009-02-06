@@ -29,7 +29,7 @@
 
 /**
  * Initializes an instance from properties.  The properties supported are:
- * <ul><li>ImmediateFlush - see setImmediateFlush:(BOOL)flush.</li></ul> 
+ * - <c>ImmediateFlush:</c> see setImmediateFlush:
  * If the values are being set in a file, this is how they could look:
  *	<code>log4cocoa.appender.A2.ImmediateFlush=false</code>
  * @param initProperties the proterties to use.

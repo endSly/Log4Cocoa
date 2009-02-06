@@ -43,9 +43,9 @@ typedef enum L4RollingFrequency
 
 /**
  * Initializes an instance from properties.  The properties supported are:
- *	RollingFrequency: specifies the frequency when the log file should be rolled.  See L4RollingFrequency.
+ * - <c>RollingFrequency:</c> specifies the frequency when the log file should be rolled.  See L4RollingFrequency.
  * If the values are being set in a file, this is how they could look:
- *	log4cocoa.appender.A2.RollingFrequency=daily
+ *	<code>log4cocoa.appender.A2.RollingFrequency=daily</code>
  * @param initProperties the proterties to use.
  */
 - (id) initWithProperties: (L4Properties *) initProperties;

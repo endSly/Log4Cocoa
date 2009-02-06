@@ -26,9 +26,9 @@
 
 /**
  * Initializes an instance from properties.  The properties supported are:
- *	- AcceptOnMatch: a string that get's converted to a BOOL. YES/NO work well. See the documentation for [NSString 
+ *	- <c>AcceptOnMatch:</c> a string that get's converted to a BOOL. YES/NO work well. See the documentation for [NSString 
  *		boolValue] for other options.
- *	- LevelToMatch: the name of the L4Level to match. See L4Level#levelWithName: for options.
+ *	- <c>LevelToMatch:</c> the name of the L4Level to match. See L4Level#levelWithName: for options.
  *
  * @param initProperties the proterties to use.
  * @throw L4PropertyMissingException if the LevelToMatch property is missing.

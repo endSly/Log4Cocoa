@@ -12,6 +12,9 @@ static NSString *DELIM_STOP = @"}";
 static int DELIM_STOP_LEN = 1;
 NSString* const L4PropertyMissingException = @"L4PropertyMissingException";
 
+/**
+ * Private messages for the L4Properties class.
+ */
 @interface L4Properties (Private)
 /**
  * A helper method that enumerates all the stored properties, and for each one,
@@ -24,7 +27,7 @@ NSString* const L4PropertyMissingException = @"L4PropertyMissingException";
  * environment variable references, such as ${TEMP_DIR} and substitutes each
  * named environment variable reference with its actual value instead.
  *
- * @param a string that may contain zero or more named environment variable references
+ * @param aString a string that may contain zero or more named environment variable references
  * @return a copy of the input string, with all the named environment variable references
  *         having been replaced by their actual values.
  */
@@ -35,17 +38,17 @@ NSString* const L4PropertyMissingException = @"L4PropertyMissingException";
 /* ********************************************************************* */
 #pragma mark Class methods
 /* ********************************************************************* */
-+ (id) properties
++ (L4Properties *) properties
 {
  	return [self propertiesWithProperties:[NSMutableDictionary dictionary]];
 }
 
-+ (id) propertiesWithFileName:(NSString *)aName
++ (L4Properties *) propertiesWithFileName:(NSString *)aName
 {
  	return [[[L4Properties alloc] initWithFileName:aName] autorelease];
 }
 
-+ (id) propertiesWithProperties:(NSDictionary *)aProperties
++ (L4Properties *) propertiesWithProperties:(NSDictionary *)aProperties
 {
  	return [[[L4Properties alloc] initWithProperties:aProperties] autorelease];
 }
@@ -140,12 +143,12 @@ NSString* const L4PropertyMissingException = @"L4PropertyMissingException";
  	return [self stringForKey:aKey withDefaultValue:nil];
 }
 
-- (NSString *) stringForKey:(NSString *)aKey withDefaultValue:(NSString *)aDefaultVal
+- (NSString *) stringForKey:(NSString *)aKey withDefaultValue:(NSString *)aDefaultValue
 {
  	NSString *string = [properties objectForKey:aKey];
  	
  	if ( string == nil ) {
-  		return aDefaultVal;
+  		return aDefaultValue;
  	} else {
   		return string;
  	}

@@ -1,8 +1,11 @@
 #import <SenTestingKit/SenTestingKit.h>
 #import "L4Properties.h"
 
+/**
+ * Unit tests for the L4Properties class.
+ */
 @interface TestL4Properties : SenTestCase {
-	NSDictionary *fullDictionary;
+	NSDictionary *fullDictionary; /**< The properties dictionary used to initialize the L4Properties instance. */
 }
 @end
 

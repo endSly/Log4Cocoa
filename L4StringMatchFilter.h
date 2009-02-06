@@ -18,9 +18,9 @@
 
 /**
  * Initializes an instance from properties.  The properties supported are:
- *	- AcceptOnMatch: a string that get's converted to a BOOL. YES/NO work well. See the documentation for [NSString 
+ *	- <c>AcceptOnMatch:</c> a string that get's converted to a BOOL. YES/NO work well. See the documentation for [NSString 
  *		boolValue] for other options.
- *	- StringToMatch: the string that the logging events message must contain to match this filter.
+ *	- <c>StringToMatch:</c> the string that the logging events message must contain to match this filter.
  *
  * @param initProperties the proterties to use.
  * @throw L4PropertyMissingException if the StringToMatch property is missing.

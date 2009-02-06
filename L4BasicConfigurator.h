@@ -9,6 +9,9 @@
 
 }
 
-+ (id) basicConfigurator;
+/**
+ * Factory method to return an instance of the default, basic configurator.
+ */
++ (L4BasicConfigurator *) basicConfigurator;
 
 @end

@@ -3,6 +3,9 @@
 
 @class L4Level, L4Logger;
 
+/**
+ * An event to be logged.  This class embodies all of the information needed to generate a log message to an appender.
+ */
 @interface L4LoggingEvent : NSObject {
 	NSNumber *lineNumber; /**< The line number where the event was generated.*/
 	NSString *fileName; /**< The name of the file where the event was generated.*/

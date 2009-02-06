@@ -30,10 +30,10 @@
 
 /**
  * Initializes an instance from properties.  The properties supported are:
- *	- AcceptOnMatch: a string that get's converted to a BOOL. YES/NO work well. See the documentation for [NSString 
+ * - <c>AcceptOnMatch:</c> a string that get's converted to a BOOL. YES/NO work well. See the documentation for [NSString 
  *		boolValue] for other options.
- *	- MinimumLevel: the name of the minimum L4Level to match. See L4Level#levelWithName: for options.
- *  - MaximumLevel: the name of the maximum L4Level to match. See L4Level#levelWithName: for options.
+ * - <c>MinimumLevel:</c> the name of the minimum L4Level to match. See L4Level#levelWithName: for options.
+ * - <c>MaximumLevel:</c> the name of the maximum L4Level to match. See L4Level#levelWithName: for options.
  *
  * @param initProperties the proterties to use.
  */

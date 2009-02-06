@@ -12,7 +12,7 @@ static NSData *lineBreakChar;
 @implementation L4LogLog
 + (void) initialize
 {
-	lineBreakChar = [[@"\n" dataUsingEncoding: NSASCIIStringEncoding allowLossyConversion: YES] retain];
+	lineBreakChar = [[@"\n" dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] retain];
 }
 
 + (BOOL) internalDebuggingEnabled
@@ -20,7 +20,7 @@ static NSData *lineBreakChar;
 	return internalDebugging;
 }
 
-+ (void) setInternalDebuggingEnabled: (BOOL) enabled
++ (void) setInternalDebuggingEnabled:(BOOL) enabled
 {
 	internalDebugging = enabled;
 }
@@ -30,54 +30,53 @@ static NSData *lineBreakChar;
 	return quietMode;
 }
 
-+ (void) setQuietModeEnabled: (BOOL) enabled
++ (void) setQuietModeEnabled:(BOOL) enabled
 {
 	quietMode = enabled;
 }
 
-+ (void) debug: (NSString *) message
++ (void) debug:(NSString *)message
 {
-	[self debug: message exception: nil];
+	[self debug:message exception:nil];
 }
 
-+ (void) debug: (NSString *) message exception: (NSException *) e
++ (void) debug:(NSString *)message exception:(NSException *)exception
 {
 	if(internalDebugging && !quietMode) {
-		[self writeMessage: message
-				withPrefix: L4LogLog_PREFIX
-					toFile: [NSFileHandle fileHandleWithStandardOutput]
-				 exception: e];
+		[self writeMessage:message
+				withPrefix:L4LogLog_PREFIX
+					toFile:[NSFileHandle fileHandleWithStandardOutput]
+				 exception:exception];
 	}
 }
 
-+ (void) warn: (NSString *) message
++ (void) warn:(NSString *)message
 {
-	[self warn: message exception: nil];
+	[self warn:message exception:nil];
 }
 
-+ (void) warn: (NSString *) message exception: (NSException *) e
-{
-	if(!quietMode)
-	{
-		[self writeMessage: message
-				withPrefix: L4LogLog_WARN_PREFIX
-					toFile: [NSFileHandle fileHandleWithStandardError]
-				 exception: e];
-	}
-}
-
-+ (void) error: (NSString *) message
-{
-	[self error: message exception: nil];
-}
-
-+ (void) error: (NSString *) message exception: (NSException *) e
++ (void) warn:(NSString *)message exception:(NSException *)exception
 {
 	if(!quietMode) {
-		[self writeMessage: message
-				withPrefix: L4LogLog_ERROR_PREFIX
-					toFile: [NSFileHandle fileHandleWithStandardError]
-				 exception: e];
+		[self writeMessage:message
+				withPrefix:L4LogLog_WARN_PREFIX
+					toFile:[NSFileHandle fileHandleWithStandardError]
+				 exception:exception];
+	}
+}
+
++ (void) error:(NSString *)message
+{
+	[self error:message exception:nil];
+}
+
++ (void) error:(NSString *)message exception:(NSException *)exception
+{
+	if(!quietMode) {
+		[self writeMessage:message
+				withPrefix:L4LogLog_ERROR_PREFIX
+					toFile:[NSFileHandle fileHandleWithStandardError]
+				 exception:exception];
 	}
 }
 
@@ -88,24 +87,25 @@ static NSData *lineBreakChar;
 // What are the performance implications, if any?
 // ### TODO -- must test under heavy load and talk to performance expert.
 //
-+ (void) writeMessage: (NSString *) message
-		   withPrefix: (NSString *) prefix
-			   toFile: (NSFileHandle *) fileHandle
-			exception: (NSException *) e
++ (void) writeMessage:(NSString *)message
+		   withPrefix:(NSString *)prefix
+			   toFile:(NSFileHandle *)fileHandle
+			exception:(NSException *)exception
 {
 	@try {
 		[fileHandle writeData:
-		 [[prefix stringByAppendingString: message] dataUsingEncoding: NSASCIIStringEncoding
-												 allowLossyConversion: YES]];
-		[fileHandle writeData: lineBreakChar];
+		 [[prefix stringByAppendingString:message] dataUsingEncoding:NSASCIIStringEncoding
+												allowLossyConversion:YES]];
+		[fileHandle writeData:lineBreakChar];
 		
-		if( e != nil ) {
+		if( exception != nil ) {
 			[fileHandle writeData:
-			 [[prefix stringByAppendingString: [e description]] dataUsingEncoding: NSASCIIStringEncoding allowLossyConversion: YES]];
+			 [[prefix stringByAppendingString:[exception description]] dataUsingEncoding:NSASCIIStringEncoding 
+																	allowLossyConversion:YES]];
 			[fileHandle writeData:lineBreakChar];
 		}
 	}
-	@catch (NSException * e) {
+	@catch (NSException * exception) {
 		// ### TODO WTF? WE'RE SCRWEDED HERE ... ABORT? EXIT? RAISE? Write Error Haiku?
 	}
 }

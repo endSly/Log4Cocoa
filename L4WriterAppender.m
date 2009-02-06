@@ -84,12 +84,12 @@ static NSData *lineBreakChar;
 	}
 
 	if( fileHandle == nil ) {
-		[[self errorHandler] error: [@"No file handle for output stream set for the appender named: " stringByAppendingString: name]];
+		[L4LogLog error: [@"No file handle for output stream set for the appender named: " stringByAppendingString: name]];
 		return NO;
 	}
 
 	if( layout == nil ) {
-		[[self errorHandler] error: [@"No layout set for the appender named: " stringByAppendingString: name]];
+		[L4LogLog error: [@"No layout set for the appender named: " stringByAppendingString: name]];
 		return NO;
 	}
 	
@@ -133,7 +133,7 @@ static NSData *lineBreakChar;
 			[fileHandle writeData: lineBreakChar];
 		}
 		@catch (NSException *localException) {
-			[[self errorHandler] error:[NSString stringWithFormat:@"Appender failed to write string:%@\n%@", theString, localException]];
+			[L4LogLog error:[NSString stringWithFormat:@"Appender failed to write string:%@\n%@", theString, localException]];
 		}
 	}
 }

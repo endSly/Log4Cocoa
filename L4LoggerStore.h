@@ -33,7 +33,7 @@
 /**
  * Is the repository disabled for a given level? The answer depends
  * on the repository threshold and the parameter.
- * See also {@link #setThreshold} method.
+ * See also setThreshold: method.
  * @param aLevel the level to check.
  * @return YES if logging is disabled for the specified level; NO if it is not.
  */

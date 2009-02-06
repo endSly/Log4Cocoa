@@ -29,12 +29,12 @@ extern const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize;
 
 /**
  * Initializes an instance from properties.  The properties supported are:
- *	MaximumFileSize: the maxamum size of the log file in bytes, before beginning a new one.  A suffix of MB and KB can
- *		be used to specify mega and kilo bytes.
- *	MaxBackupIndex: specifies how many log files to keep.
+ * - <c>MaximumFileSize:</c> the maxamum size of the log file in bytes, before beginning a new one.  A suffix of MB and 
+ *	KB can be used to specify mega and kilo bytes.
+ * - <c>MaxBackupIndex:</c> specifies how many log files to keep.
  * If the values are being set in a file, this is how they could look:
- *	log4cocoa.appender.A2.MaximumFileSize=10MB
- *	log4cocoa.appender.A2.MaxBackupIndex=3
+ *	<code>log4cocoa.appender.A2.MaximumFileSize=10MB
+ *	log4cocoa.appender.A2.MaxBackupIndex=3</code>
  * This specifies that three files should be maintained, in adition to the one currently being logged to, and that the
  * file should be rolled at 10 MB in size.
  * @param initProperties the proterties to use.

@@ -2,10 +2,10 @@
  * For copyright & license, see COPYRIGHT.txt.
  */
 
-#import "L4AppenderAttachableImpl.h"
+#import "L4AppenderAttachable.h"
 
 
-@implementation L4AppenderAttachableImpl
+@implementation L4AppenderAttachable
 
 - (int) appendLoopOnAppenders: (L4LoggingEvent *) event
 {
@@ -56,14 +56,14 @@
 - (id <L4Appender>) appenderWithName: (NSString *) aName
 {
 	NSEnumerator *enumerator = [appenderList objectEnumerator];
-	id <L4Appender> anAppender;
+	id <L4Appender> anAppender = nil;
 	
 	while ((anAppender = (id <L4Appender>)[enumerator nextObject])) {
-		if( [[anAppender name] isEqualToString: aName ]) {
-			return anAppender;
+		if( [[anAppender name] isEqualToString:aName ]) {
+			break;
 		}
 	}
-	return nil;
+	return anAppender;
 }
 
 - (BOOL) isAttached: (id <L4Appender>) appender

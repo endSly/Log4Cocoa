@@ -2,22 +2,6 @@
 
 @class L4Logger, L4Filter, L4Layout, L4LoggingEvent, L4Properties;
 
-@protocol L4ErrorHandler
-- (void) error: (NSString *) message;
-
-- (void) error: (NSString *) message exception: (NSException *) e errorCode: (int) errorCode;
-
-- (void) error: (NSString *) message exception: (NSException *) e errorCode: (int) errorCode event: (L4LoggingEvent *) event;
-
-- (id)retain;
-
-- (void) setLogger: (L4Logger *) aLogger;
-
-- (void) setAppender: (id) appender; // can't forward declare protocols, so check to see if the object responds
-- (void) setBackupAppender: (id) appender;
-
-@end
-
 /**
  * Appenders are responsible for adding a log message to log.
  * This formal protocol defines the messages a class used for appending needs to support.
@@ -58,6 +42,10 @@
  */
 - (void) close;
 
+/**
+ * Returns if the appender requires layout.
+ * @return YES if the appender requires layout, NO if it does not.
+ */
 - (BOOL) requiresLayout;
 
 /**
@@ -83,20 +71,13 @@
  */
 - (void) setLayout: (L4Layout *) aLayout;
 
-/**
- * Accessor for errorHandler attribute.
- * @return errorHandler of this appender.
- */
-- (id <L4ErrorHandler>) errorHandler;
-/**
- * Mutator for errorHandler attribute.
- * @param anErrorHandler the errorHandler for this appender.
- */
-- (void) setErrorHandler: (id <L4ErrorHandler>) anErrorHandler;
-
 @end
 
 
+/**
+ * This protocol defines messages used to chain L4Appender instances together.  The system supports having more than one
+ * logging appender, so that a single logging event can be logged in more than one place.
+ */
 @protocol L4AppenderAttachable <NSObject>
 /**
  * Adds an appender to be logged to.
@@ -110,12 +91,36 @@
  */
 - (NSArray *) allAppenders;
 
-- (id <L4Appender>) appenderWithName: (NSString *) aName;
-- (BOOL) isAttached: (id <L4Appender>) appender;
+/**
+ * Returns the L4Appender with the given name.
+ * @param aName the name of the L4Appender of interest.
+ * @return the L4Appender with the name aName, or nil if it does not exist.
+ */
+- (id <L4Appender>) appenderWithName:(NSString *)aName;
 
+/**
+ * Returns a BOOL value that indicates whether the parameter has been attached to the appender list.
+ * @param appender the L4Appender of interest.
+ * @return YES if appender has been attached, NO otherwise.
+ */
+- (BOOL) isAttached:(id <L4Appender>)appender;
+
+/**
+ * Clears all L4Appender instances that have been attached.
+ */
 - (void) removeAllAppenders;
-- (void) removeAppender: (id <L4Appender>) appender;
-- (void) removeAppenderWithName: (NSString *) aName;
+
+/**
+ * Removes a given L4Appender from those attached.
+ * @param appender the L4Appender to remove.
+ */
+- (void) removeAppender:(id <L4Appender>)appender;
+
+/**
+ * Removes a L4Appender with the given name from those attached.
+ * @param aName the name of the L4Appender to remove.
+ */
+- (void) removeAppenderWithName:(NSString *)aName;
 
 @end
 // For copyright & license, see COPYRIGHT.txt.

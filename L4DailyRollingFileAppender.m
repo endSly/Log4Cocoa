@@ -7,10 +7,22 @@
 #import "L4LogLog.h"
 #import <math.h>
 
-@interface L4DailyRollingFileAppender (PrivateMethods)
-
-- (NSCalendarDate*)lastRolloverDate;
+/**
+ * Private methods for the L4DailyRollingFileAppender class.
+ */
+@interface L4DailyRollingFileAppender (Private)
+/**
+ * Accessor for the lastRolloverDate property.
+ */
+- (NSCalendarDate *)lastRolloverDate;
+/**
+ * Mutator for the lastRolloverDate property.
+ */
 - (void)setLastRolloverDate: (NSDate*)date;
+
+/**
+ * Causes a new log file to be generated.
+ */
 - (void)rollOver;
 
 @end
@@ -120,10 +132,10 @@
 	NSCalendarDate*	tempLastRolloverDate = nil;
 	NSCalendarDate*	tempCalendarDate = nil, *tempCalendarDate2 = nil;
 	NSString*		newFileName = nil;
-	NSFileManager*	fm = nil;
+	NSFileManager*	fileManager = nil;
 	BOOL			rolloverTime = NO;
 	
-	fm = [NSFileManager defaultManager];
+	fileManager = [NSFileManager defaultManager];
 	
 	// get the current date and time
 	now = [NSCalendarDate calendarDate];
@@ -239,7 +251,7 @@
 		[self closeFile];
 		
 		// rename the current log file to the new rollover log file name
-		if (![fm movePath: [self fileName] toPath: newFileName handler: nil])
+		if (![fileManager movePath: [self fileName] toPath: newFileName handler: nil])
 		{
 			// if we can't rename the file, raise an exception
 			[NSException raise: @"CantMoveFileException" format: @"Unable to move file from %@ to %@", [self fileName], newFileName];

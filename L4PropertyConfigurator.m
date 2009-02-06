@@ -9,14 +9,34 @@
 #import "L4Properties.h"
 #import "L4RootLogger.h"
 
+/**
+ * Private methods for the L4PropertyConfigurator class.
+ */
 @interface L4PropertyConfigurator (Private)
+/**
+ * Factory method to create a new L4Appender for a given class with configuratin properties.
+ * @param appenderClassName the name of the class this appender is for.
+ * @param appenderProperties the properties used to configure the new appender.
+ * @return the newly configured appender.
+ */
 - (id<L4Appender>) appenderForClassName:(NSString *)appenderClassName andProperties:(L4Properties *)appenderProperties;
+
+/**
+ * Reads through the properties one at a time looking for aproperties related to additivity.  If found, they are
+ * used to configure the framework.
+ */
 - (void) configureAdditivity;
+
 /**
  * Reads through the properties one at a time looking for a named appender.  If one is found, the properties
  * for that appender are seperated out, and sent to the appender to initialize & configure the appender.
  */
 - (void) configureAppenders;
+
+/**
+ * Reads through the properties one at a time looking for a named loggers.  If one is found, the properties
+ * for that logger are seperated out, and sent to the logger to initialize & configure the logger.
+ */
 - (void) configureLoggers;
 @end
 
@@ -25,12 +45,12 @@
 /* ********************************************************************* */
 #pragma mark Class methods
 /* ********************************************************************* */
-+ (id) propertyConfiguratorWithFileName:(NSString *) aName
++ (L4PropertyConfigurator *) propertyConfiguratorWithFileName:(NSString *) aName
 {
  	return [[[self alloc] initWithFileName: aName] autorelease];
 }
 
-+ (id) propertyConfiguratorWithProperties:(L4Properties *) aProperties
++ (L4PropertyConfigurator *) propertyConfiguratorWithProperties:(L4Properties *) aProperties
 {
  	return [[(L4PropertyConfigurator *) [self alloc] initWithProperties: aProperties] autorelease];
 }

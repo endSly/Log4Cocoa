@@ -22,11 +22,11 @@
 
 /**
  * Initializes an instance from properties.  The properties supported are:
- *	File: the full path of the file to use.
- *	Append: weather to append to the file, or create a new one.  Expected values are [true|false].
+ * - <c>File:</c> the full path of the file to use.
+ * - <c>Append:</c> weather to append to the file, or create a new one.  Expected values are [true|false].
  * If the values are being set in a file, this is how they could look:
- *	log4cocoa.appender.A2.File=/tmp/mylogfile.txt
- *	log4cocoa.appender.A2.Append=false
+ *	<code>log4cocoa.appender.A2.File=/tmp/mylogfile.txt
+ *	log4cocoa.appender.A2.Append=false</code>
  * @param initProperties the proterties to use.
  */
 - (id) initWithProperties: (L4Properties *) initProperties;

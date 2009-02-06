@@ -5,7 +5,9 @@
 #import "L4LoggingEvent.h"
 #import "L4Properties.h"
 
-
+/**
+ * Unit tests for the L4StringMatchFilter class.
+ */
 @interface TestL4StringMatchFilter : SenTestCase {	
 }
 

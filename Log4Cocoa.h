@@ -18,7 +18,6 @@
 #import "L4LevelRangeFilter.h"
 #import "L4Logger.h"
 #import "L4Logging.h"
-#import "L4LogLog.h"
 #import "L4LoggerProtocols.h"
 #import "L4LoggerStore.h"
 #import "L4LoggingEvent.h"
