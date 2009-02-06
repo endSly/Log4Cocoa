@@ -125,7 +125,7 @@ static L4Level *L4_ALL   = nil;
 	return [L4Level debug]; // ok since not mutable and no "set" methods exist.
 }
 
-- (id) initLevel: (int) aLevel withName: (NSString *) aName syslogEquivalent: (int) sysLogLevel
+- (id) initLevel:(int)aLevel withName:(NSString *)aName syslogEquivalent:(int)sysLogLevel
 {
 	self = [super init];
 	if( self != nil ) {
@@ -134,6 +134,18 @@ static L4Level *L4_ALL   = nil;
 		name = [aName retain];
 	}
 	return self;
+}
+
+- (BOOL) isEqual:(id)anotherObject
+{
+	BOOL isEqual = NO;
+	if (anotherObject != nil || [anotherObject isKindOfClass:[L4Level class]]) {
+		L4Level *otherLevel = (L4Level *)anotherObject;
+		if ([otherLevel intValue] == [self intValue] && [[otherLevel stringValue] isEqualToString:[self stringValue]]) {
+			isEqual = YES;
+		}
+	}
+	return isEqual;
 }
 
 - (void) dealloc

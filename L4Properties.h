@@ -1,6 +1,12 @@
 #import <Foundation/Foundation.h>
 
 /**
+ *Defines the name for the no conversion pattern exception
+ * This exception is thrown if you try to use an L4PatternLayout before setting its conversion pattern
+ */
+extern NSString* const L4PropertyMissingException;
+
+/**
  * The L4Properties class provides a dictionary like interface to properties used to configure the logging system. Even
  * though these properties would typically be read in from a file, they can also be set from an NSDictionary.
  */

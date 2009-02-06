@@ -37,10 +37,10 @@
 - (void) doAppend: (L4LoggingEvent *) anEvent;
 
 /**
- * Adds to the end of list.
+ * Appends to the end of list.
  * @param newFilter the filter to add.
  */
-- (void) addFilter: (L4Filter *) newFilter;
+- (void) appendFilter: (L4Filter *) newFilter;
 
 /**
  * Accessor for the head filter (the first in the list).

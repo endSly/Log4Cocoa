@@ -19,9 +19,9 @@
     [super dealloc];
 }
 
-- (int) decide: (L4LoggingEvent *) event
+- (L4FilterResult) decide: (L4LoggingEvent *) event
 {
-	return FILTER_NEUTRAL;
+	return L4FilterNeutral;
 }
 
 - (L4Filter *) next

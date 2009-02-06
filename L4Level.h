@@ -74,19 +74,33 @@
 
 /**
  * Create and return a new instance where the level is set to the string argument.
- * @param aLevel the name of the level requested.
+ * @param aLevel the name of the level requested.  The options are:
+ *	- ALL 
+ *	- DEBUG 
+ *	- INFO 
+ *	- WARN 
+ *	- ERROR 
+ *	- FATAL 
+ *	- OFF 
  * @return the new L4Level.
  */
-+ (L4Level *) levelWithName:(NSString *) aLevel;
++ (L4Level *) levelWithName:(NSString *)aLevel;
 
 /**
  * Create and return a new instance where the level is set to the string argument.  If no level matches the
  * argument, the defaultLevel is rturned.
- * @param aLevel the name of the level requested.
+ * @param aLevel the name of the level requested.  The options are:
+ *	- ALL 
+ *	- DEBUG 
+ *	- INFO 
+ *	- WARN 
+ *	- ERROR 
+ *	- FATAL 
+ *	- OFF 
  * @param defaultLevel the level to use if aLevel can not be dereferenced.
  * @return the new L4Level. 
  */
-+ (L4Level *) levelWithName:(NSString *) aLevel defaultLevel:(L4Level *) defaultLevel;
++ (L4Level *) levelWithName:(NSString *)aLevel defaultLevel:(L4Level *)defaultLevel;
 
 /**
  * Create and return a new instance where the level is set to the int argument.

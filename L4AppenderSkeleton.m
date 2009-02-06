@@ -50,7 +50,6 @@
         // Configure the filters
         L4Properties *filtersProperties = [initProperties subsetForPrefix:@"filters."];
         int filterCount = 0;
-        L4Filter *filterChain = nil;
         while ( [filtersProperties stringForKey:[[NSNumber numberWithInt:++filterCount] stringValue]] != nil ) {
             NSString *filterName = [[NSNumber numberWithInt:filterCount] stringValue];
             L4Properties *filterProperties = [filtersProperties subsetForPrefix:[filterName stringByAppendingString:@"."]];
@@ -58,11 +57,7 @@
             L4Filter *newFilter = [self filterForClassName:className andProperties:filterProperties];
             
             if ( newFilter != nil ) {
-                if ( filterChain == nil ) {
-                    filterChain = newFilter;
-                } else {
-                    [filterChain setNext: newFilter];
-                }                    
+				[self appendFilter:newFilter];
             } else {
                 [L4LogLog error: [NSString stringWithFormat:
                                   @"Error while creating filter \"%@\".", className]];
@@ -70,7 +65,6 @@
                 return nil;
             }
         }
-        [self addFilter: filterChain];
     }
     
     return self;
@@ -82,7 +76,6 @@
 	[layout release];
 	[threshold release];
 	[headFilter release];
-	[tailFilter release];
 	[super dealloc];
 }
 
@@ -169,12 +162,12 @@
 	
 	while((aFilter != nil) && !breakLoop) {
 		switch([aFilter decide: anEvent]) {
-			case FILTER_DENY:
+			case L4FilterDeny:
 				return;
-			case FILTER_ACCEPT:
+			case L4FilterAccept:
 				breakLoop = YES;
 				break;
-			case FILTER_NEUTRAL:
+			case L4FilterNeutral:
 			default:
 				aFilter = [aFilter next];
 				break;
@@ -183,7 +176,7 @@
 	[self append: anEvent]; // passed all threshold checks, append event.
 }
 
-- (void) addFilter: (L4Filter *) newFilter
+- (void) appendFilter: (L4Filter *) newFilter
 {
 	if( headFilter == nil ) {
 		headFilter = [newFilter retain];

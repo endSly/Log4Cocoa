@@ -10,7 +10,7 @@ static NSString *DELIM_START = @"${";
 static int DELIM_START_LEN = 2;
 static NSString *DELIM_STOP = @"}";
 static int DELIM_STOP_LEN = 1;
-
+NSString* const L4PropertyMissingException = @"L4PropertyMissingException";
 
 @interface L4Properties (Private)
 /**
@@ -119,7 +119,7 @@ static int DELIM_STOP_LEN = 1;
 {
     self = [super init];
 	if ( self != nil ) {
-  		properties = [aProperties retain];
+  		properties = [[NSMutableDictionary alloc] initWithDictionary:aProperties];
  	}
  	
  	return self;

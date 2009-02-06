@@ -1,11 +1,16 @@
 #import <Foundation/Foundation.h>
 #import "L4AppenderProtocols.h"
 
-#define FILTER_DENY	-1
-#define FILTER_NEUTRAL  0
-#define FILTER_ACCEPT   1
-
 @class L4LoggingEvent, L4Properties;
+
+/**
+ * An enumeration of the allowed L4Filter actions.
+ */
+typedef enum {
+	L4FilterDeny	= -1, /**< Prevent the request to log the event. */
+	L4FilterNeutral = 0,  /**< Do not affect the request to log the event. */
+	L4FilterAccept  = 1   /**< Allow the request to log he event. */
+} L4FilterResult;
 
 /**
  * Filter for log events.
@@ -21,6 +26,7 @@
 /**
  * Initializes an instance from properties.  Currently there are no properties that apply to this class.
  * @param initProperties the proterties to use.
+ * @throw L4PropertyMissingException if a required property is missing.
  */
 - (id) initWithProperties: (L4Properties *) initProperties;
 
@@ -28,10 +34,9 @@
  * Decide what this filter should do with event.
  * This method is used to determine if the event should be logged.
  * @param event the event to check.
- * @return one of FILTER_DENY, FILTER_NEUTRAL, or FILTER_ACCEPT. FILTER_DENY means to not 
- *		log the event.
+ * @return one of L4FilterDeny, L4FilterNeutral, or L4FilterAccept. 
  */
-- (int) decide: (L4LoggingEvent *) event;
+- (L4FilterResult) decide: (L4LoggingEvent *) event;
 
 /**
  * Accessor for the next filter.
