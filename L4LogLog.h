@@ -6,7 +6,7 @@
 
 /**
  * This class is used to log when the logging system could not be properly initialized.  It logs to either stdout or
- * stderr depending on the severaty of the message.  
+ * stderr depending on the severity of the message.  
  * @note This class should not be used outside the framework.
  */
 @interface L4LogLog : NSObject {

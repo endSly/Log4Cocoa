@@ -21,7 +21,8 @@
 
 - (id) initWithProperties: (L4Properties *) initProperties
 {
-	if(self = [super initWithProperties: initProperties]) {
+	self = [super initWithProperties: initProperties];
+	if(self != nil) {
 		NSString *acceptIfMatched = [initProperties stringForKey:@"AcceptOnMatch"];
 		acceptOnMatch = YES;
 		if (acceptIfMatched) {

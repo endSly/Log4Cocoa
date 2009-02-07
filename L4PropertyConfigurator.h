@@ -3,7 +3,7 @@
 @class L4Properties;
 
 /**
- * The class responsible for configuring the logging system with a properoes file.
+ * The class responsible for configuring the logging system with a properties file.
  */
 @interface L4PropertyConfigurator : NSObject {
     L4Properties* properties; /**< The internal collection in which individual properties are stored.*/

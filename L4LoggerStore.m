@@ -24,7 +24,6 @@ static NSLock *_storeLock = nil;
  */
 - (NSString *) pseudoFqcnForClass:(Class) aClass;
 /**
- /**
  * Update parents, starts at the end of the pseudo-fqcn string and looks for the first matching logger and sets that as
  * the parent.  Each element in the pseudo-fqcn key path that doesn't exist is created as an NSMutableArray.
  * In order to collect all the child loggers underneath that point in the hierarchy.  This is important when a node in

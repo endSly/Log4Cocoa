@@ -11,7 +11,7 @@
 - (id) initWithAcceptOnMatch:(BOOL)shouldAccept andLevelToMatch:(L4Level *)aLevel
 {
 	self = [super init];
-	if (self) {
+	if (self != nil) {
 		acceptOnMatch = shouldAccept;
 		if (aLevel == nil) {
 			self = nil;
@@ -25,7 +25,8 @@
 
 - (id) initWithProperties:(L4Properties *)initProperties
 {
-	if (self = [super initWithProperties: initProperties]) {
+	self = [super initWithProperties: initProperties];
+	if (self != nil) {
 		acceptOnMatch = YES;
 		NSString *acceptIfMatched = [initProperties stringForKey:@"AcceptOnMatch"];
 		if (acceptIfMatched) {

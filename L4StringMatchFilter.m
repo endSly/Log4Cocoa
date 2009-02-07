@@ -7,6 +7,7 @@
 #import "L4Properties.h"
 
 @implementation L4StringMatchFilter
+
 - (id) initWithAcceptOnMatch:(BOOL)shouldAccept stringToMatch:(NSString *)aString
 {
 	self = [super init];
@@ -24,7 +25,8 @@
 
 -(id) initWithProperties: (L4Properties *) initProperties
 {
-	if (self = [super initWithProperties: initProperties]) {
+	self = [super initWithProperties: initProperties];
+	if (self != nil) {
 		NSString *acceptIfMatched = [initProperties stringForKey:@"AcceptOnMatch"];
 		acceptOnMatch = YES;
 		

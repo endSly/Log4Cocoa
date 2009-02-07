@@ -22,7 +22,7 @@
 - (id<L4Appender>) appenderForClassName:(NSString *)appenderClassName andProperties:(L4Properties *)appenderProperties;
 
 /**
- * Reads through the properties one at a time looking for aproperties related to additivity.  If found, they are
+ * Reads through the properties one at a time looking for properties related to additivity.  If found, they are
  * used to configure the framework.
  */
 - (void) configureAdditivity;
