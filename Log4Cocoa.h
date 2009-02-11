@@ -4,7 +4,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "L4AppenderAttachableImpl.h"
+#import "L4AppenderAttachable.h"
 #import "L4AppenderProtocols.h"
 #import "L4AppenderSkeleton.h"
 #import "L4BasicConfigurator.h"
