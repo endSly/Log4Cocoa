@@ -14,7 +14,7 @@
  * to use as they define the basic function call.
  */
 
-LOG4COCOA_EXTERN void log4Log(id object, int line, char *file, const char *method, SEL sel, L4Level *level, BOOL isAssertion, 
+LOG4COCOA_EXTERN void log4Log(id object, int line, const char *file, const char *method, SEL sel, L4Level *level, BOOL isAssertion, 
 			 BOOL assertion, id exception, id message, ...);
 
 

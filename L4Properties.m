@@ -91,7 +91,7 @@ NSString* const L4PropertyMissingException = @"L4PropertyMissingException";
 	if ( self != nil ) {
 		properties = [[NSMutableDictionary dictionary] retain];
   		
-  		NSString *fileContents = [NSString stringWithContentsOfFile:aName];
+  		NSString *fileContents = [NSString stringWithContentsOfFile:aName encoding:NSUTF8StringEncoding error:nil];
   		
   		NSEnumerator *lineEnum = [[fileContents componentsSeparatedByString:@"\n"] objectEnumerator];
   		NSString *currentLine = nil;
@@ -136,6 +136,7 @@ NSString* const L4PropertyMissingException = @"L4PropertyMissingException";
 - (void) setString:(NSString *)aString forKey:(NSString *)aKey
 {
  	[properties setObject:aString forKey:aKey];
+    [self replaceEnvironmentVariables];
 }
 
 - (NSString *) stringForKey:(NSString *)aKey

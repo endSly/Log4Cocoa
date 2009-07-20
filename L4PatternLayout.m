@@ -64,14 +64,16 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
 
 - (void)setConversionPattern: (NSString*)cp
 {
-	if (![conversionPattern isEqualToString: cp]) {
-		[conversionPattern release];
-		conversionPattern = nil;
-		conversionPattern = [cp retain];
-		
-		// since conversion pattern changed, reset _tokenArray
-		[tokenArray removeAllObjects];
-	}
+    @synchronized(self) {
+        if (![conversionPattern isEqualToString: cp]) {
+            [conversionPattern release];
+            conversionPattern = nil;
+            conversionPattern = [cp retain];
+            
+            // since conversion pattern changed, reset _tokenArray
+            [tokenArray removeAllObjects];
+        }
+    }
 }
 
 - (id)parserDelegate
@@ -103,64 +105,66 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
 	int					index = -1;
 	NSString*			convertedString = nil;
 
-	// check the conversion pattern to make sure it has been set, if not, throw an L4NoConversionPatternException
-	if ([self conversionPattern] == nil) {
-		[NSException raise: L4NoConversionPatternException format: @"L4PatternLayout's conversion pattern is nil and must be set first using either initWithConversionPattern: or setConversionPattern:"];
-	}	
-	
-	formattedString = [NSMutableString stringWithCapacity: 10];
-	
-	// let delegate handle it first
-	if (parserDelegate != nil && [parserDelegate respondsToSelector: @selector(parseConversionPattern:intoArray:)]) {
-		if ([tokenArray count] <= 0) {
-			[parserDelegate parseConversionPattern: conversionPattern intoArray: &tokenArray];
-		}
-		
-		for (index = 0; index < [tokenArray count]; index++) {
-			// reset converted string state to make sure we don't use an old value
-			convertedString = [NSString string];
-			
-			// let delegate handle it first
-			if (converterDelegate != nil && [converterDelegate respondsToSelector: @selector(convertTokenString:withLoggingEvent:intoString:)]) {
-				handled = [converterDelegate convertTokenString: [tokenArray objectAtIndex: index] withLoggingEvent: event intoString: &convertedString];
-				if (!handled) {
-					[self convertTokenString: [tokenArray objectAtIndex: index] withLoggingEvent: event intoString: &convertedString];
-				}
-			} else {
-				[self convertTokenString: [tokenArray objectAtIndex: index] withLoggingEvent: event intoString: &convertedString];
-			}
-			
-			// only append string if it isn't nil
-			if (convertedString != nil) {
-				[formattedString appendString: convertedString];
-			}
-		}
-	} else {
-		if ([tokenArray count] <= 0) {
-			[self parseConversionPattern: conversionPattern intoArray: &tokenArray];
-		}
-
-		for (index = 0; index < [tokenArray count]; index++) {
-			// reset converted string state to make sure we don't use an old value
-			convertedString = nil;
-
-			// let delegate handle it first
-			if (converterDelegate != nil && [converterDelegate respondsToSelector: @selector(convertTokenString:withLoggingEvent:intoString:)]) {
-				handled = [converterDelegate convertTokenString: [tokenArray objectAtIndex: index] withLoggingEvent: event intoString: &convertedString];
-				if (!handled) {
-					[self convertTokenString: [tokenArray objectAtIndex: index] withLoggingEvent: event intoString: &convertedString];
-				}
-			} else {
-				[self convertTokenString: [tokenArray objectAtIndex: index] withLoggingEvent: event intoString: &convertedString];
-			}
-
-			// only append string if it isn't nil
-			if (convertedString != nil) {
-				[formattedString appendString: convertedString];
-			}
-		}
+    @synchronized(self) {
+        
+        // check the conversion pattern to make sure it has been set, if not, throw an L4NoConversionPatternException
+        if ([self conversionPattern] == nil) {
+            [NSException raise: L4NoConversionPatternException format: @"L4PatternLayout's conversion pattern is nil and must be set first using either initWithConversionPattern: or setConversionPattern:"];
+        }	
+        
+        formattedString = [NSMutableString stringWithCapacity: 10];
+        
+        // let delegate handle it first
+        if (parserDelegate != nil && [parserDelegate respondsToSelector: @selector(parseConversionPattern:intoArray:)]) {
+            if ([tokenArray count] <= 0) {
+                [parserDelegate parseConversionPattern: conversionPattern intoArray: &tokenArray];
+            }
+            
+            for (index = 0; index < [tokenArray count]; index++) {
+                // reset converted string state to make sure we don't use an old value
+                convertedString = [NSString string];
+                
+                // let delegate handle it first
+                if (converterDelegate != nil && [converterDelegate respondsToSelector: @selector(convertTokenString:withLoggingEvent:intoString:)]) {
+                    handled = [converterDelegate convertTokenString: [tokenArray objectAtIndex: index] withLoggingEvent: event intoString: &convertedString];
+                    if (!handled) {
+                        [self convertTokenString: [tokenArray objectAtIndex: index] withLoggingEvent: event intoString: &convertedString];
+                    }
+                } else {
+                    [self convertTokenString: [tokenArray objectAtIndex: index] withLoggingEvent: event intoString: &convertedString];
+                }
+                
+                // only append string if it isn't nil
+                if (convertedString != nil) {
+                    [formattedString appendString: convertedString];
+                }
+            }
+        } else {
+            if ([tokenArray count] <= 0) {
+                [self parseConversionPattern: conversionPattern intoArray: &tokenArray];
+            }
+            
+            for (index = 0; index < [tokenArray count]; index++) {
+                // reset converted string state to make sure we don't use an old value
+                convertedString = nil;
+                
+                // let delegate handle it first
+                if (converterDelegate != nil && [converterDelegate respondsToSelector: @selector(convertTokenString:withLoggingEvent:intoString:)]) {
+                    handled = [converterDelegate convertTokenString: [tokenArray objectAtIndex: index] withLoggingEvent: event intoString: &convertedString];
+                    if (!handled) {
+                        [self convertTokenString: [tokenArray objectAtIndex: index] withLoggingEvent: event intoString: &convertedString];
+                    }
+                } else {
+                    [self convertTokenString: [tokenArray objectAtIndex: index] withLoggingEvent: event intoString: &convertedString];
+                }
+                
+                // only append string if it isn't nil
+                if (convertedString != nil) {
+                    [formattedString appendString: convertedString];
+                }
+            }
+        }
 	}
-	
 	return formattedString;
 }
 

@@ -68,39 +68,41 @@
 - (void)setupFile
 {
 	NSFileManager*	fileManager = nil;
-	
-	if (fileName == nil || [fileName length] <= 0) {
-		[self closeFile];
-		[fileName release];
-		fileName = nil;
-		[self setFileHandle: nil];
-		return;
-	}
-	
-	fileManager = [NSFileManager defaultManager];
-	
-	// if file doesn't exist, try to create the file
-	if (![fileManager fileExistsAtPath: fileName]) {
-		// if the we cannot create the file, raise a FileNotFoundException
-		if (![fileManager createFileAtPath: fileName contents: nil attributes: nil]) {
-			[NSException raise: @"FileNotFoundException" format: @"Couldn't create a file at %@", fileName];
-		}
-	}
-	
-	// if we had a previous file name, close it and release the file handle
-	if (fileName != nil) {
-		[self closeFile];
-	}
-	
-	// open a file handle to the file
-	[self setFileHandle: [NSFileHandle fileHandleForWritingAtPath: fileName]];
-	
-	// check the append option
-	if (append) {
-		[fileHandle seekToEndOfFile];
-	} else {
-		[fileHandle truncateFileAtOffset: 0];
-	}
+
+	@synchronized(self) {
+        if (fileName == nil || [fileName length] <= 0) {
+            [self closeFile];
+            [fileName release];
+            fileName = nil;
+            [self setFileHandle: nil];
+        } else {
+        
+            fileManager = [NSFileManager defaultManager];
+        
+            // if file doesn't exist, try to create the file
+            if (![fileManager fileExistsAtPath: fileName]) {
+                // if the we cannot create the file, raise a FileNotFoundException
+                if (![fileManager createFileAtPath: fileName contents: nil attributes: nil]) {
+                    [NSException raise: @"FileNotFoundException" format: @"Couldn't create a file at %@", fileName];
+                }
+            }
+        
+            // if we had a previous file name, close it and release the file handle
+            if (fileName != nil) {
+               [self closeFile];
+            }
+        
+            // open a file handle to the file
+            [self setFileHandle: [NSFileHandle fileHandleForWritingAtPath: fileName]];
+        
+            // check the append option
+            if (append) {
+                [fileHandle seekToEndOfFile];
+            } else {
+                [fileHandle truncateFileAtOffset: 0];
+            }
+        }
+    }
 }
 
 - (NSString *) fileName
@@ -118,11 +120,13 @@
 /* ********************************************************************* */
 - (void) closeFile
 {
-	[fileHandle closeFile];
-	
-	// Deallocate the file handle because trying to read from or write to a closed file raises exceptions.  Sending messages to nil objects are no-ops.
-	[fileHandle release];
-	fileHandle = nil;
+    @synchronized(self) {
+        [fileHandle closeFile];
+        
+        // Deallocate the file handle because trying to read from or write to a closed file raises exceptions.  Sending messages to nil objects are no-ops.
+        [fileHandle release];
+        fileHandle = nil;
+    }
 }
 @end
 

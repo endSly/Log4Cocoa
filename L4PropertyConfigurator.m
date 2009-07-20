@@ -60,12 +60,14 @@
 /* ********************************************************************* */
 - (void) configure
 {
- 	[self configureAppenders];
- 	[self configureLoggers];
- 	[self configureAdditivity];
-	
- 	// Erase the appenders to that we are not artificially retaining them.
- 	[appenders removeAllObjects];
+    @synchronized(self) {
+        [self configureAppenders];
+        [self configureLoggers];
+        [self configureAdditivity];
+        
+        // Erase the appenders to that we are not artificially retaining them.
+        [appenders removeAllObjects];
+    }
 }
 
 - (void) configureLogger:(L4Logger *)aLogger withProperty:(NSString *)aProperty

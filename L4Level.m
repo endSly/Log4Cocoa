@@ -131,7 +131,7 @@ static L4Level *L4_ALL   = nil;
 	if( self != nil ) {
 		intValue = aLevel;
 		syslogEquivalent = sysLogLevel;
-		name = [aName retain];
+		name = [aName copy];
 	}
 	return self;
 }

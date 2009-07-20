@@ -8,9 +8,6 @@
 #import "L4Level.h"
 #import "L4LogLog.h"
 
-
-static NSLock *_storeLock = nil;
-
 /**
  * Private methods.
  */
@@ -46,22 +43,6 @@ static NSLock *_storeLock = nil;
 
 + (void) initialize 
 {
-	if ([NSThread isMultiThreaded]) {
-		[self taskNowMultiThreaded:nil];
-	} else {
-		[[NSNotificationCenter defaultCenter] addObserver:self
-												 selector:@selector(taskNowMultiThreaded:)
-													 name:NSWillBecomeMultiThreadedNotification
-												   object:nil];
-	}
-}
-
-+ (void) taskNowMultiThreaded:(NSNotification *) event 
-{
-	if (!_storeLock) {
-		_storeLock = [[NSLock alloc] init];
-		// we can add other things here.
-	}
 }
 
 - (id) init
@@ -112,9 +93,11 @@ static NSLock *_storeLock = nil;
 
 - (void) setThreshold:(L4Level *) aLevel
 {
-	[threshold autorelease];
-	threshold = [aLevel retain];
-	thresholdInt = [aLevel intValue];
+    @synchronized(self) {
+        [threshold autorelease];
+        threshold = [aLevel retain];
+        thresholdInt = [aLevel intValue];
+    }
 }
 
 - (void) setThresholdByName:(NSString *) aLevelName
@@ -131,16 +114,17 @@ static NSLock *_storeLock = nil;
 {
 	id theLogger = nil;
 	if( aClass != nil ) {
-		theLogger = [repository objectForKey:aClass];
-		
-		if( theLogger == nil ) {
-			NSString *pseudoFqcn = [self pseudoFqcnForClass:aClass];
-			theLogger = [self loggerForName:pseudoFqcn factory:self];
-			//		[_storeLock lock];  // ### LOCKING
-			[repository setObject:theLogger forKey:aClass];
-			//		[_storeLock unlock];  // ### LOCKING
-		}
-	}
+        
+        @synchronized(self) {
+            theLogger = [repository objectForKey:aClass];
+            
+            if( theLogger == nil ) {
+                NSString *pseudoFqcn = [self pseudoFqcnForClass:aClass];
+                theLogger = [self loggerForName:pseudoFqcn factory:self];
+                [repository setObject:theLogger forKey:aClass];
+            }
+        }
+    }
 
 	return theLogger;
 }
@@ -155,56 +139,56 @@ static NSLock *_storeLock = nil;
 	L4Logger *theLogger = nil;
 	id theNode;
 	
-//	[_storeLock lock];  // ### LOCKING
-	theNode = [repository objectForKey:aName];
-//	[_storeLock unlock];  // ### LOCKING
-
-	if( theNode == nil ) {
-//		[_storeLock lock];  // ### LOCKING
-		//
-		// if the node is nil, then its a new logger & therefore 
-		// a new leaf node, since no placeholder node was found.
-		//
-		theLogger = [aFactory newLoggerInstance:aName];
-		[theLogger setLoggerRepository:self];
-		[repository setObject:theLogger forKey:aName];
-		[self updateParentsOfLogger:theLogger];
-		[loggers addObject:theLogger];
-
-//		[_storeLock unlock];  // ### LOCKING
-	} else if([theNode isKindOfClass:[L4Logger class]]) {
-		return (L4Logger *) theNode;
-	} else if([theNode isKindOfClass:[NSMutableArray class]]) {
-//		[_storeLock lock];  // ### LOCKING
-		//
-		// this node is a placeholder middle node, since its an NSMutableArray.  It contains children and
-		// a parent, so when we insert this logger, we need to update all of the children to point to this node
-		// and to point to their parent.
-		//
-		theLogger = [aFactory newLoggerInstance:aName];
-		[theLogger setLoggerRepository:self];
-		[repository setObject:theLogger forKey:aName];
-		[self updateChildren:theNode withParent:theLogger ];
-		[self updateParentsOfLogger:theLogger];
-		[loggers addObject:theLogger];
-
-//		[_storeLock lock];  // ### LOCKING
-	} else {
-		// We should hopefully never end up here.  ### TODO ??? - Internal Consistency Error
-		//
-		NSString *one = @"Logger not found & internal repository in returned unexpected node type:";
-		NSString *twoDo = @"  ### TODO:Should we raise here, because we shouldn't be here.";
-		[L4LogLog error:
-			[[one stringByAppendingString:
-				NSStringFromClass([theNode class])] stringByAppendingString:twoDo]];
-	}
+    @synchronized(self) {
+        theNode = [repository objectForKey:aName];
+        
+        if( theNode == nil ) {
+            //
+            // if the node is nil, then its a new logger & therefore 
+            // a new leaf node, since no placeholder node was found.
+            //
+            theLogger = [aFactory newLoggerInstance:aName];
+            [theLogger setLoggerRepository:self];
+            [repository setObject:theLogger forKey:aName];
+            [self updateParentsOfLogger:theLogger];
+            [loggers addObject:theLogger];
+            
+        } else if([theNode isKindOfClass:[L4Logger class]]) {
+            theLogger =  (L4Logger *) theNode;
+        } else if([theNode isKindOfClass:[NSMutableArray class]]) {
+            //
+            // this node is a placeholder middle node, since its an NSMutableArray.  It contains children and
+            // a parent, so when we insert this logger, we need to update all of the children to point to this node
+            // and to point to their parent.
+            //
+            theLogger = [aFactory newLoggerInstance:aName];
+            [theLogger setLoggerRepository:self];
+            [repository setObject:theLogger forKey:aName];
+            [self updateChildren:theNode withParent:theLogger ];
+            [self updateParentsOfLogger:theLogger];
+            [loggers addObject:theLogger];
+            
+        } else {
+            // We should hopefully never end up here.  ### TODO ??? - Internal Consistency Error
+            //
+            NSString *one = @"Logger not found & internal repository in returned unexpected node type:";
+            NSString *twoDo = @"  ### TODO:Should we raise here, because we shouldn't be here.";
+            [L4LogLog error:
+             [[one stringByAppendingString:
+               NSStringFromClass([theNode class])] stringByAppendingString:twoDo]];
+        }
+    }
 
 	return (L4Logger *) theLogger;
 }
 
 - (NSArray *) currentLoggers
 {
-	return [[loggers copy] autorelease];
+    NSArray *currentLoggers = nil;
+    @synchronized(self) {
+        currentLoggers = [[loggers copy] autorelease];
+    }
+    return currentLoggers;
 }
 
 - (void) emitNoAppenderWarning:(L4Logger *) aLogger
@@ -219,38 +203,41 @@ static NSLock *_storeLock = nil;
 
 - (void) resetConfiguration
 {
-	NSEnumerator *enumerator = [loggers objectEnumerator];
-	L4Logger *logger;
-
-	[root setLevel:[L4Level debug]];
-	[self setThreshold:[L4Level all]];
-	
-	[self shutdown];
-
-	while ((logger = (L4Logger *)[enumerator nextObject])) {
-		[logger setLevel:nil];
-		[logger setAdditivity:YES];
-	}
-	
+    @synchronized(self) {
+        NSEnumerator *enumerator = [loggers objectEnumerator];
+        L4Logger *logger;
+        
+        [root setLevel:[L4Level debug]];
+        [self setThreshold:[L4Level all]];
+        
+        [self shutdown];
+        
+        while ((logger = (L4Logger *)[enumerator nextObject])) {
+            [logger setLevel:nil];
+            [logger setAdditivity:YES];
+        }
+    }
 }
 
 - (void) shutdown
 {
-	NSEnumerator *enumerator = [loggers objectEnumerator];
-	L4Logger *logger;
-
-	[root closeNestedAppenders];
-
-	while ((logger = (L4Logger *)[enumerator nextObject])) {
-		[logger closeNestedAppenders];
-	}
-
-	[root removeAllAppenders];
-	enumerator = [loggers objectEnumerator];
-	
-	while ((logger = (L4Logger *)[enumerator nextObject])) {
-		[logger removeAllAppenders];
-	}
+    @synchronized(self) {
+        NSEnumerator *enumerator = [loggers objectEnumerator];
+        L4Logger *logger;
+        
+        [root closeNestedAppenders];
+        
+        while ((logger = (L4Logger *)[enumerator nextObject])) {
+            [logger closeNestedAppenders];
+        }
+        
+        [root removeAllAppenders];
+        enumerator = [loggers objectEnumerator];
+        
+        while ((logger = (L4Logger *)[enumerator nextObject])) {
+            [logger removeAllAppenders];
+        }
+    }
 }
 
 /* ********************************************************************* */

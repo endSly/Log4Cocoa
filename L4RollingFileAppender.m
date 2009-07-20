@@ -105,14 +105,16 @@ const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize = (1024 * 1024
 
 - (void)rollOver
 {
-	// if maxBackupIndex is 0, truncate file and create no backups
-	if ([self maxBackupIndex] <= 0) {
-		[fileHandle truncateFileAtOffset:0];
-	} else {
-		[self closeFile];
-		[self renameLogFile:0];
-		[self setupFile];
-	}
+    @synchronized(self) {
+        // if maxBackupIndex is 0, truncate file and create no backups
+        if ([self maxBackupIndex] <= 0) {
+            [fileHandle truncateFileAtOffset:0];
+        } else {
+            [self closeFile];
+            [self renameLogFile:0];
+            [self setupFile];
+        }
+    }
 }
 
 /* ********************************************************************* */
@@ -120,13 +122,15 @@ const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize = (1024 * 1024
 /* ********************************************************************* */
 - (void)subAppend:(L4LoggingEvent*)event
 {
-	// if the file's size has exceeded maximumFileSize, roll the file over
-	if ([fileHandle offsetInFile] >= [self maximumFileSize]) {
-		[self rollOver];
-	}
-	
-	// use the superclass's subAppend
-	[super subAppend:event];
+    @synchronized(self) {
+        // if the file's size has exceeded maximumFileSize, roll the file over
+        if ([fileHandle offsetInFile] >= [self maximumFileSize]) {
+            [self rollOver];
+        }
+        
+        // use the superclass's subAppend
+        [super subAppend:event];
+    }
 }
 
 /* ********************************************************************* */
@@ -156,7 +160,7 @@ const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize = (1024 * 1024
 		}
 		
 		// try to delete the oldest backup file
-		if (![fileManager removeFileAtPath:tempOldFileName handler:nil]) {
+		if (![fileManager removeItemAtPath:tempOldFileName error:nil]) {
 			// if we couldn't delete the file, raise an exception
 			[NSException raise:@"CantDeleteFileException" format:@"Unable to delete the file %@", tempOldFileName];
 		}
@@ -196,7 +200,7 @@ const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize = (1024 * 1024
 		}
 		
 		// rename the old file
-		if (![fileManager movePath:tempOldFileName toPath:tempNewFileName handler:nil]) {
+		if (![fileManager moveItemAtPath:tempOldFileName toPath:tempNewFileName error:nil]) {
 			[NSException raise:@"CantMoveFileException" 
 						format:@"Unable to move file %@ to %@!", tempOldFileName, tempNewFileName];
 		}

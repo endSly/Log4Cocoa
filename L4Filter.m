@@ -31,10 +31,12 @@
 
 - (void) setNext: (L4Filter *) newNext
 {
-	if( next != newNext ) {
-		[next autorelease];
-		next = [newNext retain];
-	}
+    @synchronized(self) {
+        if( next != newNext ) {
+            [next autorelease];
+            next = [newNext retain];
+        }
+    }
 }
 
 @end

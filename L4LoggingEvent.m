@@ -139,7 +139,7 @@ static NSCalendarDate *startTime = nil;
 - (NSString *) fileName
 {
 	if((fileName == nil) && (rawFileName != NO_FILE_NAME)) {
-		fileName = [[NSString stringWithCString: rawFileName] retain];
+		fileName = [[NSString stringWithCString: rawFileName encoding: NSUTF8StringEncoding] retain];
 	} else if (rawFileName == NO_FILE_NAME) {
 		fileName = [[NSString stringWithString: @"No file name!"] retain];
 	}
@@ -149,7 +149,7 @@ static NSCalendarDate *startTime = nil;
 - (NSString *) methodName
 {
 	if((methodName == nil) && (rawMethodName != NO_METHOD_NAME)) {
-		methodName = [[NSString stringWithCString: rawMethodName] retain];
+		methodName = [[NSString stringWithCString: rawMethodName encoding: NSUTF8StringEncoding] retain];
 	} else if (rawMethodName == NO_METHOD_NAME) {
 		methodName = [[NSString stringWithString: @"No method name!"] retain];
 	}

@@ -18,7 +18,6 @@ static L4Level *_error = nil;
 static L4Level *_warn  = nil;
 static L4Level *_info  = nil;
 static L4Level *_debug = nil;
-static NSLock *_loggerLock = nil;
 
 @implementation L4Logger
 
@@ -36,22 +35,6 @@ static NSLock *_loggerLock = nil;
 	_error = [L4Level error];
 	_fatal = [L4Level fatal];
 
-	if ([NSThread isMultiThreaded]) {
-		[self taskNowMultiThreaded: nil];
-	} else {
-		[[NSNotificationCenter defaultCenter] addObserver: self
-												 selector: @selector(taskNowMultiThreaded:)
-													 name: NSWillBecomeMultiThreadedNotification
-												   object: nil];
-	}
-}
-
-+ (void) taskNowMultiThreaded: (NSNotification *) event 
-{
-	if (!_loggerLock) {
-		_loggerLock = [[NSLock alloc] init];
-		// we can add other things here.
-	}
 }
 
 - init
@@ -63,8 +46,8 @@ static NSLock *_loggerLock = nil;
 {
 	self = [super init];
 	if( self != nil ) {
-		name = [aName retain];
-		additive = YES;
+		name = [aName copy];
+		additivity = YES;
 	}
 	
 	return self;
@@ -81,12 +64,12 @@ static NSLock *_loggerLock = nil;
 
 - (BOOL) additivity
 {
-	return additive;
+	return additivity;
 }
 
 - (void) setAdditivity: (BOOL) newAdditivity
 {
-	additive = newAdditivity;
+        additivity = newAdditivity;
 }
 
 - (L4Logger *) parent
@@ -96,8 +79,10 @@ static NSLock *_loggerLock = nil;
 
 - (void) setParent: (L4Logger *) theParent
 {
-	[parent autorelease];
-	parent = [theParent retain];
+    @synchronized(self) {
+        [parent autorelease];
+        parent = [theParent retain];
+    }
 }
 
 - (NSString *) name
@@ -112,28 +97,32 @@ static NSLock *_loggerLock = nil;
 
 - (void) setLoggerRepository: (id <L4LoggerRepository>) aRepository
 {
-	if( repository != aRepository ) {
-		[repository autorelease];
-		repository = [aRepository retain];
-	}
+    @synchronized(self) {
+        if( repository != aRepository ) {
+            [repository autorelease];
+            repository = [aRepository retain];
+        }
+    }
 }
 
 // NO METHOD CALLING - PERFORMANCE TWEAKED METHOD
 - (L4Level *) effectiveLevel
 {
 	L4Level *effectiveLevel = nil;
-	L4Logger *aLogger = self;
-	while (aLogger != nil) {
-		if((aLogger->level) != nil) {
-			effectiveLevel = aLogger->level;
-			break;
-		}
-		aLogger = aLogger->parent;
-	}
-	
-	if (effectiveLevel == nil) {
-		[L4LogLog error: @"Root Logger Not Found!"];
-	}
+    @synchronized(self) {
+        L4Logger *aLogger = self;
+        while (aLogger != nil) {
+            if((aLogger->level) != nil) {
+                effectiveLevel = aLogger->level;
+                break;
+            }
+            aLogger = aLogger->parent;
+        }
+    }
+        
+    if (effectiveLevel == nil) {
+        [L4LogLog error: @"Root Logger Not Found!"];
+    }
 	return effectiveLevel;
 }
 
@@ -145,9 +134,11 @@ static NSLock *_loggerLock = nil;
 /* nil is ok, because then we just pick up the parent's level */
 - (void) setLevel: (L4Level *) aLevel
 {
-	if( level != aLevel ) {
-		[level autorelease];
-		level = [aLevel retain];
+    @synchronized(self) {
+    	if( level != aLevel ) {
+	    	[level autorelease];
+		    level = [aLevel retain];
+	    }
 	}
 }
 
@@ -158,23 +149,22 @@ static NSLock *_loggerLock = nil;
 - (void) callAppenders:(L4LoggingEvent *) event
 {
 	int writes = 0;
+
+	@synchronized(self) {
 	
-	//	[_loggerLock lock];  // ### LOCKING
-	
-	for( L4Logger *aLogger = self; aLogger != nil; aLogger = [aLogger parent] ) {
-		if( [aLogger aai] != nil ) {
-			writes += [[aLogger aai] appendLoopOnAppenders: event];
-		}
-		if( ![aLogger additivity] ) {
-			break;
-		}
-	}
-	
-	//	[_loggerLock unlock];  // ### LOCKING
-	
-	if( writes == 0 ) {
-		[repository emitNoAppenderWarning: self];
-	}
+        for( L4Logger *aLogger = self; aLogger != nil; aLogger = [aLogger parent] ) {
+            if( [aLogger aai] != nil ) {
+                writes += [[aLogger aai] appendLoopOnAppenders: event];
+            }
+            if( ![aLogger additivity] ) {
+                break;
+            }
+        }
+    }
+        
+    if( writes == 0 ) {
+        [repository emitNoAppenderWarning: self];
+    }
 }
 
 - (L4AppenderAttachable *) aai
@@ -194,54 +184,55 @@ static NSLock *_loggerLock = nil;
 
 - (void) addAppender: (id <L4Appender>) appender
 {
-	//	[_loggerLock lock];  // ### LOCKING
-	if( aai == nil ) {
-		aai = [[L4AppenderAttachable alloc] init];
-	}
-	
-	[aai addAppender: appender];
-	//	[_loggerLock unlock];  // ### LOCKING
+    @synchronized(self) {
+        if( aai == nil ) {
+            aai = [[L4AppenderAttachable alloc] init];
+        }
+        
+        [aai addAppender: appender];
+    }
 }
 
 - (BOOL) isAttached: (id <L4Appender>) appender
 {
-	if((appender == nil) || (aai == nil)) {
-		return NO;
-	}
-	return [aai isAttached: appender];
+    BOOL isAttached = NO;
+    @synchronized(self) {
+        if((appender != nil) && (aai != nil)) {
+            isAttached = [aai isAttached: appender];
+        }
+    }
+    return isAttached;
 }
 
 - (void) closeNestedAppenders
 {
-	NSEnumerator *enumerator = [[self allAppenders] objectEnumerator];
-	id <L4Appender> anObject;
-	
-	while ((anObject = (id <L4Appender>)[enumerator nextObject])) {
-		[anObject close];
-	}
+    @synchronized(self) {
+        NSEnumerator *enumerator = [[self allAppenders] objectEnumerator];
+        id <L4Appender> anObject;
+        
+        while ((anObject = (id <L4Appender>)[enumerator nextObject])) {
+            [anObject close];
+        }
+    }
 }
 
 - (void) removeAllAppenders
 {
-	//	[_loggerLock lock];  // ### LOCKING
-	[aai removeAllAppenders];
-	[aai release];
-	aai = nil;
-	//	[_loggerLock unlock];  // ### LOCKING
+    @synchronized(self) {
+        [aai removeAllAppenders];
+        [aai release];
+        aai = nil;
+    }
 }
 
 - (void) removeAppender: (id <L4Appender>) appender
 {
-	//	[_loggerLock lock];  // ### LOCKING
-	[aai removeAppender: appender];
-	//	[_loggerLock unlock];  // ### LOCKING
+    [aai removeAppender: appender];
 }
 
 - (void) removeAppenderWithName: (NSString *) aName
 {
-	//	[_loggerLock lock];  // ### LOCKING
-	[aai removeAppenderWithName: aName];
-	//	[_loggerLock unlock];  // ### LOCKING
+    [aai removeAppenderWithName: aName];
 }
 
 /* ********************************************************************* */

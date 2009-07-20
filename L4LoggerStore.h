@@ -18,13 +18,6 @@
 }
 
 /**
- * enables thread locking, no need to lock if not mulit-threaded.
- * @param event
- */
-+ (void) taskNowMultiThreaded:(NSNotification *) event;
-
-
-/**
  * the following are L4LoggerRepository methods
  * @param rootLogger the root logger.
  */

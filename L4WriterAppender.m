@@ -66,9 +66,11 @@ static NSData *lineBreakChar;
 
 - (void) append: (L4LoggingEvent *) anEvent
 {
-	if([self checkEntryConditions]) {
-		[self subAppend: anEvent];
-	}
+    @synchronized(self) {
+        if([self checkEntryConditions]) {
+            [self subAppend: anEvent];
+        }
+    }
 }
 
 - (void) subAppend: (L4LoggingEvent *) anEvent
@@ -108,12 +110,14 @@ static NSData *lineBreakChar;
 
 - (void)setFileHandle: (NSFileHandle*)fh
 {
-	if (fileHandle != fh) {
-		[self closeWriter];
-		[fileHandle release];
-		fileHandle = nil;
-		fileHandle = [fh retain];
-	}
+    @synchronized(self) {
+        if (fileHandle != fh) {
+            [self closeWriter];
+            [fileHandle release];
+            fileHandle = nil;
+            fileHandle = [fh retain];
+        }
+    }
 }
 
 - (void) reset
@@ -126,11 +130,13 @@ static NSData *lineBreakChar;
 	if( theString != nil )
 	{
 		@try {
-			// TODO ### -- NEED UNIX EXPERT IS THIS THE BEST WAY ??
-			// TODO - ### - NEED TO WORK ON ENCODING ISSUES (& THEN LATER LOCALIZATION)
-			//
-			[fileHandle writeData: [theString dataUsingEncoding: NSASCIIStringEncoding allowLossyConversion: YES]];
-			[fileHandle writeData: lineBreakChar];
+            @synchronized(self) {
+                // TODO ### -- NEED UNIX EXPERT IS THIS THE BEST WAY ??
+                // TODO - ### - NEED TO WORK ON ENCODING ISSUES (& THEN LATER LOCALIZATION)
+                //
+                [fileHandle writeData: [theString dataUsingEncoding: NSASCIIStringEncoding allowLossyConversion: YES]];
+                [fileHandle writeData: lineBreakChar];
+            }
 		}
 		@catch (NSException *localException) {
 			[L4LogLog error:[NSString stringWithFormat:@"Appender failed to write string:%@\n%@", theString, localException]];
@@ -163,11 +169,13 @@ static NSData *lineBreakChar;
 /* ********************************************************************* */
 - (void) close // synchronized ... make thread safe???
 {
-	if( !closed ) {
-		closed = YES;
-		[self writeFooter];
-		[self reset];
-	}
+    @synchronized(self) {
+        if( !closed ) {
+            closed = YES;
+            [self writeFooter];
+            [self reset];
+        }
+    }
 }
 
 - (BOOL) requiresLayout

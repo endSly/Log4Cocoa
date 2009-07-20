@@ -1,6 +1,6 @@
 #import "L4RootLogger.h"
 #import "L4LogLog.h"
-#import "L4Level.h";
+#import "L4Level.h"
 
 @implementation L4RootLogger
 

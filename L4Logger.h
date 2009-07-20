@@ -25,25 +25,17 @@
  */
 @interface L4Logger : NSObject {
 	NSString *name; /**< The name of this logger.*/
-	L4Level *level; /**< The level of this logger.*/
+	L4Level *level; /**< The level of this logger. Nil means use parent's*/
 	L4Logger *parent; /**< The parent of this logger.*/
 	id <L4LoggerRepository> repository; /**< Don't know.*/
 	 /**
 	  * Flag for if log messages are additive.  If YES, logging events are set to parent loggers.  
 	  * If NO, parents are not called. 
 	  */
-	BOOL additive;
+	BOOL additivity;
 	L4AppenderAttachable *aai; /**< What does the actual appending for this logger.*/
 }
 
-/**
- * Handles when the application using logging becomes multi-threaded.
- * The initialize method fist calls this method, and registers with the default
- * notification center for NSWillBecomeMultiThreadedNotification events.
- *
- * @param event NSWillBecomeMultiThreadedNotification notification.
- */
-+ (void) taskNowMultiThreaded:(NSNotification *) event;
 
 /**
  * DON'T USE, only for use of log manager

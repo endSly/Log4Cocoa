@@ -89,20 +89,24 @@
 /* ********************************************************************* */
 - (void) setStandardOut
 {
-	if(!isStandardOut || (fileHandle == nil)) {
-		isStandardOut = YES;
-		[fileHandle autorelease];
-		fileHandle = [[NSFileHandle fileHandleWithStandardOutput] retain];
-	}
+    @synchronized(self) {
+        if(!isStandardOut || (fileHandle == nil)) {
+            isStandardOut = YES;
+            [fileHandle autorelease];
+            fileHandle = [[NSFileHandle fileHandleWithStandardOutput] retain];
+        }
+    }
 }
 
 - (void) setStandardErr
 {
-	if(isStandardOut || (fileHandle == nil)) {
-		isStandardOut = NO;
-		[fileHandle autorelease];
-		fileHandle = [[NSFileHandle fileHandleWithStandardError] retain];
-	}
+    @synchronized(self) {
+        if(isStandardOut || (fileHandle == nil)) {
+            isStandardOut = NO;
+            [fileHandle autorelease];
+            fileHandle = [[NSFileHandle fileHandleWithStandardError] retain];
+        }
+    }
 }
 
 

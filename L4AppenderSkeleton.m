@@ -95,7 +95,11 @@
 
 - (BOOL) isAsSevereAsThreshold: (L4Level *) aLevel
 {
-	return ((threshold == nil) || ([aLevel isGreaterOrEqual: threshold]));
+    BOOL isAsSevere = NO;
+    @synchronized(self) {
+    	isAsSevere = ((threshold == nil) || ([aLevel isGreaterOrEqual: threshold]));
+    }
+    return isAsSevere;
 }
 
 - (L4Level *) threshold
@@ -105,10 +109,12 @@
 
 - (void) setThreshold: (L4Level *) aLevel
 {
-	if( threshold != aLevel ) {
-		[threshold autorelease];
-		threshold = [aLevel retain];
-	}
+    @synchronized(self) {
+        if( threshold != aLevel ) {
+            [threshold autorelease];
+            threshold = [aLevel retain];
+        }
+    }
 }
 
 /* ********************************************************************* */
@@ -158,44 +164,55 @@
 // calls [self append: anEvent] after doing threshold checks
 - (void) doAppend: (L4LoggingEvent *) anEvent
 {
-	L4Filter *aFilter = [self headFilter];
-	BOOL breakLoop = NO;
-	
-	if( closed ) {
-		[L4LogLog error: [@"Attempted to append to closed appender named: " stringByAppendingString: name]];
-		return;
-	}
-	
-	if(![self isAsSevereAsThreshold: [anEvent level]]) {
-		return;
-	}
-	
-	while((aFilter != nil) && !breakLoop) {
-		switch([aFilter decide: anEvent]) {
-			case L4FilterDeny:
-				return;
-			case L4FilterAccept:
-				breakLoop = YES;
-				break;
-			case L4FilterNeutral:
-			default:
-				aFilter = [aFilter next];
-				break;
-		}
-	}
-	[self append: anEvent]; // passed all threshold checks, append event.
+    L4Filter *aFilter = [self headFilter];
+    BOOL breakLoop = NO;
+    
+    if(![self isAsSevereAsThreshold: [anEvent level]]) {
+        return;
+    }
+
+    BOOL isOkToAppend = YES;
+    
+    @synchronized(self) {
+
+        if( closed ) {
+            [L4LogLog error: [@"Attempted to append to closed appender named: " stringByAppendingString: name]];
+            isOkToAppend = NO;
+        }
+        
+        while((aFilter != nil) && !breakLoop) {
+            switch([aFilter decide: anEvent]) {
+                case L4FilterDeny:
+                    isOkToAppend = NO;
+                    breakLoop = YES;
+                    break;
+                case L4FilterAccept:
+                    breakLoop = YES;
+                    break;
+                case L4FilterNeutral:
+                default:
+                    aFilter = [aFilter next];
+                    break;
+            }
+        }
+        
+        if(isOkToAppend) {
+            [self append: anEvent]; // passed all threshold checks, append event.
+        }
+    }
 }
 
 - (void) appendFilter: (L4Filter *) newFilter
 {
-	if( headFilter == nil ) {
-		headFilter = [newFilter retain];
-		tailFilter = newFilter; // don't retain at the tail, just the head.
-	} else {
-		[tailFilter setNext: newFilter];
-		tailFilter = newFilter;
-	}
-	
+    @synchronized(self) {
+        if( headFilter == nil ) {
+            headFilter = [newFilter retain];
+            tailFilter = newFilter; // don't retain at the tail, just the head.
+        } else {
+            [tailFilter setNext: newFilter];
+            tailFilter = newFilter;
+        }
+    }
 }
 
 - (L4Filter *) headFilter
@@ -205,17 +222,19 @@
 
 - (void) clearFilters
 {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	
-	id aFilter;
-	[headFilter autorelease];
-	for( aFilter = headFilter; aFilter != nil; aFilter = [headFilter next] ) {
-		[aFilter setNext: nil];
-	}
-	headFilter = nil;
-	tailFilter = nil;
-	
-	[pool release];
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+
+    @synchronized(self) {
+        id aFilter;
+        [headFilter autorelease];
+        for( aFilter = headFilter; aFilter != nil; aFilter = [headFilter next] ) {
+            [aFilter setNext: nil];
+        }
+        headFilter = nil;
+        tailFilter = nil;
+    }
+    
+    [pool release];
 }
 
 - (void) close
@@ -234,10 +253,12 @@
 
 - (void) setName: (NSString *) aName
 {
-	if( name != aName ) {
-		[name autorelease];
-		name = [aName retain];
-	}
+    @synchronized(self) {
+        if( name != aName ) {
+            [name autorelease];
+            name = [aName copy];
+        }
+    }
 }
 
 - (L4Layout *) layout
@@ -247,10 +268,12 @@
 
 - (void) setLayout: (L4Layout *) aLayout
 {
-	if( layout != aLayout ) {
-		[layout autorelease];
-		layout = [aLayout retain];
-	}
+    @synchronized(self) {
+        if( layout != aLayout ) {
+            [layout autorelease];
+            layout = [aLayout retain];
+        }
+    }
 }
 
 @end
