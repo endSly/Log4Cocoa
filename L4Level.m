@@ -21,13 +21,13 @@ static L4Level *L4_ALL   = nil;
 /* ********************************************************************* */
 + (void) initialize
 {
-	L4_OFF		= [L4Level level:OFF_INT    withName:@"OFF"		syslogEquivalent:0 ];
-	L4_FATAL	= [L4Level level:FATAL_INT	withName:@"FATAL"	syslogEquivalent:0 ];
-	L4_ERROR	= [L4Level level:ERROR_INT	withName:@"ERROR"	syslogEquivalent:3 ];
-	L4_WARN		= [L4Level level:WARN_INT	withName:@"WARN"	syslogEquivalent:4 ];
-	L4_INFO		= [L4Level level:INFO_INT	withName:@"INFO"	syslogEquivalent:6 ];
-	L4_DEBUG	= [L4Level level:DEBUG_INT	withName:@"DEBUG"	syslogEquivalent:7 ];
-	L4_ALL		= [L4Level level:ALL_INT    withName:@"ALL"		syslogEquivalent:7 ];
+	L4_OFF		= [[L4Level level:OFF_INT    withName:@"OFF"	syslogEquivalent:0 ] retain];
+	L4_FATAL	= [[L4Level level:FATAL_INT	withName:@"FATAL"	syslogEquivalent:0 ] retain];
+	L4_ERROR	= [[L4Level level:ERROR_INT	withName:@"ERROR"	syslogEquivalent:3 ] retain];
+	L4_WARN		= [[L4Level level:WARN_INT	withName:@"WARN"	syslogEquivalent:4 ] retain];
+	L4_INFO		= [[L4Level level:INFO_INT	withName:@"INFO"	syslogEquivalent:6 ] retain];
+	L4_DEBUG	= [[L4Level level:DEBUG_INT	withName:@"DEBUG"	syslogEquivalent:7 ] retain];
+	L4_ALL		= [[L4Level level:ALL_INT    withName:@"ALL"	syslogEquivalent:7 ] retain];
 }
 
 + (L4Level *) level:(int)aLevel withName:(NSString *)aName syslogEquivalent:(int)sysLogLevel
