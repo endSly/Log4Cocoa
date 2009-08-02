@@ -18,28 +18,28 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
 
 - (id)init
 {
-	return [self initWithConversionPattern: L4PatternLayoutDefaultConversionPattern];
+	return [self initWithConversionPattern:L4PatternLayoutDefaultConversionPattern];
 }
 
-- (id) initWithProperties: (L4Properties *) initProperties
+- (id) initWithProperties:(L4Properties *) initProperties
 {
-    self = [super initWithProperties: initProperties];
+    self = [super initWithProperties:initProperties];
     
     if ( self != nil ) {
         // Support for layout.ConversionPattern in properties configuration file
         NSString *buf = [initProperties stringForKey:@"ConversionPattern"];
         if ( buf == nil ) {
-            [L4LogLog warn: @"ConversionPattern not specified in properties, will use default."];
+            [L4LogLog warn:@"ConversionPattern not specified in properties, will use default."];
 			buf = L4PatternLayoutDefaultConversionPattern;
         }
-		[self setConversionPattern: buf];
-		tokenArray = [[NSMutableArray alloc] initWithCapacity: 3];
+		[self setConversionPattern:buf];
+		tokenArray = [[NSMutableArray alloc] initWithCapacity:3];
     }
     
     return self;
 }
 
-- (id)initWithConversionPattern: (NSString*)aConversionPattern
+- (id)initWithConversionPattern:(NSString*)aConversionPattern
 {
 	L4Properties *properties = [L4Properties properties];
 	[properties setString:aConversionPattern forKey:@"ConversionPattern"];
@@ -62,13 +62,13 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
 	return conversionPattern;
 }
 
-- (void)setConversionPattern: (NSString*)cp
+- (void)setConversionPattern:(NSString*)cp
 {
     @synchronized(self) {
-        if (![conversionPattern isEqualToString: cp]) {
+        if (![conversionPattern isEqualToString:cp]) {
             [conversionPattern release];
             conversionPattern = nil;
-            conversionPattern = [cp retain];
+            conversionPattern = [cp copy];
             
             // since conversion pattern changed, reset _tokenArray
             [tokenArray removeAllObjects];
@@ -81,7 +81,7 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
 	return parserDelegate;
 }
 
-- (void)setParserDelegate: (id)pd
+- (void)setParserDelegate:(id)pd
 {
 	// delegates are not retained by the objects that they are delegates for
 	parserDelegate = pd;
@@ -92,13 +92,13 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
 	return converterDelegate;
 }
 
-- (void)setConverterDelegate: (id)cd
+- (void)setConverterDelegate:(id)cd
 {
 	// delegates are not retained by the objects that they are delegates for
 	converterDelegate = cd;
 }
 
-- (NSString *)format: (L4LoggingEvent *)event
+- (NSString *)format:(L4LoggingEvent *)event
 {
 	BOOL				handled = NO;
 	NSMutableString*	formattedString = nil;
@@ -109,15 +109,16 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
         
         // check the conversion pattern to make sure it has been set, if not, throw an L4NoConversionPatternException
         if ([self conversionPattern] == nil) {
-            [NSException raise: L4NoConversionPatternException format: @"L4PatternLayout's conversion pattern is nil and must be set first using either initWithConversionPattern: or setConversionPattern:"];
+            [NSException raise:L4NoConversionPatternException 
+						format:@"L4PatternLayout's conversion pattern is nil and must be set first using either initWithConversionPattern: or setConversionPattern:"];
         }	
         
-        formattedString = [NSMutableString stringWithCapacity: 10];
+        formattedString = [NSMutableString stringWithCapacity:10];
         
         // let delegate handle it first
-        if (parserDelegate != nil && [parserDelegate respondsToSelector: @selector(parseConversionPattern:intoArray:)]) {
+        if (parserDelegate != nil && [parserDelegate respondsToSelector:@selector(parseConversionPattern:intoArray:)]) {
             if ([tokenArray count] <= 0) {
-                [parserDelegate parseConversionPattern: conversionPattern intoArray: &tokenArray];
+                [parserDelegate parseConversionPattern:conversionPattern intoArray:&tokenArray];
             }
             
             for (index = 0; index < [tokenArray count]; index++) {
@@ -125,23 +126,30 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
                 convertedString = [NSString string];
                 
                 // let delegate handle it first
-                if (converterDelegate != nil && [converterDelegate respondsToSelector: @selector(convertTokenString:withLoggingEvent:intoString:)]) {
-                    handled = [converterDelegate convertTokenString: [tokenArray objectAtIndex: index] withLoggingEvent: event intoString: &convertedString];
+                if (converterDelegate != nil && 
+					[converterDelegate respondsToSelector:@selector(convertTokenString:withLoggingEvent:intoString:)]) {
+                    handled = [converterDelegate convertTokenString:[tokenArray objectAtIndex:index] 
+												   withLoggingEvent:event 
+														 intoString:&convertedString];
                     if (!handled) {
-                        [self convertTokenString: [tokenArray objectAtIndex: index] withLoggingEvent: event intoString: &convertedString];
+                        [self convertTokenString:[tokenArray objectAtIndex:index] 
+								withLoggingEvent:event 
+									  intoString:&convertedString];
                     }
                 } else {
-                    [self convertTokenString: [tokenArray objectAtIndex: index] withLoggingEvent: event intoString: &convertedString];
+                    [self convertTokenString:[tokenArray objectAtIndex:index] 
+							withLoggingEvent:event 
+								  intoString:&convertedString];
                 }
                 
                 // only append string if it isn't nil
                 if (convertedString != nil) {
-                    [formattedString appendString: convertedString];
+                    [formattedString appendString:convertedString];
                 }
             }
         } else {
             if ([tokenArray count] <= 0) {
-                [self parseConversionPattern: conversionPattern intoArray: &tokenArray];
+                [self parseConversionPattern:conversionPattern intoArray:&tokenArray];
             }
             
             for (index = 0; index < [tokenArray count]; index++) {
@@ -149,18 +157,25 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
                 convertedString = nil;
                 
                 // let delegate handle it first
-                if (converterDelegate != nil && [converterDelegate respondsToSelector: @selector(convertTokenString:withLoggingEvent:intoString:)]) {
-                    handled = [converterDelegate convertTokenString: [tokenArray objectAtIndex: index] withLoggingEvent: event intoString: &convertedString];
+                if (converterDelegate != nil && 
+					[converterDelegate respondsToSelector:@selector(convertTokenString:withLoggingEvent:intoString:)]) {
+                    handled = [converterDelegate convertTokenString:[tokenArray objectAtIndex:index] 
+												   withLoggingEvent:event 
+														 intoString:&convertedString];
                     if (!handled) {
-                        [self convertTokenString: [tokenArray objectAtIndex: index] withLoggingEvent: event intoString: &convertedString];
+                        [self convertTokenString:[tokenArray objectAtIndex:index] 
+								withLoggingEvent:event 
+									  intoString:&convertedString];
                     }
                 } else {
-                    [self convertTokenString: [tokenArray objectAtIndex: index] withLoggingEvent: event intoString: &convertedString];
+                    [self convertTokenString:[tokenArray objectAtIndex:index] 
+							withLoggingEvent:event 
+								  intoString:&convertedString];
                 }
                 
                 // only append string if it isn't nil
                 if (convertedString != nil) {
-                    [formattedString appendString: convertedString];
+                    [formattedString appendString:convertedString];
                 }
             }
         }
@@ -168,7 +183,7 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
 	return formattedString;
 }
 
-- (void)parseConversionPattern: (NSString*)cp intoArray: (NSMutableArray**)tokenStringArray
+- (void)parseConversionPattern:(NSString*)cp intoArray:(NSMutableArray**)tokenStringArray
 {
 	NSScanner*				scanner = nil;
 	NSCharacterSet*			percentCharacterSet = nil;
@@ -176,61 +191,73 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
 	NSMutableDictionary*	locale = nil;
 	NSMutableString*		token = nil, *tempString = nil;
 	
-	percentCharacterSet = [NSCharacterSet characterSetWithCharactersInString: @"%"];
+	percentCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"%"];
 	
-	specifiersAndSpaceCharacterSet = (NSMutableCharacterSet*)[NSCharacterSet characterSetWithCharactersInString: @" "];
-	[specifiersAndSpaceCharacterSet formUnionWithCharacterSet: L4PatternLayoutDefaultSpecifiers];
+	specifiersAndSpaceCharacterSet = (NSMutableCharacterSet*)[NSCharacterSet characterSetWithCharactersInString:@" "];
+	[specifiersAndSpaceCharacterSet formUnionWithCharacterSet:L4PatternLayoutDefaultSpecifiers];
 	
-	// Get a copy of the user's default locale settings and set the NSDecimalSeparator key of the locale dictionary to the string ".".  This way we can make sure that minimum and maximum length specifiers are scanned correctly by the scanner.
-	locale = [NSMutableDictionary dictionaryWithDictionary: [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
-	[locale setObject: @"." forKey: NSLocaleDecimalSeparator];
+	// Get a copy of the user's default locale settings and set the NSDecimalSeparator key of the locale dictionary to 
+	// the string ".".  This way we can make sure that minimum and maximum length specifiers are scanned correctly by 
+	// the scanner.
+	locale = [NSMutableDictionary 
+			  dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
+	[locale setObject:@"." forKey:NSLocaleDecimalSeparator];
 	
-	scanner = [NSScanner scannerWithString: cp];
-	[scanner setLocale: locale];
+	scanner = [NSScanner scannerWithString:cp];
+	[scanner setLocale:locale];
 	
 	// don't skip any characters when parsing the string
-	[scanner setCharactersToBeSkipped: [NSCharacterSet characterSetWithCharactersInString: @""]];
+	[scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@""]];
 	
 	while (![scanner isAtEnd]) {
-		token = [NSMutableString stringWithCapacity: 10];
-		tempString = [NSMutableString stringWithCapacity: 10];
+		token = [NSMutableString stringWithCapacity:10];
+		tempString = [NSMutableString stringWithCapacity:10];
 		
 		// scan until % is found or end of string is reached
-		[scanner scanUpToCharactersFromSet: percentCharacterSet intoString: &token];
+		[scanner scanUpToCharactersFromSet:percentCharacterSet intoString:&token];
 		
 		// if end of string reached
 		if ([scanner isAtEnd]) {
-			// do nothing, this will force the execution to the end of the while loop where the token string is added to the token string array
-		} else if ([percentCharacterSet characterIsMember: [[scanner string] characterAtIndex: [scanner scanLocation]]]) {
+			// do nothing, this will force the execution to the end of the while loop where the token string is added to
+			// the token string array
+		} else if ([percentCharacterSet characterIsMember:[[scanner string] characterAtIndex:[scanner scanLocation]]]) {
 			// if characters were scanned
 			if ([token length] > 0) {
 				// it should be a literal string and we are done for this iteration of the while loop
 			} else {
-				[token appendFormat: @"%C", [[scanner string] characterAtIndex: [scanner scanLocation]]];
-				[scanner setScanLocation: ([scanner scanLocation] + 1)];
-				[scanner scanUpToCharactersFromSet: specifiersAndSpaceCharacterSet intoString: &tempString];
+				[token appendFormat:@"%C", [[scanner string] characterAtIndex:[scanner scanLocation]]];
+				[scanner setScanLocation:([scanner scanLocation] + 1)];
+				[scanner scanUpToCharactersFromSet:specifiersAndSpaceCharacterSet intoString:&tempString];
 				
 				if ([scanner isAtEnd]) {
-					[NSException raise: L4InvalidSpecifierException format: @"Expected a valid specifier character at position %d in the string '%@'", [scanner scanLocation], [scanner string]];
-				} else if ([[scanner string] characterAtIndex: [scanner scanLocation]] == (unichar)' ') {
-					[NSException raise: L4InvalidSpecifierException format: @"Expected a valid specifier character at position %d in the string '%@'", [scanner scanLocation], [scanner string]];
+					[NSException raise:L4InvalidSpecifierException 
+								format:@"Expected a valid specifier character at position %d in the string '%@'", 
+					 [scanner scanLocation], [scanner string]];
+				} else if ([[scanner string] characterAtIndex:[scanner scanLocation]] == (unichar)' ') {
+					[NSException raise:L4InvalidSpecifierException 
+								format:@"Expected a valid specifier character at position %d in the string '%@'", 
+					 [scanner scanLocation], [scanner string]];
 				} else {
-					[token appendString: tempString];
-					[token appendFormat: @"%C", [[scanner string] characterAtIndex: [scanner scanLocation]]];
-					[scanner setScanLocation: ([scanner scanLocation] + 1)];
+					[token appendString:tempString];
+					[token appendFormat:@"%C", [[scanner string] characterAtIndex:[scanner scanLocation]]];
+					[scanner setScanLocation:([scanner scanLocation] + 1)];
 					
-					if ([L4PatternLayoutTrailingBracesSpecifiers characterIsMember: [[scanner string] characterAtIndex: ([scanner scanLocation] - 1)]]) {
+					if ([L4PatternLayoutTrailingBracesSpecifiers 
+						 characterIsMember:[[scanner string] characterAtIndex:([scanner scanLocation] - 1)]]) {
 						if ([scanner isAtEnd]) {
-							// do nothing, this will force the execution to the end of the while loop where the token string is added to the token string array
-						} else if ([[scanner string] characterAtIndex: [scanner scanLocation]] == (unichar)'{') {
-							[scanner scanUpToString: @"}" intoString: &tempString];
+							// do nothing, this will force the execution to the end of the while loop where the token 
+							// string is added to the token string array
+						} else if ([[scanner string] characterAtIndex:[scanner scanLocation]] == (unichar)'{') {
+							[scanner scanUpToString:@"}" intoString:&tempString];
 							
 							if ([scanner isAtEnd]) {
-								[NSException raise: L4InvalidBraceClauseException format: @"Expected a closing brace '}' character at position %d in the string '%@'", [scanner scanLocation], [scanner string]];
-							} else if ([[scanner string] characterAtIndex: [scanner scanLocation]] == (unichar)'}') {
-								[token appendString: tempString];
-								[token appendFormat: @"%C", [[scanner string] characterAtIndex: [scanner scanLocation]]];
-								[scanner setScanLocation: ([scanner scanLocation] + 1)];
+								[NSException raise:L4InvalidBraceClauseException 
+											format:@"Expected a closing brace '}' character at position %d in the string '%@'", 
+								 [scanner scanLocation], [scanner string]];
+							} else if ([[scanner string] characterAtIndex:[scanner scanLocation]] == (unichar)'}') {
+								[token appendString:tempString];
+								[token appendFormat:@"%C", [[scanner string] characterAtIndex:[scanner scanLocation]]];
+								[scanner setScanLocation:([scanner scanLocation] + 1)];
 							}
 						}
 					} // if specifier character can be followed by brace clause
@@ -239,13 +266,15 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
 		} // else if %  found
 		
 		// add final token string to the token string array
-		[*tokenStringArray addObject: token];
+		[*tokenStringArray addObject:token];
 	} // while
 	
 	// return YES;
 }
 
-- (BOOL)convertTokenString: (NSString*)token withLoggingEvent: (L4LoggingEvent*)logEvent intoString: (NSString**)convertedString
+- (BOOL)convertTokenString:(NSString*)token 
+		  withLoggingEvent:(L4LoggingEvent*)logEvent 
+				intoString:(NSString**)convertedString
 {
 	NSScanner*			scanner = nil;
 	NSCharacterSet*		percentCharSet = nil, *specifiersCharSet = nil;
@@ -260,18 +289,18 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
 	NSRange				componentRange;
 	NSArray*			fieldLengthArray = nil;
 	
-	if ([token length] > 0 && [token characterAtIndex: 0] != (unichar)'%') {
-		*convertedString = [NSString stringWithString: token];
+	if ([token length] > 0 && [token characterAtIndex:0] != (unichar)'%') {
+		*convertedString = [NSString stringWithString:token];
 	} else {
-		percentCharSet = [NSCharacterSet characterSetWithCharactersInString: @"%"];
+		percentCharSet = [NSCharacterSet characterSetWithCharactersInString:@"%"];
 		specifiersCharSet = L4PatternLayoutDefaultSpecifiers;
 
-		scanner = [NSScanner scannerWithString: token];
+		scanner = [NSScanner scannerWithString:token];
 
 		// don't skip any characters
-		[scanner setCharactersToBeSkipped: [NSCharacterSet characterSetWithCharactersInString: @""]];
+		[scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@""]];
 
-		finalResultString = [NSMutableString stringWithCapacity: 10];
+		finalResultString = [NSMutableString stringWithCapacity:10];
 
 		while (![scanner isAtEnd]) {
 			// reset parser state variables
@@ -284,46 +313,49 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
 
 			// check for specifier escape sequence (a percent (%))
 			//NSLog(@"Checking for a percent at index %d", [scanner scanLocation]);
-			if ([percentCharSet characterIsMember: [[scanner string] characterAtIndex: [scanner scanLocation]]]) {
+			if ([percentCharSet characterIsMember:[[scanner string] characterAtIndex:[scanner scanLocation]]]) {
 				// found a percent sign
 				charsToSkip++;
 
 				// we will read the specifier justification and length as a string, so update scan location first
-				[scanner setScanLocation: ([scanner scanLocation] + charsToSkip)];
+				[scanner setScanLocation:([scanner scanLocation] + charsToSkip)];
 				charsToSkip = 0;
 
-				if ([scanner scanUpToCharactersFromSet: specifiersCharSet intoString: &tempString2]) {
-					fieldLengthArray = [tempString2 componentsSeparatedByString: @"."];
+				if ([scanner scanUpToCharactersFromSet:specifiersCharSet intoString:&tempString2]) {
+					fieldLengthArray = [tempString2 componentsSeparatedByString:@"."];
 
 					// check for left justification character (-)
-					if ([[fieldLengthArray objectAtIndex: 0] rangeOfString: @"-"].location != NSNotFound) {
+					if ([[fieldLengthArray objectAtIndex:0] rangeOfString:@"-"].location != NSNotFound) {
 						leftJustify = YES;
 					} else {
 						leftJustify = NO;
 					}
 
 					// check for minimum field width
-					minLength = abs([[fieldLengthArray objectAtIndex: 0] intValue]);
+					minLength = abs([[fieldLengthArray objectAtIndex:0] intValue]);
 					if (minLength == 0) {
 						minLength = -1;
 					}
 
 					if ([fieldLengthArray count] > 1) {
-						maxLength = abs([[fieldLengthArray objectAtIndex: ([fieldLengthArray count] - 1)] intValue]);
+						maxLength = abs([[fieldLengthArray objectAtIndex:([fieldLengthArray count] - 1)] intValue]);
 						if (maxLength == 0) {
 							maxLength = -1;
 						}
 					}
 				}
 
-				// get the specifier character, if we are at the end of the string but haven't read a specifier character yet, throw an L4InvalidSpecifierException
+				// get the specifier character, if we are at the end of the string but haven't read a specifier
+				// character yet, throw an L4InvalidSpecifierException
 				//NSLog(@"Checking for the specifier character at index %d", ([scanner scanLocation] + charsToSkip));
 				if ([scanner isAtEnd]) {
-					[NSException raise: L4InvalidSpecifierException format: @"Expected a valid specifier character at position %d in the string '%@'", [scanner scanLocation], [scanner string]];
+					[NSException raise:L4InvalidSpecifierException 
+								format:@"Expected a valid specifier character at position %d in the string '%@'", 
+					 [scanner scanLocation], [scanner string]];
 				}
-				specifierChar = [[scanner string] characterAtIndex: ([scanner scanLocation] + charsToSkip)];
+				specifierChar = [[scanner string] characterAtIndex:([scanner scanLocation] + charsToSkip)];
 
-				if ([specifiersCharSet characterIsMember: specifierChar]) {
+				if ([specifiersCharSet characterIsMember:specifierChar]) {
 					switch (specifierChar) {
 						case 'C':
 						{
@@ -334,23 +366,31 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
 
 							//NSLog(@"Checking for { after a C at index %d", ([scanner scanLocation] + charsToSkip));
 
-							// if skipping number of characters equal to value of charsToSkip doesn't put us at the end of the string and the next character (if we skipped charsToSkip characters) would be {
-							if (([scanner scanLocation] + charsToSkip) < [[scanner string] length] && [[scanner string] characterAtIndex: ([scanner scanLocation] + charsToSkip)] == (unichar)'{') {
+							// if skipping number of characters equal to value of charsToSkip doesn't put us at the end 
+							// of the string and the next character (if we skipped charsToSkip characters) would be {
+							if (([scanner scanLocation] + charsToSkip) < [[scanner string] length] && 
+								[[scanner string] characterAtIndex:([scanner scanLocation] + charsToSkip)] == (unichar)'{') {
 								// there's an {, skip it and read the integer that follows
 								charsToSkip++;
 
-								// update the scanner's scan location because the following scan operation will advance the scan location, also reset the charsToSkip
-								[scanner setScanLocation: ([scanner scanLocation] + charsToSkip)];
+								// update the scanner's scan location because the following scan operation will advance 
+								// the scan location, also reset the charsToSkip
+								[scanner setScanLocation:([scanner scanLocation] + charsToSkip)];
 								charsToSkip = 0;
 
-								if ([scanner scanUpToString: @"}" intoString: &tempString2]) {
+								if ([scanner scanUpToString:@"}" intoString:&tempString2]) {
 									componentLength = [tempString2 intValue];
 
 									if (componentLength > 0) {
-										componentRange = NSMakeRange([[tempString componentsSeparatedByString: @"."] count] - componentLength, componentLength);
-										tempString = [[[tempString componentsSeparatedByString: @"."] subarrayWithRange: componentRange] componentsJoinedByString: @"."];
+										componentRange =
+											NSMakeRange([[tempString componentsSeparatedByString:@"."] count] - componentLength, 
+														componentLength);
+										tempString = 
+											[[[tempString componentsSeparatedByString:@"."] subarrayWithRange:componentRange] componentsJoinedByString:@"."];
 									} else {
-										[NSException raise: L4InvalidBraceClauseException format: @"Expected a nonzero positive integer at position %d in conversion specifier %@.", ([scanner scanLocation] - [tempString2 length]), [scanner string]];
+										[NSException raise:L4InvalidBraceClauseException 
+													format:@"Expected a nonzero positive integer at position %d in conversion specifier %@.", 
+										 ([scanner scanLocation] - [tempString2 length]), [scanner string]];
 									}
 
 									// skip closing }
@@ -365,18 +405,22 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
 							// skip the 'd'
 							charsToSkip++;
 
-							// if skipping number of characters equal to value of charsToSkip doesn't put us at the end of the string and the next character (if we skipped charsToSkip characters) would be {
-							if (([scanner scanLocation] + charsToSkip) < [[scanner string] length] && [[scanner string] characterAtIndex: ([scanner scanLocation] + charsToSkip)] == (unichar)'{') {
+							// if skipping number of characters equal to value of charsToSkip doesn't put us at the end 
+							// of the string and the next character (if we skipped charsToSkip characters) would be {
+							if (([scanner scanLocation] + charsToSkip) < [[scanner string] length] && 
+								[[scanner string] characterAtIndex:([scanner scanLocation] + charsToSkip)] == (unichar)'{') {
 								// there's an {, skip it and read the string that follows
 								charsToSkip++;
 
-								// update the scanner's scan location because the following scan operation will advance the scan location, also reset the charsToSkip
-								[scanner setScanLocation: ([scanner scanLocation] + charsToSkip)];
+								// update the scanner's scan location because the following scan operation will advance 
+								// the scan location, also reset the charsToSkip
+								[scanner setScanLocation:([scanner scanLocation] + charsToSkip)];
 								charsToSkip = 0;
 
-								// if there's anything between the braces, get string description of the logging event's timestamp with the format we just found
-								if ([scanner scanUpToString: @"}" intoString: &tempString2]) {
-									tempString = [[logEvent timestamp] descriptionWithCalendarFormat: tempString2];
+								// if there's anything between the braces, get string description of the logging event's 
+								// timestamp with the format we just found
+								if ([scanner scanUpToString:@"}" intoString:&tempString2]) {
+									tempString = [[logEvent timestamp] descriptionWithCalendarFormat:tempString2];
 									
 									// skip closing brace
 									charsToSkip++;
@@ -396,13 +440,15 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
 						case 'l':
 							// skip the 'l'
 							charsToSkip++;
-							tempString = [NSString stringWithFormat: @"%@'s %@ (%@:%d)", [[logEvent logger] name], [logEvent methodName], [logEvent fileName], [[logEvent lineNumber] intValue] ];
+							tempString = [NSString stringWithFormat:@"%@'s %@ (%@:%d)", [[logEvent logger] name], 
+										  [logEvent methodName], [logEvent fileName], 
+										  [[logEvent lineNumber] intValue] ];
 							break;
 						
 						case 'L':
 							// skip the 'L'
 							charsToSkip++;
-							tempString = [NSString stringWithFormat: @"%d", [[logEvent lineNumber] intValue]];
+							tempString = [NSString stringWithFormat:@"%d", [[logEvent lineNumber] intValue]];
 							break;
 						
 						case 'm':
@@ -435,9 +481,18 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
 						case 'r':
 							// skip the 'r'
 							charsToSkip++;
-							tempString = [NSString stringWithFormat: @"%d", [logEvent millisSinceStart]];
+							tempString = [NSString stringWithFormat:@"%d", [logEvent millisSinceStart]];
 							break;
 						
+						case 't':
+							// skip the 't'
+							charsToSkip++;
+							tempString = [[NSThread currentThread] name];
+							if (tempString == nil) {
+								tempString = [NSString stringWithFormat:@"%p", [NSThread currentThread]];
+							}
+							break;
+							
 						case '%':
 							// skip the '%'
 							charsToSkip++;
@@ -446,55 +501,57 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
 					}
 
 					if (leftJustify && minLength > 0 && maxLength > 0) {
-						tempString2 = [NSString stringWithFormat: @"%-*@", minLength, tempString];
+						tempString2 = [NSString stringWithFormat:@"%-*@", minLength, tempString];
 
 						if ([tempString2 length] > maxLength) {
-							tempString2 = [tempString2 substringFromIndex: ([tempString2 length] - maxLength)];
-							[finalResultString appendFormat: @"%-*.*@", minLength, maxLength, tempString2];
+							tempString2 = [tempString2 substringFromIndex:([tempString2 length] - maxLength)];
+							[finalResultString appendFormat:@"%-*.*@", minLength, maxLength, tempString2];
 						} else {
-							[finalResultString appendFormat: @"%-*.*@", minLength, maxLength, tempString];
+							[finalResultString appendFormat:@"%-*.*@", minLength, maxLength, tempString];
 						}
 					} else if (!leftJustify && minLength > 0 && maxLength > 0) {
-						tempString2 = [NSString stringWithFormat: @"%*@", minLength, tempString];
+						tempString2 = [NSString stringWithFormat:@"%*@", minLength, tempString];
 
 						if ([tempString2 length] > maxLength) {
-							tempString2 = [tempString2 substringFromIndex: ([tempString2 length] - maxLength)];
-							[finalResultString appendFormat: @"%*.*@", minLength, maxLength, tempString2];
+							tempString2 = [tempString2 substringFromIndex:([tempString2 length] - maxLength)];
+							[finalResultString appendFormat:@"%*.*@", minLength, maxLength, tempString2];
 						} else {
-							[finalResultString appendFormat: @"%*.*@", minLength, maxLength, tempString];
+							[finalResultString appendFormat:@"%*.*@", minLength, maxLength, tempString];
 						}
 					} else if (leftJustify && minLength <= 0 && maxLength > 0) {
 						if ([tempString length] > maxLength) {
-							tempString2 = [tempString substringFromIndex: ([tempString length] - maxLength)];
-							[finalResultString appendFormat: @"%-.*@", maxLength, tempString2];
+							tempString2 = [tempString substringFromIndex:([tempString length] - maxLength)];
+							[finalResultString appendFormat:@"%-.*@", maxLength, tempString2];
 						} else {
-							[finalResultString appendFormat: @"%-.*@", maxLength, tempString];
+							[finalResultString appendFormat:@"%-.*@", maxLength, tempString];
 						}
 					} else if (!leftJustify && minLength <= 0 && maxLength > 0) {
 						if ([tempString length] > maxLength) {
-							tempString2 = [tempString substringFromIndex: ([tempString length] - maxLength)];
-							[finalResultString appendFormat: @"%.*@", maxLength, tempString2];
+							tempString2 = [tempString substringFromIndex:([tempString length] - maxLength)];
+							[finalResultString appendFormat:@"%.*@", maxLength, tempString2];
 						} else {
-							[finalResultString appendFormat: @"%.*@", maxLength, tempString];
+							[finalResultString appendFormat:@"%.*@", maxLength, tempString];
 						}
 					} else if (leftJustify && minLength > 0 && maxLength <= 0) {
-						[finalResultString appendFormat: @"%-*@", minLength, tempString];
+						[finalResultString appendFormat:@"%-*@", minLength, tempString];
 					} else if (!leftJustify && minLength > 0 && maxLength <= 0) {
-						[finalResultString appendFormat: @"%*@", minLength, tempString];
+						[finalResultString appendFormat:@"%*@", minLength, tempString];
 					} else {
-						[finalResultString appendString: tempString];
+						[finalResultString appendString:tempString];
 					}
 				}
 
-				[scanner setScanLocation: ([scanner scanLocation] + charsToSkip)];
+				[scanner setScanLocation:([scanner scanLocation] + charsToSkip)];
 				continue;
 			}
 			
-			if ([scanner scanUpToCharactersFromSet: percentCharSet intoString: &tempString]) {
-				[finalResultString appendString: tempString];
+			if ([scanner scanUpToCharactersFromSet:percentCharSet intoString:&tempString]) {
+				[finalResultString appendString:tempString];
 				continue;
 			} else {
-				[NSException raise: L4InvalidSpecifierException format: @"Expected a valid specifier character at position %d in the string '%@'", [scanner scanLocation], [scanner string]];
+				[NSException raise:L4InvalidSpecifierException 
+							format:@"Expected a valid specifier character at position %d in the string '%@'", 
+				 [scanner scanLocation], [scanner string]];
 			}
 		}
 		
@@ -502,6 +559,15 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
 	}
 	
 	return YES;
+}
+
+/*
+ * This is here for testing purposes.  Otherwise, the conversion pattern does not get parsed until a log event happens.
+ */
+- (NSArray *)tokenArray
+{
+	[self parseConversionPattern:conversionPattern intoArray:&tokenArray];
+	return tokenArray;
 }
 
 @end

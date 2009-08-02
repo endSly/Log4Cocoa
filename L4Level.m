@@ -122,7 +122,7 @@ static L4Level *L4_ALL   = nil;
 - (id) init
 {
 	[self autorelease];
-	return [L4Level debug]; // ok since not mutable and no "set" methods exist.
+	return [[L4Level debug] retain]; // ok since not mutable and no "set" methods exist.
 }
 
 - (id) initLevel:(int)aLevel withName:(NSString *)aName syslogEquivalent:(int)sysLogLevel

@@ -27,7 +27,7 @@ extern NSString* const L4InvalidBraceClauseException;
 /**
  * An NSCharacterSet that contains the default format specifier characters
  */
-#define L4PatternLayoutDefaultSpecifiers	[NSCharacterSet characterSetWithCharactersInString:@"CdFlLmMnpr%"]
+#define L4PatternLayoutDefaultSpecifiers	[NSCharacterSet characterSetWithCharactersInString:@"CdFlLmMnprt%"]
 
 /**
  * An NSCharacterSet that contains the subset of characters from L4PatternLayoutDefaultSpecifiers that can have a brace clause 
@@ -53,7 +53,7 @@ extern NSString* const L4InvalidBraceClauseException;
  * character</em>. The specifier character specifies the type of data, e.g. priority, date. The format modifiers control such things
  * as field width, padding, left and right justification. The following is a simple example.
  * 
- * Let the conversion pattern be <b>"%-5p :%m%n"</b> and assume that the Log4Cocoa environment was set to use a L4PatternLayout. Then the
+ * Let the conversion pattern be <b>"%-5p :%m%n"</b> and assume that the Log4Cocoa environment was set to use an L4PatternLayout. Then the
  * statements
  * <pre>
  * log4Debug("Message 1");
@@ -142,6 +142,11 @@ extern NSString* const L4InvalidBraceClauseException;
  * <tr>
  * <td align=center><b>r</b></td>
  * <td>Used to output the number of milliseconds elapsed since the start of the application until the creation of the logging event.</td>
+ * </tr>
+ * 
+ * <tr>
+ * <td align=center><b>t</b></td>
+ * <td>Used to output the name of the thread where the logging event occured.</td>
  * </tr>
  * 
  * <tr>
