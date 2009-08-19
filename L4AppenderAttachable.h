@@ -16,7 +16,7 @@
  * @param event the event to be appended.
  * @return the number of appenders the event was appended to.
  */
-- (int) appendLoopOnAppenders: (L4LoggingEvent *) event;
+- (NSUInteger) appendLoopOnAppenders:(L4LoggingEvent *) event;
 
 @end
 // For copyright & license, see COPYRIGHT.txt.

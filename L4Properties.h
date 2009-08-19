@@ -44,7 +44,7 @@ extern NSString* const L4PropertyMissingException;
  * Accessor for the int value of the number of entries in this collection.
  * @return the int value of the number of entries in this collection.
  */
-- (int) count;
+- (NSUInteger) count;
 
 /**
  * This method initializes a new instance of this class with the specified file path.

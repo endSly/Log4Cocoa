@@ -7,9 +7,9 @@
 
 @implementation L4AppenderAttachable
 
-- (int) appendLoopOnAppenders: (L4LoggingEvent *) event
+- (NSUInteger) appendLoopOnAppenders: (L4LoggingEvent *) event
 {
-	int size = 0;
+	NSUInteger size = 0;
 
     @synchronized(self) {
         if( appenderList != nil ) {

@@ -62,7 +62,7 @@ NSString* const L4PropertyMissingException = @"L4PropertyMissingException";
  	return [properties allKeys];
 }
 
-- (int) count
+- (NSUInteger) count
 {
  	return [properties count];
 }
