@@ -15,7 +15,7 @@
 		acceptOnMatch = shouldAccept;
 		if (aLevel == nil) {
 			self = nil;
-			[NSException raise:NSInvalidArgumentException format: @"aLevel is not allowed to be nil."];
+			[NSException raise:NSInvalidArgumentException format:@"aLevel is not allowed to be nil."];
 		} else {
 			levelToMatch = aLevel;
 		}
@@ -25,7 +25,7 @@
 
 - (id) initWithProperties:(L4Properties *)initProperties
 {
-	self = [super initWithProperties: initProperties];
+	self = [super initWithProperties:initProperties];
 	if (self != nil) {
 		acceptOnMatch = YES;
 		NSString *acceptIfMatched = [initProperties stringForKey:@"AcceptOnMatch"];
@@ -41,11 +41,11 @@
 			
 			if (levelToMatch == nil) {
 				[NSException raise:L4PropertyMissingException 
-							format: @"L4Level name [%@] not found.", levelName];
+							format:@"L4Level name [%@] not found.", levelName];
 			}
 		} else {
 			[NSException raise:L4PropertyMissingException 
-						format: @"LevelToMatch is a required property."];
+						format:@"LevelToMatch is a required property."];
 		}
 		
 	}
@@ -73,7 +73,7 @@
 	// Default stance.
 	L4FilterResult action = L4FilterNeutral;
 	if ([[event level] intValue] == [levelToMatch intValue] || [levelToMatch intValue] == [[L4Level all] intValue]){
-		action =  acceptOnMatch ? L4FilterAccept : L4FilterDeny;
+		action =  acceptOnMatch ? L4FilterAccept :L4FilterDeny;
 	}
 	
 	return action;

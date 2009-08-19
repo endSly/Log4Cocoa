@@ -21,14 +21,14 @@
 /* ********************************************************************* */
 #pragma mark Class methods
 /* ********************************************************************* */
-+ (L4ConsoleAppender *) standardOutWithLayout: (L4Layout *)aLayout
++ (L4ConsoleAppender *) standardOutWithLayout:(L4Layout *)aLayout
 {
-	return [[[L4ConsoleAppender alloc] initTarget: YES withLayout: aLayout] autorelease];
+	return [[[L4ConsoleAppender alloc] initTarget:YES withLayout:aLayout] autorelease];
 }
 
-+ (L4ConsoleAppender *) standardErrWithLayout: (L4Layout *)aLayout
++ (L4ConsoleAppender *) standardErrWithLayout:(L4Layout *)aLayout
 {
-	return [[[L4ConsoleAppender alloc] initTarget: NO withLayout: aLayout] autorelease];
+	return [[[L4ConsoleAppender alloc] initTarget:NO withLayout:aLayout] autorelease];
 }
 
 /* ********************************************************************* */
@@ -36,7 +36,7 @@
 /* ********************************************************************* */
 - (id) init
 {
-	return [self initTarget: YES withLayout: [L4Layout simpleLayout]];
+	return [self initTarget:YES withLayout:[L4Layout simpleLayout]];
 }
 
 - (id) initTarget:(BOOL)standardOut withLayout:(L4Layout *)aLayout
@@ -48,7 +48,7 @@
 		} else {
 			[self setStandardErr];
 		}
-		[self setLayout: aLayout];
+		[self setLayout:aLayout];
 	}
 	return self;
 }
@@ -61,16 +61,16 @@
 /* ********************************************************************* */
 #pragma mark L4Appender protocol methods
 /* ********************************************************************* */
-- (id) initWithProperties: (L4Properties *)initProperties
+- (id) initWithProperties:(L4Properties *)initProperties
 {    
     self = [super initWithProperties:initProperties];
     if ( self != nil ) {
         BOOL logToStandardOut = YES;
         
         // Support for appender.LogToStandardOut in properties configuration file
-        if ( [initProperties stringForKey: @"LogToStandardOut"] != nil ) {
-            NSString *buf = [[initProperties stringForKey: @"LogToStandardOut"] lowercaseString];
-            logToStandardOut = [buf isEqualToString: @"true"];
+        if ( [initProperties stringForKey:@"LogToStandardOut"] != nil ) {
+            NSString *buf = [[initProperties stringForKey:@"LogToStandardOut"] lowercaseString];
+            logToStandardOut = [buf isEqualToString:@"true"];
         }
         
         if( logToStandardOut ) {

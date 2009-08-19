@@ -237,12 +237,12 @@
  * @param aLevel the L4Level for this log message.
  * @param e the exception to be logged.
  */
-- (void) lineNumber: (int) lineNumber
-		   fileName: (char *) fileName
-		 methodName: (char *) methodName
-			message: (id) aMessage
-			  level: (L4Level *) aLevel
-		  exception: (NSException *) e;
+- (void) lineNumber:(int) lineNumber
+		   fileName:(char *) fileName
+		 methodName:(char *) methodName
+			message:(id) aMessage
+			  level:(L4Level *) aLevel
+		  exception:(NSException *) e;
 
 /* This is the designated logging method that the others invoke. */
 /**
@@ -274,14 +274,14 @@
  * @param aClass the class we want the logger for.
  * @return the logger for the class
  */
-+ (L4Logger *) loggerForClass: (Class) aClass;
++ (L4Logger *) loggerForClass:(Class) aClass;
 
 /**
  * Accesses the logger for the given name.
  * @param aName the name of the logger we want.
  * @return the logger for the class
  */
-+ (L4Logger *) loggerForName: (NSString *) aName;
++ (L4Logger *) loggerForName:(NSString *) aName;
 
 /**
  * Accesses the logger for the given name.
@@ -289,7 +289,7 @@
  * @param aFactory the factory to use to create the logger if it does not yet exist.
  * @return the logger for the class
  */
-+ (L4Logger *) loggerForName: (NSString *) aName factory: (id <L4LoggerFactory>) aFactory;
++ (L4Logger *) loggerForName:(NSString *) aName factory:(id <L4LoggerFactory>) aFactory;
 
 /**
  * The array of loggers.
@@ -314,7 +314,7 @@
  * methods.  It serves as the 'self' argument.  Log level for methods can be 
  * adjusted with this, but keep in mind that it applies to all function logging.
  */
-@interface L4FunctionLogger : NSObject
+@interface L4FunctionLogger :NSObject
 {
 	L4FunctionLogger *instance; /**< the singleon instance of this class. */
 }

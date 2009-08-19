@@ -29,7 +29,7 @@ typedef enum L4RollingFrequency
 }
 
 /**
- * This initializer calls the <code>initWithLayout:fileName:rollingFrequency:</code> method with the respective values: nil, nil, never.
+ * This initializer calls the <code>initWithLayout:fileName:rollingFrequency:</code> method with the respective values:nil, nil, never.
  */
 - (id)init;
 
@@ -48,7 +48,7 @@ typedef enum L4RollingFrequency
  *	<code>log4cocoa.appender.A2.RollingFrequency=daily</code>
  * @param initProperties the proterties to use.
  */
-- (id) initWithProperties: (L4Properties *) initProperties;
+- (id) initWithProperties:(L4Properties *) initProperties;
 
 /**
  * Returns this object's rolling frequency.
@@ -60,7 +60,7 @@ typedef enum L4RollingFrequency
  Sets the object's rolling frequency
  * @param aRollingFrequency The desired rolling frequency for this object
  */
-- (void)setRollingFrequency: (L4RollingFrequency)aRollingFrequency;
+- (void)setRollingFrequency:(L4RollingFrequency)aRollingFrequency;
 
 @end
 

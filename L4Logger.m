@@ -23,8 +23,8 @@ static L4Level *_debug = nil;
 
 + (void) initialize
 {
-	id rootLogger = [[L4RootLogger alloc] initWithLevel: [L4Level debug]];
-	_loggerRepository = [[L4LoggerStore alloc] initWithRoot: rootLogger];
+	id rootLogger = [[L4RootLogger alloc] initWithLevel:[L4Level debug]];
+	_loggerRepository = [[L4LoggerStore alloc] initWithRoot:rootLogger];
 	[rootLogger autorelease];
 
 	[L4LoggingEvent startTime];
@@ -42,7 +42,7 @@ static L4Level *_debug = nil;
 	return nil; // never use this constructor
 }
 
-- (id) initWithName: (NSString *) aName
+- (id) initWithName:(NSString *) aName
 {
 	self = [super init];
 	if( self != nil ) {
@@ -67,7 +67,7 @@ static L4Level *_debug = nil;
 	return additivity;
 }
 
-- (void) setAdditivity: (BOOL) newAdditivity
+- (void) setAdditivity:(BOOL) newAdditivity
 {
         additivity = newAdditivity;
 }
@@ -77,7 +77,7 @@ static L4Level *_debug = nil;
 	return parent;
 }
 
-- (void) setParent: (L4Logger *) theParent
+- (void) setParent:(L4Logger *) theParent
 {
     @synchronized(self) {
         [parent autorelease];
@@ -95,7 +95,7 @@ static L4Level *_debug = nil;
 	return repository;
 }
 
-- (void) setLoggerRepository: (id <L4LoggerRepository>) aRepository
+- (void) setLoggerRepository:(id <L4LoggerRepository>) aRepository
 {
     @synchronized(self) {
         if( repository != aRepository ) {
@@ -121,7 +121,7 @@ static L4Level *_debug = nil;
     }
         
     if (effectiveLevel == nil) {
-        [L4LogLog error: @"Root Logger Not Found!"];
+        [L4LogLog error:@"Root Logger Not Found!"];
     }
 	return effectiveLevel;
 }
@@ -132,7 +132,7 @@ static L4Level *_debug = nil;
 }
 
 /* nil is ok, because then we just pick up the parent's level */
-- (void) setLevel: (L4Level *) aLevel
+- (void) setLevel:(L4Level *) aLevel
 {
     @synchronized(self) {
     	if( level != aLevel ) {
@@ -154,7 +154,7 @@ static L4Level *_debug = nil;
 	
         for( L4Logger *aLogger = self; aLogger != nil; aLogger = [aLogger parent] ) {
             if( [aLogger aai] != nil ) {
-                writes += [[aLogger aai] appendLoopOnAppenders: event];
+                writes += [[aLogger aai] appendLoopOnAppenders:event];
             }
             if( ![aLogger additivity] ) {
                 break;
@@ -163,7 +163,7 @@ static L4Level *_debug = nil;
     }
         
     if( writes == 0 ) {
-        [repository emitNoAppenderWarning: self];
+        [repository emitNoAppenderWarning:self];
     }
 }
 
@@ -177,28 +177,28 @@ static L4Level *_debug = nil;
 	return [aai allAppenders];
 }
 
-- (id <L4Appender>) appenderWithName: (NSString *) aName
+- (id <L4Appender>) appenderWithName:(NSString *) aName
 {
-	return [aai appenderWithName: aName];
+	return [aai appenderWithName:aName];
 }
 
-- (void) addAppender: (id <L4Appender>) appender
+- (void) addAppender:(id <L4Appender>) appender
 {
     @synchronized(self) {
         if( aai == nil ) {
             aai = [[L4AppenderAttachable alloc] init];
         }
         
-        [aai addAppender: appender];
+        [aai addAppender:appender];
     }
 }
 
-- (BOOL) isAttached: (id <L4Appender>) appender
+- (BOOL) isAttached:(id <L4Appender>) appender
 {
     BOOL isAttached = NO;
     @synchronized(self) {
         if((appender != nil) && (aai != nil)) {
-            isAttached = [aai isAttached: appender];
+            isAttached = [aai isAttached:appender];
         }
     }
     return isAttached;
@@ -225,14 +225,14 @@ static L4Level *_debug = nil;
     }
 }
 
-- (void) removeAppender: (id <L4Appender>) appender
+- (void) removeAppender:(id <L4Appender>) appender
 {
-    [aai removeAppender: appender];
+    [aai removeAppender:appender];
 }
 
-- (void) removeAppenderWithName: (NSString *) aName
+- (void) removeAppenderWithName:(NSString *) aName
 {
-    [aai removeAppenderWithName: aName];
+    [aai removeAppenderWithName:aName];
 }
 
 /* ********************************************************************* */
@@ -241,56 +241,56 @@ static L4Level *_debug = nil;
 
 // ALL < DEBUG < INFO < WARN < ERROR < FATAL < OFF
 
-- (BOOL) isDebugEnabled { return [self isEnabledFor: _debug]; }
-- (BOOL) isInfoEnabled  { return [self isEnabledFor: _info]; }
-- (BOOL) isWarnEnabled  { return [self isEnabledFor: _warn]; }
-- (BOOL) isErrorEnabled { return [self isEnabledFor: _error]; }
-- (BOOL) isFatalEnabled { return [self isEnabledFor: _fatal]; }
+- (BOOL) isDebugEnabled { return [self isEnabledFor:_debug]; }
+- (BOOL) isInfoEnabled  { return [self isEnabledFor:_info]; }
+- (BOOL) isWarnEnabled  { return [self isEnabledFor:_warn]; }
+- (BOOL) isErrorEnabled { return [self isEnabledFor:_error]; }
+- (BOOL) isFatalEnabled { return [self isEnabledFor:_fatal]; }
 
-- (BOOL) isEnabledFor: (L4Level *) aLevel
+- (BOOL) isEnabledFor:(L4Level *) aLevel
 {
-	if([repository isDisabled: [aLevel intValue]]) {
+	if([repository isDisabled:[aLevel intValue]]) {
 		return NO;
 	}
-	return [aLevel isGreaterOrEqual: [self effectiveLevel]];
+	return [aLevel isGreaterOrEqual:[self effectiveLevel]];
 }
 
-- (void) lineNumber: (int) lineNumber
-		   fileName: (char *) fileName
-		 methodName: (char *) methodName
-			 assert: (BOOL) anAssertion
-				log: (NSString *) aMessage
+- (void) lineNumber:(int) lineNumber
+		   fileName:(char *) fileName
+		 methodName:(char *) methodName
+			 assert:(BOOL) anAssertion
+				log:(NSString *) aMessage
 {
 	if( !anAssertion ) {
-		[self lineNumber:lineNumber fileName:fileName methodName:methodName message:aMessage level:_error exception: nil];
+		[self lineNumber:lineNumber fileName:fileName methodName:methodName message:aMessage level:_error exception:nil];
 	}
 }
 
-- (void) lineNumber: (int) lineNumber
-		   fileName: (char *) fileName
-		 methodName: (char *) methodName
-			message: (id) aMessage
-			  level: (L4Level *) aLevel
-		  exception: (NSException *) e
+- (void) lineNumber:(int) lineNumber
+		   fileName:(char *) fileName
+		 methodName:(char *) methodName
+			message:(id) aMessage
+			  level:(L4Level *) aLevel
+		  exception:(NSException *) e
 {
-	if([repository isDisabled: [aLevel intValue]]) {
+	if([repository isDisabled:[aLevel intValue]]) {
 		return;
 	}
 	
-	if([aLevel isGreaterOrEqual: [self effectiveLevel]]) {
-		[self forcedLog: [L4LoggingEvent logger: self
-										  level: aLevel
-									 lineNumber: lineNumber
-									   fileName: fileName
-									 methodName: methodName
-										message: aMessage
-									  exception: e]];
+	if([aLevel isGreaterOrEqual:[self effectiveLevel]]) {
+		[self forcedLog:[L4LoggingEvent logger:self
+										 level:aLevel
+									lineNumber:lineNumber
+									  fileName:fileName
+									methodName:methodName
+									   message:aMessage
+									 exception:e]];
 	}
 }
 
-- (void) forcedLog: (L4LoggingEvent *) event
+- (void) forcedLog:(L4LoggingEvent *) event
 {
-	[self callAppenders: event];
+	[self callAppenders:event];
 }
 
 /* ********************************************************************* */
@@ -306,19 +306,19 @@ static L4Level *_debug = nil;
 	return [_loggerRepository rootLogger];
 }
 
-+ (L4Logger *) loggerForClass: (Class) aClass
++ (L4Logger *) loggerForClass:(Class) aClass
 {
-	return [_loggerRepository loggerForClass: aClass];
+	return [_loggerRepository loggerForClass:aClass];
 }
 
-+ (L4Logger *) loggerForName: (NSString *) aName
++ (L4Logger *) loggerForName:(NSString *) aName
 {
-	return [_loggerRepository loggerForName: aName];
+	return [_loggerRepository loggerForName:aName];
 }
 
-+ (L4Logger *) loggerForName: (NSString *) aName factory: (id <L4LoggerFactory>) aFactory
++ (L4Logger *) loggerForName:(NSString *) aName factory:(id <L4LoggerFactory>) aFactory
 {
-	return [_loggerRepository loggerForName: aName factory: aFactory];
+	return [_loggerRepository loggerForName:aName factory:aFactory];
 }
 
 + (NSArray *) currentLoggers

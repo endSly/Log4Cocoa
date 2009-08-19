@@ -7,7 +7,7 @@
 
 @implementation L4DenyAllFilter
 
-- (L4FilterResult) decide: (L4LoggingEvent *) event
+- (L4FilterResult) decide:(L4LoggingEvent *) event
 {
 	return L4FilterDeny;
 }

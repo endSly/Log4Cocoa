@@ -30,7 +30,7 @@
 
 @implementation L4AppenderSkeleton
 
-- (id) initWithProperties: (L4Properties *) initProperties
+- (id) initWithProperties:(L4Properties *) initProperties
 {
     self = [super init];
     
@@ -69,7 +69,7 @@
             if ( newFilter != nil ) {
 				[self appendFilter:newFilter];
             } else {
-                [L4LogLog error: [NSString stringWithFormat:
+                [L4LogLog error:[NSString stringWithFormat:
                                   @"Error while creating filter \"%@\".", className]];
                 [self release];
                 return nil;
@@ -89,15 +89,15 @@
 	[super dealloc];
 }
 
-- (void) append: (L4LoggingEvent *) anEvent
+- (void) append:(L4LoggingEvent *) anEvent
 {
 }
 
-- (BOOL) isAsSevereAsThreshold: (L4Level *) aLevel
+- (BOOL) isAsSevereAsThreshold:(L4Level *) aLevel
 {
     BOOL isAsSevere = NO;
     @synchronized(self) {
-    	isAsSevere = ((threshold == nil) || ([aLevel isGreaterOrEqual: threshold]));
+    	isAsSevere = ((threshold == nil) || ([aLevel isGreaterOrEqual:threshold]));
     }
     return isAsSevere;
 }
@@ -107,7 +107,7 @@
 	return threshold;
 }
 
-- (void) setThreshold: (L4Level *) aLevel
+- (void) setThreshold:(L4Level *) aLevel
 {
     @synchronized(self) {
         if( threshold != aLevel ) {
@@ -126,10 +126,10 @@
 	Class filterClass = NSClassFromString(filterClassName);
 	
 	if ( filterClass == nil ) {
-	 	[L4LogLog error:[NSString stringWithFormat:@"Cannot find L4Filter class with name: \"%@\".", filterClassName]];
+	 	[L4LogLog error:[NSString stringWithFormat:@"Cannot find L4Filter class with name:\"%@\".", filterClassName]];
 	} else {	  		
 	 	if ( ![[[[filterClass alloc] init] autorelease] isKindOfClass:[L4Filter class]] ) {
-	  		[L4LogLog error: 
+	  		[L4LogLog error:
 			 [NSString stringWithFormat:
 			  @"Failed to create instance with name \"%@\" since it is not of kind L4Filter.", filterClass]];
 	 	} else {
@@ -145,10 +145,10 @@
 	Class layoutClass = NSClassFromString(layoutClassName);
 	
 	if ( layoutClass == nil ) {
-	 	[L4LogLog error:[NSString stringWithFormat:@"Cannot find L4Layout class with name: \"%@\".", layoutClassName]];
+	 	[L4LogLog error:[NSString stringWithFormat:@"Cannot find L4Layout class with name:\"%@\".", layoutClassName]];
 	} else {	  		
 	 	if ( ![[[[layoutClass alloc] init] autorelease] isKindOfClass:[L4Layout class]] ) {
-	  		[L4LogLog error: 
+	  		[L4LogLog error:
 			 [NSString stringWithFormat:
 			  @"Failed to create instance with name \"%@\" since it is not of kind L4Layout.", layoutClass]];
 	 	} else {
@@ -161,13 +161,13 @@
 /* ********************************************************************* */
 #pragma mark L4AppenderCategory methods
 /* ********************************************************************* */
-// calls [self append: anEvent] after doing threshold checks
-- (void) doAppend: (L4LoggingEvent *) anEvent
+// calls [self append:anEvent] after doing threshold checks
+- (void) doAppend:(L4LoggingEvent *) anEvent
 {
     L4Filter *aFilter = [self headFilter];
     BOOL breakLoop = NO;
     
-    if(![self isAsSevereAsThreshold: [anEvent level]]) {
+    if(![self isAsSevereAsThreshold:[anEvent level]]) {
         return;
     }
 
@@ -176,12 +176,12 @@
     @synchronized(self) {
 
         if( closed ) {
-            [L4LogLog error: [@"Attempted to append to closed appender named: " stringByAppendingString: name]];
+            [L4LogLog error:[@"Attempted to append to closed appender named:" stringByAppendingString:name]];
             isOkToAppend = NO;
         }
         
         while((aFilter != nil) && !breakLoop) {
-            switch([aFilter decide: anEvent]) {
+            switch([aFilter decide:anEvent]) {
                 case L4FilterDeny:
                     isOkToAppend = NO;
                     breakLoop = YES;
@@ -197,19 +197,19 @@
         }
         
         if(isOkToAppend) {
-            [self append: anEvent]; // passed all threshold checks, append event.
+            [self append:anEvent]; // passed all threshold checks, append event.
         }
     }
 }
 
-- (void) appendFilter: (L4Filter *) newFilter
+- (void) appendFilter:(L4Filter *) newFilter
 {
     @synchronized(self) {
         if( headFilter == nil ) {
             headFilter = [newFilter retain];
             tailFilter = newFilter; // don't retain at the tail, just the head.
         } else {
-            [tailFilter setNext: newFilter];
+            [tailFilter setNext:newFilter];
             tailFilter = newFilter;
         }
     }
@@ -228,7 +228,7 @@
         id aFilter;
         [headFilter autorelease];
         for( aFilter = headFilter; aFilter != nil; aFilter = [headFilter next] ) {
-            [aFilter setNext: nil];
+            [aFilter setNext:nil];
         }
         headFilter = nil;
         tailFilter = nil;
@@ -251,7 +251,7 @@
 	return name;
 }
 
-- (void) setName: (NSString *) aName
+- (void) setName:(NSString *) aName
 {
     @synchronized(self) {
         if( name != aName ) {
@@ -266,7 +266,7 @@
 	return layout;
 }
 
-- (void) setLayout: (L4Layout *) aLayout
+- (void) setLayout:(L4Layout *) aLayout
 {
     @synchronized(self) {
         if( layout != aLayout ) {

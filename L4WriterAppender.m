@@ -9,7 +9,7 @@ static NSData *lineBreakChar;
 
 + (void) initialize
 {
-    lineBreakChar = [[@"\n" dataUsingEncoding: NSASCIIStringEncoding allowLossyConversion: YES] retain];
+    lineBreakChar = [[@"\n" dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] retain];
 }
 
 - (id) init
@@ -21,20 +21,20 @@ static NSData *lineBreakChar;
 	return self;
 }
 
-- (id) initWithProperties: (L4Properties *) initProperties
+- (id) initWithProperties:(L4Properties *) initProperties
 {    
-    self = [super initWithProperties: initProperties];
+    self = [super initWithProperties:initProperties];
     
     if ( self != nil ) {
         BOOL newImmediateFlush = YES;
         
         // Support for appender.ImmediateFlush in properties configuration file
-        if ( [initProperties stringForKey: @"ImmediateFlush"] != nil ) {
-            NSString *buf = [[initProperties stringForKey: @"ImmediateFlush"] lowercaseString];
-            newImmediateFlush = [buf isEqualToString: @"true"];
+        if ( [initProperties stringForKey:@"ImmediateFlush"] != nil ) {
+            NSString *buf = [[initProperties stringForKey:@"ImmediateFlush"] lowercaseString];
+            newImmediateFlush = [buf isEqualToString:@"true"];
         }
         
-        [self setImmediateFlush: newImmediateFlush];
+        [self setImmediateFlush:newImmediateFlush];
     }
     
     return self;
@@ -44,7 +44,7 @@ static NSData *lineBreakChar;
 {
 	[self init]; // call designated initializer
 	fileHandle= [aFileHandle retain];
-	[self setLayout: aLayout];
+	[self setLayout:aLayout];
 	return self;
 }
 
@@ -59,39 +59,39 @@ static NSData *lineBreakChar;
 	return immediateFlush;
 }
 
-- (void) setImmediateFlush: (BOOL) flush
+- (void) setImmediateFlush:(BOOL) flush
 {
 	immediateFlush = flush;
 }
 
-- (void) append: (L4LoggingEvent *) anEvent
+- (void) append:(L4LoggingEvent *) anEvent
 {
     @synchronized(self) {
         if([self checkEntryConditions]) {
-            [self subAppend: anEvent];
+            [self subAppend:anEvent];
         }
     }
 }
 
-- (void) subAppend: (L4LoggingEvent *) anEvent
+- (void) subAppend:(L4LoggingEvent *) anEvent
 {
-	[self write: [layout format: anEvent]];
+	[self write:[layout format:anEvent]];
 }
 
 - (BOOL) checkEntryConditions
 {
 	if( closed ) {
-		[L4LogLog warn: @"Not allowed to write to a closed appender."];
+		[L4LogLog warn:@"Not allowed to write to a closed appender."];
 		return NO;
 	}
 
 	if( fileHandle == nil ) {
-		[L4LogLog error: [@"No file handle for output stream set for the appender named: " stringByAppendingString: name]];
+		[L4LogLog error:[@"No file handle for output stream set for the appender named:" stringByAppendingString:name]];
 		return NO;
 	}
 
 	if( layout == nil ) {
-		[L4LogLog error: [@"No layout set for the appender named: " stringByAppendingString: name]];
+		[L4LogLog error:[@"No layout set for the appender named:" stringByAppendingString:name]];
 		return NO;
 	}
 	
@@ -104,11 +104,11 @@ static NSData *lineBreakChar;
 		[fileHandle closeFile];
 	}
 	@catch (NSException *localException) {
-		[L4LogLog error: [NSString stringWithFormat:@"Could not close file handle: %@\n%@", fileHandle,  localException]];
+		[L4LogLog error:[NSString stringWithFormat:@"Could not close file handle:%@\n%@", fileHandle,  localException]];
 	}
 }
 
-- (void)setFileHandle: (NSFileHandle*)fh
+- (void)setFileHandle:(NSFileHandle*)fh
 {
     @synchronized(self) {
         if (fileHandle != fh) {
@@ -125,7 +125,7 @@ static NSData *lineBreakChar;
 	[self closeWriter];
 }
 
-- (void) write: (NSString *) theString
+- (void) write:(NSString *) theString
 {
 	if( theString != nil )
 	{
@@ -134,8 +134,8 @@ static NSData *lineBreakChar;
                 // TODO ### -- NEED UNIX EXPERT IS THIS THE BEST WAY ??
                 // TODO - ### - NEED TO WORK ON ENCODING ISSUES (& THEN LATER LOCALIZATION)
                 //
-                [fileHandle writeData: [theString dataUsingEncoding: NSASCIIStringEncoding allowLossyConversion: YES]];
-                [fileHandle writeData: lineBreakChar];
+                [fileHandle writeData:[theString dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES]];
+                [fileHandle writeData:lineBreakChar];
             }
 		}
 		@catch (NSException *localException) {
@@ -146,12 +146,12 @@ static NSData *lineBreakChar;
 
 - (void) writeHeader
 {
-	[self write: [layout header]];
+	[self write:[layout header]];
 }
 
 - (void) writeFooter
 {
-	[self write: [layout footer]];
+	[self write:[layout footer]];
 }
 
 - (NSStringEncoding) encoding
@@ -159,7 +159,7 @@ static NSData *lineBreakChar;
 	return encoding;
 }
 
-- (void) setEncoding: (NSStringEncoding) newEncoding
+- (void) setEncoding:(NSStringEncoding) newEncoding
 {
 	encoding = newEncoding;
 }

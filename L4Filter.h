@@ -16,7 +16,7 @@ typedef enum {
  * Filter for log events.
  * This class is intended to serve as the base for filters.  This class itself does nothing;
  * the only way a flter would actually be used would be to subclass it and over-ride the 
- * decide: method.
+ * decide:method.
  */
 @interface L4Filter : NSObject 
 {
@@ -28,7 +28,7 @@ typedef enum {
  * @param initProperties the proterties to use.
  * @throw L4PropertyMissingException if a required property is missing.
  */
-- (id) initWithProperties: (L4Properties *) initProperties;
+- (id) initWithProperties:(L4Properties *) initProperties;
 
 /**
  * Decide what this filter should do with event.
@@ -36,7 +36,7 @@ typedef enum {
  * @param event the event to check.
  * @return one of L4FilterDeny, L4FilterNeutral, or L4FilterAccept. 
  */
-- (L4FilterResult) decide: (L4LoggingEvent *) event;
+- (L4FilterResult) decide:(L4LoggingEvent *) event;
 
 /**
  * Accessor for the next filter.
@@ -48,7 +48,7 @@ typedef enum {
  * Mutator for the next filter.
  * @param newNext the new next filter.
  */
-- (void) setNext: (L4Filter *) newNext;
+- (void) setNext:(L4Filter *) newNext;
 
 @end
 // For copyright & license, see COPYRIGHT.txt.

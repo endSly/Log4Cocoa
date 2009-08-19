@@ -21,7 +21,7 @@
  * Initializes an instance from properties.  Currently there are no properties that apply to this class.
  * @param initProperties the proterties to use.
  */
-- (id) initWithProperties: (L4Properties *) initProperties;
+- (id) initWithProperties:(L4Properties *) initProperties;
 
 /**
  * Format a log event.
@@ -29,10 +29,10 @@
  * @param event the event to be formatted.
  * @return a string of the formatted event.
  */
-- (NSString *) format: (L4LoggingEvent *) event;
+- (NSString *) format:(L4LoggingEvent *) event;
 
 /**
- * The MIME type of the string returned by the format: method.
+ * The MIME type of the string returned by the format:method.
  * @return the MIME type.
  */
 - (NSString *) contentType;

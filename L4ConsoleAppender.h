@@ -14,14 +14,14 @@
  * @param aLayout the layout to use for the created appender.
  * @return the new appender.
  */
-+ (L4ConsoleAppender *) standardOutWithLayout: (L4Layout *) aLayout;
++ (L4ConsoleAppender *) standardOutWithLayout:(L4Layout *) aLayout;
 
 /**
  * Creates and returns an L4ConsoleAppender on stderr with the given L4Layout.
  * @param aLayout the layout to use for the created appender.
  * @return the new appender.
  */
-+ (L4ConsoleAppender *) standardErrWithLayout: (L4Layout *) aLayout;
++ (L4ConsoleAppender *) standardErrWithLayout:(L4Layout *) aLayout;
 
 /**
  * default init method.  Returned instance isn't connected to anything.
@@ -35,7 +35,7 @@
  * @param aLayout the layout to use.
  * @return the new instance.
  */
-- (id) initTarget: (BOOL) standardOut withLayout: (L4Layout *) aLayout;
+- (id) initTarget:(BOOL) standardOut withLayout:(L4Layout *) aLayout;
 
 
 /**
@@ -46,7 +46,7 @@
  *	<code>log4cocoa.appender.A2.LogToStandardOut=false</code>
  * @param initProperties the proterties to use.
  */
-- (id) initWithProperties: (L4Properties *) initProperties;
+- (id) initWithProperties:(L4Properties *) initProperties;
 
 /**
  * Accesor for isStandardOut attribute.

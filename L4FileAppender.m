@@ -13,15 +13,15 @@
 	return [self initWithLayout:nil fileName:nil append:NO];
 }
 
-- (id) initWithProperties: (L4Properties *) initProperties
+- (id) initWithProperties:(L4Properties *) initProperties
 {    
-    self = [super initWithProperties: initProperties];
+    self = [super initWithProperties:initProperties];
     
     if ( self != nil ) {
         // Support for appender.File in properties configuration file
-        NSString *buf = [[initProperties stringForKey: @"File"] lowercaseString];
+        NSString *buf = [[initProperties stringForKey:@"File"] lowercaseString];
         if ( buf == nil ) {
-            [L4LogLog error: @"Invalid filename."];
+            [L4LogLog error:@"Invalid filename."];
             [self release];
             return nil;
         }
@@ -29,9 +29,9 @@
         
         // Support for appender.Append in properties configuration file
         append = YES;
-        if ( [initProperties stringForKey: @"Append"] != nil ) {
-            NSString *buf = [[initProperties stringForKey: @"Append"] lowercaseString];
-            append = [buf isEqualToString: @"true"];
+        if ( [initProperties stringForKey:@"Append"] != nil ) {
+            NSString *buf = [[initProperties stringForKey:@"Append"] lowercaseString];
+            append = [buf isEqualToString:@"true"];
         }
 		[self setupFile];
     }
@@ -49,7 +49,7 @@
     self = [super init];
 	if (self != nil)
 	{
-		[self setLayout: aLayout];
+		[self setLayout:aLayout];
 		fileName = [aName retain];
 		append = flag;
 		[self setupFile];
@@ -74,16 +74,16 @@
             [self closeFile];
             [fileName release];
             fileName = nil;
-            [self setFileHandle: nil];
+            [self setFileHandle:nil];
         } else {
         
             fileManager = [NSFileManager defaultManager];
         
             // if file doesn't exist, try to create the file
-            if (![fileManager fileExistsAtPath: fileName]) {
+            if (![fileManager fileExistsAtPath:fileName]) {
                 // if the we cannot create the file, raise a FileNotFoundException
-                if (![fileManager createFileAtPath: fileName contents: nil attributes: nil]) {
-                    [NSException raise: @"FileNotFoundException" format: @"Couldn't create a file at %@", fileName];
+                if (![fileManager createFileAtPath:fileName contents:nil attributes:nil]) {
+                    [NSException raise:@"FileNotFoundException" format:@"Couldn't create a file at %@", fileName];
                 }
             }
         
@@ -93,13 +93,13 @@
             }
         
             // open a file handle to the file
-            [self setFileHandle: [NSFileHandle fileHandleForWritingAtPath: fileName]];
+            [self setFileHandle:[NSFileHandle fileHandleForWritingAtPath:fileName]];
         
             // check the append option
             if (append) {
                 [fileHandle seekToEndOfFile];
             } else {
-                [fileHandle truncateFileAtOffset: 0];
+                [fileHandle truncateFileAtOffset:0];
             }
         }
     }

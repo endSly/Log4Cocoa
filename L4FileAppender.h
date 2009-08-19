@@ -29,7 +29,7 @@
  *	log4cocoa.appender.A2.Append=false</code>
  * @param initProperties the proterties to use.
  */
-- (id) initWithProperties: (L4Properties *) initProperties;
+- (id) initWithProperties:(L4Properties *) initProperties;
 
 /**
  * Initializes an L4FileAppender instance with the specified layout and file path name.

@@ -8,7 +8,7 @@
 
 @implementation L4Filter
 
-- (id) initWithProperties: (L4Properties *) initProperties
+- (id) initWithProperties:(L4Properties *) initProperties
 {
 	return [super init];
 }
@@ -19,7 +19,7 @@
     [super dealloc];
 }
 
-- (L4FilterResult) decide: (L4LoggingEvent *) event
+- (L4FilterResult) decide:(L4LoggingEvent *) event
 {
 	return L4FilterNeutral;
 }
@@ -29,7 +29,7 @@
 	return next;
 }
 
-- (void) setNext: (L4Filter *) newNext
+- (void) setNext:(L4Filter *) newNext
 {
     @synchronized(self) {
         if( next != newNext ) {

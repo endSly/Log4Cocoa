@@ -12,19 +12,19 @@
  * For more information on the specific appender properties, see the documentation for the particular class.
  * @param initProperties the properties to use.
  */
-- (id) initWithProperties: (L4Properties *) initProperties;
+- (id) initWithProperties:(L4Properties *) initProperties;
 
 /**
  * Appender log this event.
  * @param anEvent the event to append.
  */
-- (void) doAppend: (L4LoggingEvent *) anEvent;
+- (void) doAppend:(L4LoggingEvent *) anEvent;
 
 /**
  * Appends to the end of list.
  * @param newFilter the filter to add.
  */
-- (void) appendFilter: (L4Filter *) newFilter;
+- (void) appendFilter:(L4Filter *) newFilter;
 
 /**
  * Accessor for the head filter (the first in the list).
@@ -57,7 +57,7 @@
  * Mutator for name attribute.
  * @param aName the name for this appender.
  */
-- (void) setName: (NSString *) aName;
+- (void) setName:(NSString *) aName;
 
 /**
  * Accessor for layout attribute.
@@ -69,7 +69,7 @@
  * Mutator for layout attribute.
  * @param aLayout the layout for this appender.
  */
-- (void) setLayout: (L4Layout *) aLayout;
+- (void) setLayout:(L4Layout *) aLayout;
 
 @end
 

@@ -23,49 +23,49 @@ static NSCalendarDate *startTime = nil;
 	return startTime;
 }
 
-+ (L4LoggingEvent *) logger: (L4Logger *) aLogger
-					  level: (L4Level *) aLevel
-					message: (id) aMessage
++ (L4LoggingEvent *) logger:(L4Logger *) aLogger
+					  level:(L4Level *) aLevel
+					message:(id) aMessage
 {
-	return [self logger: aLogger
-				  level: aLevel
-			 lineNumber: NO_LINE_NUMBER
-			   fileName: NO_FILE_NAME
-			 methodName: NO_METHOD_NAME
-				message: aMessage
-			  exception: nil];
+	return [self logger:aLogger
+				  level:aLevel
+			 lineNumber:NO_LINE_NUMBER
+			   fileName:NO_FILE_NAME
+			 methodName:NO_METHOD_NAME
+				message:aMessage
+			  exception:nil];
 }
 
-+ (L4LoggingEvent *) logger: (L4Logger *) aLogger
-					  level: (L4Level *) aLevel
-					message: (id) aMessage
-				  exception: (NSException *) e;
++ (L4LoggingEvent *) logger:(L4Logger *) aLogger
+					  level:(L4Level *) aLevel
+					message:(id) aMessage
+				  exception:(NSException *) e;
 {
-	return [self logger: aLogger
-				  level: aLevel
-			 lineNumber: NO_LINE_NUMBER
-			   fileName: NO_FILE_NAME
-			 methodName: NO_METHOD_NAME
-				message: aMessage
-			  exception: e];
+	return [self logger:aLogger
+				  level:aLevel
+			 lineNumber:NO_LINE_NUMBER
+			   fileName:NO_FILE_NAME
+			 methodName:NO_METHOD_NAME
+				message:aMessage
+			  exception:e];
 }
 
-+ (L4LoggingEvent *) logger: (L4Logger *) aLogger
-					  level: (L4Level *) aLevel
-				 lineNumber: (int) aLineNumber
-				   fileName: (char *) aFileName
-				 methodName: (char *) aMethodName
-					message: (id) aMessage
-				  exception: (NSException *) e
++ (L4LoggingEvent *) logger:(L4Logger *) aLogger
+					  level:(L4Level *) aLevel
+				 lineNumber:(int) aLineNumber
+				   fileName:(char *) aFileName
+				 methodName:(char *) aMethodName
+					message:(id) aMessage
+				  exception:(NSException *) e
 {
-	return [[[L4LoggingEvent alloc] initWithLogger: aLogger
-											 level: aLevel
-										lineNumber: aLineNumber
-										  fileName: aFileName
-										methodName: aMethodName
-										   message: aMessage
-										 exception: e
-									eventTimestamp: [NSCalendarDate calendarDate]] autorelease];
+	return [[[L4LoggingEvent alloc] initWithLogger:aLogger
+											 level:aLevel
+										lineNumber:aLineNumber
+										  fileName:aFileName
+										methodName:aMethodName
+										   message:aMessage
+										 exception:e
+									eventTimestamp:[NSCalendarDate calendarDate]] autorelease];
 }
 
 - (id) init
@@ -74,14 +74,14 @@ static NSCalendarDate *startTime = nil;
 	return nil;
 }
 
-- (id) initWithLogger: (L4Logger *) aLogger
-				level: (L4Level *) aLevel
-		   lineNumber: (int) aLineNumber
-			 fileName: (char *) aFileName
-		   methodName: (char *) aMethodName
-			  message: (id) aMessage
-			exception: (NSException *) e
-	   eventTimestamp: (NSDate *) aDate
+- (id) initWithLogger:(L4Logger *) aLogger
+				level:(L4Level *) aLevel
+		   lineNumber:(int) aLineNumber
+			 fileName:(char *) aFileName
+		   methodName:(char *) aMethodName
+			  message:(id) aMessage
+			exception:(NSException *) e
+	   eventTimestamp:(NSDate *) aDate
 {
 	self = [super init];
 	if( self != nil )
@@ -106,13 +106,28 @@ static NSCalendarDate *startTime = nil;
 - (void) dealloc
 {
 	[logger release];
+	logger = nil;
 	[level release];
+	level = nil;
 	[message release];
+	message = nil;
 	[exception release];
+	exception = nil;
 	[timestamp release];
-	if( lineNumber != nil ) [lineNumber release];
-	if( fileName != nil )   [fileName release];
-	if( methodName != nil ) [methodName release];
+	timestamp = nil;
+	
+	if (lineNumber != nil){
+		[lineNumber release];
+		lineNumber = nil;
+	}
+	if (fileName != nil ){
+		[fileName release];
+		fileName = nil;
+	}
+	if (methodName != nil ){
+		[methodName release];
+		methodName = nil;
+	}
 	[super dealloc];
 }
 
@@ -129,9 +144,9 @@ static NSCalendarDate *startTime = nil;
 - (NSNumber *) lineNumber
 {
 	if((lineNumber == nil) && (rawLineNumber != NO_LINE_NUMBER)) {
-		lineNumber = [[NSNumber numberWithInt: rawLineNumber] retain];
+		lineNumber = [[NSNumber numberWithInt:rawLineNumber] retain];
 	} else if (rawLineNumber == NO_LINE_NUMBER) {
-		lineNumber = [[NSNumber numberWithInt: NO_LINE_NUMBER] retain];
+		lineNumber = [[NSNumber numberWithInt:NO_LINE_NUMBER] retain];
 	}
 	return lineNumber;
 }
@@ -139,9 +154,9 @@ static NSCalendarDate *startTime = nil;
 - (NSString *) fileName
 {
 	if((fileName == nil) && (rawFileName != NO_FILE_NAME)) {
-		fileName = [[NSString stringWithCString: rawFileName encoding: NSUTF8StringEncoding] retain];
+		fileName = [[NSString stringWithCString:rawFileName encoding:NSUTF8StringEncoding] retain];
 	} else if (rawFileName == NO_FILE_NAME) {
-		fileName = [[NSString stringWithString: @"No file name!"] retain];
+		fileName = [[NSString stringWithString:@"No file name!"] retain];
 	}
 	return fileName;
 }
@@ -149,9 +164,9 @@ static NSCalendarDate *startTime = nil;
 - (NSString *) methodName
 {
 	if((methodName == nil) && (rawMethodName != NO_METHOD_NAME)) {
-		methodName = [[NSString stringWithCString: rawMethodName encoding: NSUTF8StringEncoding] retain];
+		methodName = [[NSString stringWithCString:rawMethodName encoding:NSUTF8StringEncoding] retain];
 	} else if (rawMethodName == NO_METHOD_NAME) {
-		methodName = [[NSString stringWithString: @"No method name!"] retain];
+		methodName = [[NSString stringWithString:@"No method name!"] retain];
 	}
 	return methodName;
 }
@@ -169,7 +184,7 @@ static NSCalendarDate *startTime = nil;
 - (long) millisSinceStart
 {
 	// its a double in seconds
-	NSTimeInterval time = [timestamp timeIntervalSinceDate: startTime];
+	NSTimeInterval time = [timestamp timeIntervalSinceDate:startTime];
 	return (long) (time * 1000);
 }
 
@@ -181,7 +196,7 @@ static NSCalendarDate *startTime = nil;
 - (NSString *) renderedMessage	
 {
 	if( renderedMessage == nil && message != nil ) {
-		if([message isKindOfClass: [NSString class]]) {
+		if([message isKindOfClass:[NSString class]]) {
 			renderedMessage = message;  // if its a string return it.
 		} else {
 			renderedMessage = [message description];

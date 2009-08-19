@@ -23,9 +23,9 @@
 	return self;
 }
 
--(id) initWithProperties: (L4Properties *) initProperties
+-(id) initWithProperties:(L4Properties *) initProperties
 {
-	self = [super initWithProperties: initProperties];
+	self = [super initWithProperties:initProperties];
 	if (self != nil) {
 		NSString *acceptIfMatched = [initProperties stringForKey:@"AcceptOnMatch"];
 		acceptOnMatch = YES;
@@ -36,7 +36,7 @@
 		
 		stringToMatch = [[initProperties stringForKey:@"StringToMatch"] retain];	
 		if (stringToMatch == nil) {
-			[NSException raise:L4PropertyMissingException format: @"StringToMatch is a required property."];
+			[NSException raise:L4PropertyMissingException format:@"StringToMatch is a required property."];
 		}
 	}
 	return self;

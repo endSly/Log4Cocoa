@@ -21,7 +21,7 @@ extern const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize;
 
 /**
  * This method initializes a new instance of the L4RollingFileAppender class.
- * This method calls <code>initWithLayout:fileName:append:</code>, with the default values: nil, nil, and YES 
+ * This method calls <code>initWithLayout:fileName:append:</code>, with the default values:nil, nil, and YES 
  * respectively.
  * return An initialized instance of this class
  */
@@ -39,11 +39,11 @@ extern const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize;
  * file should be rolled at 10 MB in size.
  * @param initProperties the proterties to use.
  */
-- (id) initWithProperties: (L4Properties *) initProperties;
+- (id) initWithProperties:(L4Properties *) initProperties;
 
 /**
  * This method initialized a new instance of this class with the specified layout and file path
- * This method calls <code>initWithLayout:fileName:append:</code>, with the values: aLayout, aName, and YES 
+ * This method calls <code>initWithLayout:fileName:append:</code>, with the values:aLayout, aName, and YES 
  * respectively.
  * @param aLayout The layout object you want this appender to have.
  * @param aName The file path of the initial file you want created.  Backup files have the same name, but with the 
@@ -77,7 +77,7 @@ extern const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize;
  * reaches maxFileSize.
  * @param mbi The maximum number of backup files that will be created
  */
-- (void)setMaxBackupIndex: (unsigned int)mbi;
+- (void)setMaxBackupIndex:(unsigned int)mbi;
 
 /**
  * Returns the maximum file size allowed for log files.  If the file grows larger than this, it will be backed up and 
@@ -90,7 +90,7 @@ extern const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize;
  * Sets the maximum file size allowed for log files.
  * @param mfs The maximum file size allowed for log files (in bytes).
  */
-- (void)setMaximumFileSize: (unsigned long long)mfs;
+- (void)setMaximumFileSize:(unsigned long long)mfs;
 
 /**
  * Explicitly rolls a file over.
@@ -113,7 +113,7 @@ extern const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize;
  * If so, it rolls the file over according to the maxBackupIndex setting.
  * @param event An L4LoggingEvent that contains logging specific information
  */
-- (void)subAppend: (L4LoggingEvent*)event;
+- (void)subAppend:(L4LoggingEvent*)event;
 
 @end
 // For copyright & license, see COPYRIGHT.txt.

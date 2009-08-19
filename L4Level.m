@@ -32,7 +32,7 @@ static L4Level *L4_ALL   = nil;
 
 + (L4Level *) level:(int)aLevel withName:(NSString *)aName syslogEquivalent:(int)sysLogLevel
 {
-	return [[[L4Level alloc] initLevel: aLevel withName: aName syslogEquivalent: sysLogLevel] autorelease];
+	return [[[L4Level alloc] initLevel:aLevel withName:aName syslogEquivalent:sysLogLevel] autorelease];
 }
 
 + (L4Level *) off
@@ -72,7 +72,7 @@ static L4Level *L4_ALL   = nil;
 
 + (L4Level *) levelWithName:(NSString *) aLevel
 {
-	return [L4Level levelWithName: aLevel defaultLevel: L4_DEBUG];
+	return [L4Level levelWithName:aLevel defaultLevel:L4_DEBUG];
 }
 
 + (L4Level *) levelWithName:(NSString *) aLevel defaultLevel:(L4Level *) defaultLevel
@@ -83,33 +83,33 @@ static L4Level *L4_ALL   = nil;
 
 	theLevel = [aLevel uppercaseString];
 
-	if( [theLevel isEqualToString: @"ALL"] )   { return L4_ALL; }
-	if( [theLevel isEqualToString: @"DEBUG"] ) { return L4_DEBUG; }
-	if( [theLevel isEqualToString: @"INFO"] )  { return L4_INFO; }
-	if( [theLevel isEqualToString: @"WARN"] )  { return L4_WARN; }
-	if( [theLevel isEqualToString: @"ERROR"] ) { return L4_ERROR; }
-	if( [theLevel isEqualToString: @"FATAL"] ) { return L4_FATAL; }
-	if( [theLevel isEqualToString: @"OFF"] )   { return L4_OFF; }
+	if( [theLevel isEqualToString:@"ALL"] )   { return L4_ALL; }
+	if( [theLevel isEqualToString:@"DEBUG"] ) { return L4_DEBUG; }
+	if( [theLevel isEqualToString:@"INFO"] )  { return L4_INFO; }
+	if( [theLevel isEqualToString:@"WARN"] )  { return L4_WARN; }
+	if( [theLevel isEqualToString:@"ERROR"] ) { return L4_ERROR; }
+	if( [theLevel isEqualToString:@"FATAL"] ) { return L4_FATAL; }
+	if( [theLevel isEqualToString:@"OFF"] )   { return L4_OFF; }
 
 	return defaultLevel;
 }
 
 
-+ (L4Level *) levelWithInt: (int) aLevel
++ (L4Level *) levelWithInt:(int) aLevel
 {
-	return [L4Level levelWithInt: aLevel defaultLevel: L4_DEBUG];
+	return [L4Level levelWithInt:aLevel defaultLevel:L4_DEBUG];
 }
 
-+ (L4Level *) levelWithInt: (int) aLevel defaultLevel: (L4Level *) defaultLevel
++ (L4Level *) levelWithInt:(int) aLevel defaultLevel:(L4Level *) defaultLevel
 {
 	switch( aLevel ) {
-		case ALL_INT:   return L4_ALL;
-		case DEBUG_INT: return L4_DEBUG;
-		case INFO_INT:  return L4_INFO;
-		case WARN_INT:  return L4_WARN;
-		case ERROR_INT: return L4_ERROR;
-		case FATAL_INT: return L4_FATAL;
-		case OFF_INT:   return L4_OFF;
+		case ALL_INT:  return L4_ALL;
+		case DEBUG_INT:return L4_DEBUG;
+		case INFO_INT: return L4_INFO;
+		case WARN_INT: return L4_WARN;
+		case ERROR_INT:return L4_ERROR;
+		case FATAL_INT:return L4_FATAL;
+		case OFF_INT:  return L4_OFF;
 
 		default:
 			return defaultLevel;
@@ -175,13 +175,13 @@ static L4Level *L4_ALL   = nil;
 	return syslogEquivalent;
 }
 
-- (BOOL) isGreaterOrEqual: (L4Level *) aLevel
+- (BOOL) isGreaterOrEqual:(L4Level *) aLevel
 {
 	return intValue >= aLevel->intValue;
 }
 
-// ### NOTE: I think this name is more apporopriate, but not changing it right now.
-- (BOOL) isEnabledFor: (L4Level *) aLevel
+// ### NOTE:I think this name is more apporopriate, but not changing it right now.
+- (BOOL) isEnabledFor:(L4Level *) aLevel
 {
 	return intValue >= aLevel->intValue;
 }

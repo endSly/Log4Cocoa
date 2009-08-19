@@ -42,9 +42,9 @@
  * @param aMessage the message to be logged.
  * @return the new logging event.
  */
-+ (L4LoggingEvent *) logger: (L4Logger *) aLogger
-					  level: (L4Level *) aLevel
-					message: (id) aMessage;
++ (L4LoggingEvent *) logger:(L4Logger *) aLogger
+					  level:(L4Level *) aLevel
+					message:(id) aMessage;
 
 /**
  * Creates a logging event with the given parameters.
@@ -54,10 +54,10 @@
  * @param e an exception to go along with this log event.
  * @return the new logging event.
  */
-+ (L4LoggingEvent *) logger: (L4Logger *) aLogger
-					  level: (L4Level *) aLevel
-					message: (id) aMessage
-				  exception: (NSException *) e;
++ (L4LoggingEvent *) logger:(L4Logger *) aLogger
+					  level:(L4Level *) aLevel
+					message:(id) aMessage
+				  exception:(NSException *) e;
 
 /**
  * Creates a logging event with the given parameters.
@@ -70,13 +70,13 @@
  * @param e an exception to go along with this log event.
  * @return the new logging event.
  */
-+ (L4LoggingEvent *) logger: (L4Logger *) aLogger
-					  level: (L4Level *) aLevel
-				 lineNumber: (int) aLineNumber
-				   fileName: (char *) aFileName
-				 methodName: (char *) aMethodName
-					message: (id) aMessage
-				  exception: (NSException *) e;
++ (L4LoggingEvent *) logger:(L4Logger *) aLogger
+					  level:(L4Level *) aLevel
+				 lineNumber:(int) aLineNumber
+				   fileName:(char *) aFileName
+				 methodName:(char *) aMethodName
+					message:(id) aMessage
+				  exception:(NSException *) e;
 
 /**
  * Creates a logging event with the given parameters.
@@ -90,14 +90,14 @@
  * @param aDate the time stamp for when this event was generated.
  * @return the new logging event.
  */
-- (id) initWithLogger: (L4Logger *) aLogger
-				level: (L4Level *) aLevel
-		   lineNumber: (int) aLineNumber
-			 fileName: (char *) aFileName
-		   methodName: (char *) aMethodName
-			  message: (id) aMessage
-			exception: (NSException *) e
-	   eventTimestamp: (NSDate *) aDate;
+- (id) initWithLogger:(L4Logger *) aLogger
+				level:(L4Level *) aLevel
+		   lineNumber:(int) aLineNumber
+			 fileName:(char *) aFileName
+		   methodName:(char *) aMethodName
+			  message:(id) aMessage
+			exception:(NSException *) e
+	   eventTimestamp:(NSDate *) aDate;
 
 - (L4Logger *) logger; /**< Accessor for the logger atribute.*/
 - (L4Level *) level; /**< Access for the level attrbiute.*/
