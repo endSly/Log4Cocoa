@@ -17,7 +17,7 @@
 			self = nil;
 			[NSException raise:NSInvalidArgumentException format:@"aLevel is not allowed to be nil."];
 		} else {
-			levelToMatch = aLevel;
+			levelToMatch = [aLevel retain];
 		}
 	}
 	return self;

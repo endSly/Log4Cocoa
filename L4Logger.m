@@ -13,12 +13,6 @@
 
 static L4LoggerStore *_loggerRepository = nil;
 
-static L4Level *_fatal = nil;
-static L4Level *_error = nil;
-static L4Level *_warn  = nil;
-static L4Level *_info  = nil;
-static L4Level *_debug = nil;
-
 @implementation L4Logger
 
 + (void) initialize
@@ -28,13 +22,6 @@ static L4Level *_debug = nil;
 	[rootLogger autorelease];
 
 	[L4LoggingEvent startTime];
-
-	_debug = [L4Level debug];
-	_info  = [L4Level info];
-	_warn  = [L4Level warn];
-	_error = [L4Level error];
-	_fatal = [L4Level fatal];
-
 }
 
 - init
@@ -241,11 +228,26 @@ static L4Level *_debug = nil;
 
 // ALL < DEBUG < INFO < WARN < ERROR < FATAL < OFF
 
-- (BOOL) isDebugEnabled { return [self isEnabledFor:_debug]; }
-- (BOOL) isInfoEnabled  { return [self isEnabledFor:_info]; }
-- (BOOL) isWarnEnabled  { return [self isEnabledFor:_warn]; }
-- (BOOL) isErrorEnabled { return [self isEnabledFor:_error]; }
-- (BOOL) isFatalEnabled { return [self isEnabledFor:_fatal]; }
+- (BOOL) isDebugEnabled 
+{ 
+	return [self isEnabledFor:[L4Level debug]]; 
+}
+- (BOOL) isInfoEnabled  
+{ 
+	return [self isEnabledFor:[L4Level info]]; 
+}
+- (BOOL) isWarnEnabled  
+{ 
+	return [self isEnabledFor:[L4Level warn]]; 
+}
+- (BOOL) isErrorEnabled 
+{ 
+	return [self isEnabledFor:[L4Level error]]; 
+}
+- (BOOL) isFatalEnabled 
+{ 
+	return [self isEnabledFor:[L4Level fatal]]; 
+}
 
 - (BOOL) isEnabledFor:(L4Level *) aLevel
 {
@@ -262,7 +264,12 @@ static L4Level *_debug = nil;
 				log:(NSString *) aMessage
 {
 	if( !anAssertion ) {
-		[self lineNumber:lineNumber fileName:fileName methodName:methodName message:aMessage level:_error exception:nil];
+		[self lineNumber:lineNumber 
+				fileName:fileName 
+			  methodName:methodName 
+				 message:aMessage 
+				   level:[L4Level error] 
+			   exception:nil];
 	}
 }
 

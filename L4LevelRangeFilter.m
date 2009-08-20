@@ -13,8 +13,8 @@
 	self = [super init];
 	if (self != nil) {
 		acceptOnMatch = shouldAccept;
-		minimumLevelToMatch = minimumLevel;
-		maximumLevelToMatch = maximumLevel;
+		minimumLevelToMatch = [minimumLevel retain];
+		maximumLevelToMatch = [maximumLevel retain];
 	}
 	return self;
 }

@@ -93,17 +93,12 @@ NSString* const L4PropertyMissingException = @"L4PropertyMissingException";
   		
   		NSString *fileContents = [NSString stringWithContentsOfFile:aName encoding:NSUTF8StringEncoding error:nil];
   		
-  		NSEnumerator *lineEnum = [[fileContents componentsSeparatedByString:@"\n"] objectEnumerator];
+  		NSEnumerator *lineEnumerator = [[fileContents componentsSeparatedByString:@"\n"] objectEnumerator];
   		NSString *currentLine = nil;
-  		while ( ( currentLine = [lineEnum nextObject] ) != nil ) {
+  		while ( ( currentLine = [lineEnumerator nextObject] ) != nil ) {
 			currentLine = [currentLine stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-				
-			NSString *linePrefix = nil;
-			if ( [currentLine length] >= [L4PropertiesCommentChar length] ) {
- 				linePrefix = [currentLine substringToIndex:[L4PropertiesCommentChar length]];
-			}
-				
-			if ( ![L4PropertiesCommentChar isEqualToString:linePrefix] ) {
+			
+			if ( ![currentLine hasPrefix:L4PropertiesCommentChar] ) {
 				NSRange range = [currentLine rangeOfString:@"="];
 				
 				if ( ( range.location != NSNotFound ) && ( [currentLine length] > range.location + 1 ) ) {
