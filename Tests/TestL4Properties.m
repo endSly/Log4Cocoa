@@ -46,7 +46,7 @@
 	
 	L4Properties *properties = [L4Properties propertiesWithFileName:filename];
 	STAssertNotNil(properties, @"L4Properties could not be instantiated.");
-	STAssertEquals([properties count], 10u, @"Expected 10 keys, but found %i", [properties count]);
+	STAssertEquals([properties count], (NSUInteger)10, @"Expected 10 keys, but found %i", [properties count]);
 	
 	STAssertEqualObjects([properties stringForKey:@"log4cocoa.appender.A1"], @"L4ConsoleAppender", 
 						 @"Expected 'L4ConsoleAppender', but found %@", 
@@ -87,7 +87,7 @@
 
 	L4Properties *properties = [L4Properties propertiesWithProperties:fullDictionary];
 	STAssertNotNil(properties, @"L4Properties could not be instantiated.");
-	STAssertEquals([properties count], 10u, @"Expected 10 keys, but found %i", [properties count]);
+	STAssertEquals([properties count], (NSUInteger)10, @"Expected 10 keys, but found %i", [properties count]);
 	
 	STAssertEqualObjects([properties stringForKey:@"log4cocoa.appender.A1"], @"L4ConsoleAppender", 
 						 @"Expected 'L4ConsoleAppender', but found %@", 

@@ -19,13 +19,13 @@
     
     if ( self != nil ) {
         // Support for appender.File in properties configuration file
-        NSString *buf = [[initProperties stringForKey:@"File"] lowercaseString];
+        NSString *buf = [initProperties stringForKey:@"File"];
         if ( buf == nil ) {
             [L4LogLog error:@"Invalid filename."];
             [self release];
             return nil;
         }
-        fileName = [buf retain];
+        fileName = [[buf stringByExpandingTildeInPath] retain];
         
         // Support for appender.Append in properties configuration file
         append = YES;
@@ -50,7 +50,7 @@
 	if (self != nil)
 	{
 		[self setLayout:aLayout];
-		fileName = [aName retain];
+		fileName = [[aName stringByExpandingTildeInPath] retain];
 		append = flag;
 		[self setupFile];
 	}

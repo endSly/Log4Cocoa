@@ -257,8 +257,8 @@
             // rename the current log file to the new rollover log file name
             if (![fileManager moveItemAtPath:[self fileName] toPath:newFileName error:nil])
             {
-                // if we can't rename the file, raise an exception
-                [NSException raise:@"CantMoveFileException" format:@"Unable to move file from %@ to %@", [self fileName], newFileName];
+                // if we can't rename the file, log an error
+				[L4LogLog error:[NSString stringWithFormat:@"Unable to move file from %@ to %@", [self fileName], newFileName]];
             }
             
             // re-activate this appender (this will open a new log file named [self fileName])

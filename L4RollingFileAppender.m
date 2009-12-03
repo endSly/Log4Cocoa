@@ -5,6 +5,7 @@
 #import "L4RollingFileAppender.h"
 #import "L4Layout.h"
 #import "L4LoggingEvent.h"
+#import "L4LogLog.h"
 
 const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize = (1024 * 1024 * 10);
 
@@ -161,8 +162,8 @@ const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize = (1024 * 1024
 		
 		// try to delete the oldest backup file
 		if (![fileManager removeItemAtPath:tempOldFileName error:nil]) {
-			// if we couldn't delete the file, raise an exception
-			[NSException raise:@"CantDeleteFileException" format:@"Unable to delete the file %@", tempOldFileName];
+			// if we couldn't delete the file, log an error
+			[L4LogLog error:[NSString stringWithFormat:@"Unable to delete the file %@", tempOldFileName]];
 		}
 	} else {
 		// if the backupIndex = 0, we haven't renamed this file before
@@ -201,8 +202,7 @@ const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize = (1024 * 1024
 		
 		// rename the old file
 		if (![fileManager moveItemAtPath:tempOldFileName toPath:tempNewFileName error:nil]) {
-			[NSException raise:@"CantMoveFileException" 
-						format:@"Unable to move file %@ to %@!", tempOldFileName, tempNewFileName];
+			[L4LogLog error:[NSString stringWithFormat:@"Unable to move file %@ to %@!", tempOldFileName, tempNewFileName]];
 		}
 	}
 }

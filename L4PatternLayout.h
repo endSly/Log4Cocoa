@@ -346,4 +346,12 @@ extern NSString* const L4InvalidBraceClauseException;
 - (void)parseConversionPattern:(NSString*)cp intoArray:(NSMutableArray**)tokenStringArray;
 
 @end
+
+/*
+ * This is here for testing purposes.  Otherwise, the conversion pattern does not get parsed until a log event happens.
+ */
+@interface L4PatternLayout (TestMethods)
+- (NSArray *)tokenArray;
+@end
+
 // For copyright & license, see COPYRIGHT.txt.
