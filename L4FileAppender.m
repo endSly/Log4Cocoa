@@ -21,7 +21,7 @@
         // Support for appender.File in properties configuration file
         NSString *buf = [initProperties stringForKey:@"File"];
         if ( buf == nil ) {
-            [L4LogLog error:@"Invalid filename."];
+            [L4LogLog error:@"Invalid filename; L4FileAppender properties require a file be specified."];
             [self release];
             return nil;
         }

@@ -14,7 +14,7 @@
 
 - (void) setUp
 {
-	fullDictionary = [[NSDictionary alloc] initWithObjects:[[NSArray alloc] initWithObjects:@"L4ConsoleAppender", 
+	fullDictionary = [[NSDictionary alloc] initWithObjects:[[[NSArray alloc] initWithObjects:@"L4ConsoleAppender", 
 															@"false", 
 															@"L4PatternLayout", 
 															@"%-5p : %m%n", 
@@ -23,8 +23,8 @@
 															@"1", 
 															@"L4PatternLayout", 
 															@"DEBUG, A2", 
-															@"INHERIT", nil] 
-												   forKeys:[[NSArray alloc] initWithObjects:@"log4cocoa.appender.A1", 
+															@"INHERIT", nil] autorelease]
+												   forKeys:[[[NSArray alloc] initWithObjects:@"log4cocoa.appender.A1", 
 															@"log4cocoa.appender.A1.LogToStandardOut",
 															@"log4cocoa.appender.A1.layout", 
 															@"log4cocoa.appender.A1.layout.ConversionPattern", 
@@ -33,7 +33,7 @@
 															@"log4cocoa.appender.A2.MaxBackupIndex", 
 															@"log4cocoa.appender.A2.layout", 
 															@"log4cocoa.rootLogger", 
-															@"log4cocoa.logger.class_of_the_day", nil]];
+															@"log4cocoa.logger.class_of_the_day", nil] autorelease]];
 	
 }
 
