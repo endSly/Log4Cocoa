@@ -25,7 +25,7 @@ typedef enum L4RollingFrequency
 @interface L4DailyRollingFileAppender : L4FileAppender
 {
 	L4RollingFrequency	rollingFrequency; /**< The frequency with which the file should be rolled.*/
-	NSCalendarDate*		lastRolloverDate; /**< The date the last role-over ocured.*/
+	NSDate*		lastRolloverDate; /**< The date the last role-over ocured.*/
 }
 
 /**

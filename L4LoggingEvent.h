@@ -15,7 +15,7 @@
 	id message; /**< The message of this event.*/
 	NSString *renderedMessage; /**< The string version of message. */
 	NSException *exception; /**< Any exception that was logged as part of this event.*/
-	NSCalendarDate *timestamp; /**< The timestamp for when this event was generated.*/
+	NSDate *timestamp; /**< The timestamp for when this event was generated.*/
 
 	char *rawFileName; /**< The raw filename for where the event was generated.*/
 	char *rawMethodName; /**< The raw method name for where the event was generated. */
@@ -33,7 +33,7 @@
  * occured into the appliction run.
  *@return the start time of the application.
  */
-+ (NSCalendarDate *) startTime;
++ (NSDate *) startTime;
 
 /**
  * Creates a logging event with the given parameters.
@@ -106,7 +106,7 @@
 - (NSString *) fileName; /**< Access for the fileName attribute.*/
 - (NSString *) methodName; /**< Accessor for the methodName attribute.*/
 
-- (NSCalendarDate *) timestamp; /**< Accessor for the timestamp attribute.*/
+- (NSDate *) timestamp; /**< Accessor for the timestamp attribute.*/
 - (NSException *) exception; /**< Accessor for the exception attribute.*/
 - (long) millisSinceStart; /**< Accessor for the millisSinceStart attribute.*/
 - (id) message; /**< Accessor for the message attribute.*/

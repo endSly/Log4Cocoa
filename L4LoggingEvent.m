@@ -9,16 +9,16 @@ static int   NO_LINE_NUMBER = -1;
 static char *NO_FILE_NAME   = "";
 static char *NO_METHOD_NAME = "";
 
-static NSCalendarDate *startTime = nil;
+static NSDate *startTime = nil;
 
 @implementation L4LoggingEvent
 
 + (void) initialize
 {
-	startTime = [[NSCalendarDate calendarDate] retain];
+	startTime = [[NSDate date] retain];
 }
 
-+ (NSCalendarDate *) startTime
++ (NSDate *) startTime
 {
 	return startTime;
 }
@@ -65,7 +65,7 @@ static NSCalendarDate *startTime = nil;
 										methodName:aMethodName
 										   message:aMessage
 										 exception:e
-									eventTimestamp:[NSCalendarDate calendarDate]] autorelease];
+									eventTimestamp:[NSDate date]] autorelease];
 }
 
 - (id) init
@@ -171,7 +171,7 @@ static NSCalendarDate *startTime = nil;
 	return methodName;
 }
 
-- (NSCalendarDate *) timestamp
+- (NSDate *) timestamp
 {
 	return timestamp;
 }

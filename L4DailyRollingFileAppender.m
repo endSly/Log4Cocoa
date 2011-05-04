@@ -14,7 +14,7 @@
 /**
  * Accessor for the lastRolloverDate property.
  */
-- (NSCalendarDate *)lastRolloverDate;
+- (NSDate *)lastRolloverDate;
 /**
  * Mutator for the lastRolloverDate property.
  */
@@ -61,7 +61,7 @@
 - (void)setRollingFrequency:(L4RollingFrequency)aRollingFrequency
 {	
 	rollingFrequency = aRollingFrequency;
-	[self setLastRolloverDate:[NSCalendarDate calendarDate]];
+	[self setLastRolloverDate:[NSDate date]];
 }
 
 /* ********************************************************************* */
@@ -111,7 +111,7 @@
 /* ********************************************************************* */
 #pragma mark Private methods
 /* ********************************************************************* */
-- (NSCalendarDate*)lastRolloverDate
+- (NSDate*)lastRolloverDate
 {
 	return lastRolloverDate;
 }
@@ -127,12 +127,15 @@
     }
 }
 
+/*  EGS:
+ *  @Todo!
+ */
 - (void)rollOver
 {
-	NSCalendarDate*	now = nil;
+	NSDate*         now = nil;
 	NSString*		pathExtension = nil;
-	NSCalendarDate*	tempLastRolloverDate = nil;
-	NSCalendarDate*	tempCalendarDate = nil, *tempCalendarDate2 = nil;
+	NSDate*         tempLastRolloverDate = nil;
+	NSDate*         tempCalendarDate = nil, *tempCalendarDate2 = nil;
 	NSString*		newFileName = nil;
 	NSFileManager*	fileManager = nil;
 	BOOL			rolloverTime = NO;
@@ -140,7 +143,7 @@
 	fileManager = [NSFileManager defaultManager];
 	
 	// get the current date and time
-	now = [NSCalendarDate calendarDate];
+	now = [NSDate date];
 
 	@synchronized(self) {
         
@@ -152,11 +155,13 @@
         // save a reference to the last rollover date, before we possible change it
         tempLastRolloverDate = [[self lastRolloverDate] retain];
         
+        NSTimeInterval timeAgo = [lastRolloverDate timeIntervalSinceNow];
+        
         // determine if we need to rollover now
         switch (rollingFrequency) {
             case monthly:
                 // if the last rollover date and now are not in the same month of the same year, time to rollover
-                if ([lastRolloverDate monthOfYear] != [now monthOfYear] || [lastRolloverDate yearOfCommonEra] != [now yearOfCommonEra]) {
+                if (timeAgo > 3600 * 24 * 30) {
                     rolloverTime = YES;
                     [self setLastRolloverDate:now];
                 }
@@ -164,11 +169,8 @@
                 
             case weekly:
                 // first find the first days of the week for the last rollover date and now
-                tempCalendarDate = [lastRolloverDate dateByAddingYears:0 months:0 days:(0 - [lastRolloverDate dayOfWeek]) hours:0 minutes:0 seconds:0];
-                tempCalendarDate2 = [now dateByAddingYears:0 months:0 days:(0 - [now dayOfWeek]) hours:0 minutes:0 seconds:0];
-                
                 // if the last rollover date and now are not in the same week of the same year, time to rollover
-                if ([tempCalendarDate dayOfYear] != [tempCalendarDate2 dayOfYear] || [tempCalendarDate yearOfCommonEra] != [tempCalendarDate2 yearOfCommonEra]) {
+                if (timeAgo > 3600 * 24 * 7) {
                     rolloverTime = YES;
                     [self setLastRolloverDate:now];
                 }
@@ -176,7 +178,7 @@
                 
             case daily:
                 // if the last rollover date and now are not in the same day of the same year, time to rollover
-                if ([lastRolloverDate dayOfYear] != [now dayOfYear] || [lastRolloverDate yearOfCommonEra] != [now yearOfCommonEra]) {
+                if (timeAgo > 3600 * 24) {
                     rolloverTime = YES;
                     [self setLastRolloverDate:now];
                 }
@@ -184,19 +186,15 @@
                 
             case half_daily:
                 // if the last rollover date is between noon and midnight and now is between midnight and noon, time to rollover
-                if ([lastRolloverDate hourOfDay] >= 12 && [now hourOfDay] < 12) {
+                if (timeAgo > 3600 * 12) {
                     rolloverTime = YES;
                     [self setLastRolloverDate:now];
-                } else if ([lastRolloverDate hourOfDay] < 12 && [now hourOfDay] >= 12) {
-                    // else if the last rollover date is between midnight and noon and now is between noon and midnight, time to rollover
-                    rolloverTime = YES;
-                    [self setLastRolloverDate:now];
-                }
+                } 
                 break;
                 
             case hourly:
                 // if the last rollover date is not the same hour of the same day of the same year as now, it is time to rollover
-                if ([lastRolloverDate hourOfDay] != [now hourOfDay]  || [lastRolloverDate dayOfYear] != [now dayOfYear] || [lastRolloverDate yearOfCommonEra] != [now yearOfCommonEra]) {
+                if (timeAgo > 3600) {
                     rolloverTime = YES;
                     [self setLastRolloverDate:now];
                 }
@@ -204,7 +202,7 @@
                 
             case minutely:
                 // if the last rollover date is not the same minute of the same hour of the same day of the same year, it is time to rollover
-                if ([lastRolloverDate minuteOfHour] != [now minuteOfHour] || [lastRolloverDate hourOfDay] != [now hourOfDay] || [lastRolloverDate dayOfYear] != [now dayOfYear] || [lastRolloverDate yearOfCommonEra] != [now yearOfCommonEra]) {
+                if (timeAgo > 60) {
                     rolloverTime = YES;
                     [self setLastRolloverDate:now];
                 }
@@ -214,7 +212,7 @@
                 rolloverTime = NO;
                 break;
         }
-        
+        /*
         // if we have passed the rollover date
         if (rolloverTime) {
             // if rolling frequency is not never, calculate the path extension
@@ -264,7 +262,7 @@
             // re-activate this appender (this will open a new log file named [self fileName])
             [self setupFile];
         }
-        
+        */
         [tempLastRolloverDate release];
         tempLastRolloverDate = nil;
     }
