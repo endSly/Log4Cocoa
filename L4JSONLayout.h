@@ -9,4 +9,6 @@
     
 }
 
++ (L4JSONLayout *) JSONLayout;
+
 @end

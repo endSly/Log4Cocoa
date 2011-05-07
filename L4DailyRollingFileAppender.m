@@ -128,12 +128,12 @@ NSString *const L4RollingFrequencyMinutely = @"L4RollingFrequencyMinutely";
  */
 - (void)rollOver
 {
+    // if the rolling frequency is never, return
+    if ([self.rollingFrequency isEqualToString:L4RollingFrequencyNever])
+        return;
+    
 	@synchronized(self) {
-        
-        // if the rolling frequency is never, return
-        if ([self.rollingFrequency isEqualToString:L4RollingFrequencyNever])
-            return;
-        
+
         NSDate *now = [NSDate date];
         
         NSCalendar *calendar = [NSCalendar currentCalendar];

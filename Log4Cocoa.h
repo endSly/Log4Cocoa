@@ -31,6 +31,7 @@
 #import "L4SimpleLayout.h"
 #import "L4StringMatchFilter.h"
 #import "L4WriterAppender.h"
+#import "L4XMLAppender.h"
 #import "Log4CocoaDefines.h"
 #import "NSObject+Log4Cocoa.h"
 
