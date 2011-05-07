@@ -12,6 +12,7 @@
 #import "L4DenyAllFilter.h"
 #import "L4FileAppender.h"
 #import "L4Filter.h"
+#import "L4JSONLayout.h"
 #import "L4Layout.h"
 #import "L4Level.h"
 #import "L4LevelMatchFilter.h"
