@@ -4,16 +4,15 @@
 /**
  * The accepted constants for L4DailyRollingFileAppenderFrequency's <code>setFrequency:</code> method.
  */
-typedef enum L4RollingFrequency
-{
-	never,		/**< Never roll the file. */
-	monthly,	/**< Roll the file over every month. */
-	weekly,		/**< Roll the file over every week. */
-	daily,		/**< Roll the file over every day. */
-	half_daily,	/**< Roll the file over every 12 hours. */
-	hourly,		/**< Roll the file over every hour. */
-	minutely	/**< Roll the file over every minute. */
-} L4RollingFrequency;
+extern NSString *const L4RollingFrequencyKey;
+
+extern NSString *const L4RollingFrequencyNever;     /**< Never roll the file. */
+extern NSString *const L4RollingFrequencyMonthly;   /**< Roll the file over every month. */
+extern NSString *const L4RollingFrequencyWeekly;    /**< Roll the file over every week. */
+extern NSString *const L4RollingFrequencyDaily;     /**< Roll the file over every day. */
+extern NSString *const L4RollingFrequencyHalfDaily; /**< Roll the file over every 12 hours. */
+extern NSString *const L4RollingFrequencyHourly;    /**< Roll the file over every hour. */
+extern NSString *const L4RollingFrequencyMinutely;  /**< Roll the file over every minute. */
 
 /**
  * L4DailyRollingFileAppender extends L4FileAppender so that the underlying file is rolled over at a 
@@ -22,11 +21,15 @@ typedef enum L4RollingFrequency
  * and logging for 2001-02-17 will continue in /foo/bar.log until it rolls over the next day.
  * It is possible to specify monthly, weekly, half-daily, daily, hourly, or minutely rollover schedules.  
 */
-@interface L4DailyRollingFileAppender : L4FileAppender
-{
-	L4RollingFrequency	rollingFrequency; /**< The frequency with which the file should be rolled.*/
-	NSDate*		lastRolloverDate; /**< The date the last role-over ocured.*/
+@interface L4DailyRollingFileAppender : L4FileAppender {
+	NSString    *_rollingFrequency; /**< The frequency with which the file should be rolled.*/
+	NSDate      *_lastRolloverDate; /**< The date the last role-over ocured.*/
 }
+
+/**
+ * Sets rolling frequency
+ */
+@property (nonatomic, copy) NSString *rollingFrequency;
 
 /**
  * This initializer calls the <code>initWithLayout:fileName:rollingFrequency:</code> method with the respective values:nil, nil, never.
@@ -39,28 +42,16 @@ typedef enum L4RollingFrequency
  * @param aName The file path to the file in which you want logging output recorded
  * @param aRollingFrequency The frequency at which you want the log file rolled over
  */
-- (id)initWithLayout:(L4Layout*)aLayout fileName:(NSString*)aName rollingFrequency:(L4RollingFrequency)aRollingFrequency;
+- (id)initWithLayout:(L4Layout*)aLayout fileName:(NSString*)aName rollingFrequency:(NSString *)aRollingFrequency;
 
 /**
  * Initializes an instance from properties.  The properties supported are:
- * - <c>RollingFrequency:</c> specifies the frequency when the log file should be rolled.  See L4RollingFrequency.
+ * - <c>L4RollingFrequencyKey:</c> specifies the frequency when the log file should be rolled.  See L4RollingFrequency.
  * If the values are being set in a file, this is how they could look:
- *	<code>log4cocoa.appender.A2.RollingFrequency=daily</code>
+ *	<code>log4cocoa.appender.A2.L4RollingFrequency=L4RollingFrequencyDaily</code>
  * @param initProperties the proterties to use.
  */
 - (id) initWithProperties:(L4Properties *) initProperties;
-
-/**
- * Returns this object's rolling frequency.
- * @return This object's rolling frequency
- */
-- (L4RollingFrequency)rollingFrequency;
-
-/**
- Sets the object's rolling frequency
- * @param aRollingFrequency The desired rolling frequency for this object
- */
-- (void)setRollingFrequency:(L4RollingFrequency)aRollingFrequency;
 
 @end
 

@@ -7,6 +7,16 @@
 #import "L4LogLog.h"
 #import <math.h>
 
+NSString *const L4RollingFrequencyKey = @"L4RollingFrequency";
+
+NSString *const L4RollingFrequencyNever = @"L4RollingFrequencyNever";
+NSString *const L4RollingFrequencyMonthly = @"L4RollingFrequencyMonthly";
+NSString *const L4RollingFrequencyWeekly = @"L4RollingFrequencyWeekly";
+NSString *const L4RollingFrequencyDaily = @"L4RollingFrequencyDaily";
+NSString *const L4RollingFrequencyHalfDaily = @"L4RollingFrequencyHalfDaily";
+NSString *const L4RollingFrequencyHourly = @"L4RollingFrequencyHourly";
+NSString *const L4RollingFrequencyMinutely = @"L4RollingFrequencyMinutely";
+
 /**
  * Private methods for the L4DailyRollingFileAppender class.
  */
@@ -31,10 +41,10 @@
 
 - (id)init
 {
-	return [self initWithLayout:nil fileName:nil rollingFrequency:never];
+	return [self initWithLayout:nil fileName:nil rollingFrequency:L4RollingFrequencyNever];
 }
 
-- (id)initWithLayout:(L4Layout*)aLayout fileName:(NSString*)aName rollingFrequency:(L4RollingFrequency)aRollingFrequency
+- (id)initWithLayout:(L4Layout*)aLayout fileName:(NSString*)aName rollingFrequency:(NSString *)aRollingFrequency
 {
 	self = [super initWithLayout:aLayout fileName:aName append:YES];
 	
@@ -47,20 +57,24 @@
 
 - (void)dealloc
 {
-	[lastRolloverDate release];
-	lastRolloverDate = nil;
+	[_lastRolloverDate release];
+	_lastRolloverDate = nil;
+    
+    [_rollingFrequency release];
+    _rollingFrequency = nil;
 	
 	[super dealloc];
 }
 
-- (L4RollingFrequency)rollingFrequency
+- (NSString *)rollingFrequency
 {
-	return rollingFrequency;
+	return _rollingFrequency;
 }
 
-- (void)setRollingFrequency:(L4RollingFrequency)aRollingFrequency
+- (void)setRollingFrequency:(NSString *)aRollingFrequency
 {	
-	rollingFrequency = aRollingFrequency;
+    [_rollingFrequency release];
+	_rollingFrequency = [aRollingFrequency copy];
 	[self setLastRolloverDate:[NSDate date]];
 }
 
@@ -71,28 +85,11 @@
 {    
     self = [super initWithProperties:initProperties];
     
-    if ( self != nil ) {
-        // Support for appender.RollingFrequency in properties configuration file
-        L4RollingFrequency newRollingFrequency = daily;
-        if ( [initProperties stringForKey:@"RollingFrequency"] != nil ) {
-            NSString *buf = [[initProperties stringForKey:@"RollingFrequency"] lowercaseString];
-            
-            if( [buf isEqualToString:@"monthly"] ) {
-                newRollingFrequency = monthly;
-            } else if( [buf isEqualToString:@"weekly"] ) {
-                newRollingFrequency = weekly;
-            } else if( [buf isEqualToString:@"daily"] ) {
-                newRollingFrequency = daily;
-            } else if( [buf isEqualToString:@"half_daily"] ) {
-                newRollingFrequency = half_daily;
-            } else if( [buf isEqualToString:@"hourly"] ) {
-                newRollingFrequency = hourly;
-            } else if( [buf isEqualToString:@"minutely"] ) {
-                newRollingFrequency = minutely;
-            } else {
-                [L4LogLog warn:[NSString stringWithFormat:@"Invalid RollingFrequency:\"%@\".", buf]];
-            }
-            [self setRollingFrequency:newRollingFrequency];
+    if (self) {
+        // Support for appender.L4RollingFrequency in properties configuration file
+        NSString *rollingFrequency = [initProperties stringForKey:L4RollingFrequencyKey];
+        if (rollingFrequency) {
+            self.rollingFrequency = rollingFrequency;
         }
     }
     
@@ -113,158 +110,115 @@
 /* ********************************************************************* */
 - (NSDate*)lastRolloverDate
 {
-	return lastRolloverDate;
+	return _lastRolloverDate;
 }
 
 - (void)setLastRolloverDate:(NSDate*)date
 {
     @synchronized(self) {
-        if ((NSDate*)lastRolloverDate != date) {
-            [lastRolloverDate release];
-            lastRolloverDate = nil;
-            lastRolloverDate = [date retain];
+        if (_lastRolloverDate != date) {
+            [_lastRolloverDate release];
+            _lastRolloverDate = [date retain];
         }
     }
 }
 
-/*  EGS:
- *  @Todo!
+/** 
+ * Rolls file name
  */
 - (void)rollOver
 {
-	NSDate*         now = nil;
-	NSString*		pathExtension = nil;
-	NSDate*         tempLastRolloverDate = nil;
-	NSDate*         tempCalendarDate = nil, *tempCalendarDate2 = nil;
-	NSString*		newFileName = nil;
-	NSFileManager*	fileManager = nil;
-	BOOL			rolloverTime = NO;
-	
-	fileManager = [NSFileManager defaultManager];
-	
-	// get the current date and time
-	now = [NSDate date];
-
 	@synchronized(self) {
         
         // if the rolling frequency is never, return
-        if (rollingFrequency == never) {
+        if ([self.rollingFrequency isEqualToString:L4RollingFrequencyNever])
             return;
-        }
         
-        // save a reference to the last rollover date, before we possible change it
-        tempLastRolloverDate = [[self lastRolloverDate] retain];
+        NSDate *now = [NSDate date];
         
-        NSTimeInterval timeAgo = [lastRolloverDate timeIntervalSinceNow];
+        NSCalendar *calendar = [NSCalendar currentCalendar];
+        NSDateComponents *nowDateComponents = [calendar components:(NSYearCalendarUnit | NSMonthCalendarUnit | NSWeekCalendarUnit 
+                                                                    | NSDayCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit)
+                                                          fromDate:now];
         
-        // determine if we need to rollover now
-        switch (rollingFrequency) {
-            case monthly:
-                // if the last rollover date and now are not in the same month of the same year, time to rollover
-                if (timeAgo > 3600 * 24 * 30) {
-                    rolloverTime = YES;
-                    [self setLastRolloverDate:now];
-                }
-                break;
-                
-            case weekly:
-                // first find the first days of the week for the last rollover date and now
-                // if the last rollover date and now are not in the same week of the same year, time to rollover
-                if (timeAgo > 3600 * 24 * 7) {
-                    rolloverTime = YES;
-                    [self setLastRolloverDate:now];
-                }
-                break;
-                
-            case daily:
-                // if the last rollover date and now are not in the same day of the same year, time to rollover
-                if (timeAgo > 3600 * 24) {
-                    rolloverTime = YES;
-                    [self setLastRolloverDate:now];
-                }
-                break;
-                
-            case half_daily:
-                // if the last rollover date is between noon and midnight and now is between midnight and noon, time to rollover
-                if (timeAgo > 3600 * 12) {
-                    rolloverTime = YES;
-                    [self setLastRolloverDate:now];
-                } 
-                break;
-                
-            case hourly:
-                // if the last rollover date is not the same hour of the same day of the same year as now, it is time to rollover
-                if (timeAgo > 3600) {
-                    rolloverTime = YES;
-                    [self setLastRolloverDate:now];
-                }
-                break;
-                
-            case minutely:
-                // if the last rollover date is not the same minute of the same hour of the same day of the same year, it is time to rollover
-                if (timeAgo > 60) {
-                    rolloverTime = YES;
-                    [self setLastRolloverDate:now];
-                }
-                break;
-                
-            default:
-                rolloverTime = NO;
-                break;
-        }
-        /*
-        // if we have passed the rollover date
-        if (rolloverTime) {
-            // if rolling frequency is not never, calculate the path extension
-            if (rollingFrequency != never) {
-                switch (rollingFrequency) {
-                    case monthly:
-                        pathExtension = [tempLastRolloverDate descriptionWithCalendarFormat:@"%Y-%m" timeZone:nil locale:nil];
-                        break;
-                    case weekly:
-                        pathExtension = [tempLastRolloverDate descriptionWithCalendarFormat:[@"%Y-%m-" stringByAppendingString:[NSString stringWithFormat:@"%d", floor([tempCalendarDate dayOfYear] / 7)]] timeZone:nil locale:nil];
-                        break;
-                    case daily:
-                        pathExtension = [tempLastRolloverDate descriptionWithCalendarFormat:@"%Y-%m-%d" timeZone:nil locale:nil];
-                        break;
-                    case half_daily:
-                        pathExtension = [tempLastRolloverDate descriptionWithCalendarFormat:@"%Y-%m-%d-%p" timeZone:nil locale:nil];
-                        break;
-                    case hourly:
-                        pathExtension = [tempLastRolloverDate descriptionWithCalendarFormat:@"%Y-%m-%d-%H" timeZone:nil locale:nil];
-                        break;
-                    case minutely:
-                        pathExtension = [tempLastRolloverDate descriptionWithCalendarFormat:@"%Y-%m-%d-%H-%M" timeZone:nil locale:nil];
-                        break;
-                    default:
-                        // ignore other values, if we are here, we got an illegal value so reset the rolling frequency to never
-                        [self setRollingFrequency:never];
-                        break;
-                }
-            }
+        NSDateComponents *lastDateComponents = [calendar components:(NSYearCalendarUnit | NSMonthCalendarUnit | NSWeekCalendarUnit 
+                                                                     | NSDayCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit) 
+                                                           fromDate:self.lastRolloverDate];
+        
+        bool doRollover = NO;
+        NSString *format;
+        
+        if ([self.rollingFrequency isEqualToString:L4RollingFrequencyMonthly]) {
+            doRollover = ([nowDateComponents year] != [lastDateComponents year]) 
+            || ([nowDateComponents month] != [lastDateComponents month]);
             
-            [tempLastRolloverDate release];
-            tempLastRolloverDate = nil;
+            format = @"yyyy";
+            
+        } else if ([self.rollingFrequency isEqualToString:L4RollingFrequencyWeekly]) {
+            doRollover = ([nowDateComponents year] != [lastDateComponents year]) 
+            || ([nowDateComponents week] != [lastDateComponents week]);
+            
+            format = @"yyyy-MM";
+            
+        } else if ([self.rollingFrequency isEqualToString:L4RollingFrequencyDaily]) {
+            doRollover = ([nowDateComponents year] != [lastDateComponents year]) 
+            || ([nowDateComponents month] != [lastDateComponents month])
+            || ([nowDateComponents day] != [lastDateComponents day])
+            || (([nowDateComponents hour] / 12) != ([lastDateComponents hour] / 12));
+            
+            format = @"yyyy-MM-dd";
+            
+        } else if ([self.rollingFrequency isEqualToString:L4RollingFrequencyHalfDaily]) {
+            doRollover = ([nowDateComponents year] != [lastDateComponents year]) 
+            || ([nowDateComponents month] != [lastDateComponents month])
+            || ([nowDateComponents day] != [lastDateComponents day]); 
+            
+            format = @"yyyy-MM-dd-HH";
+            
+        } else if ([self.rollingFrequency isEqualToString:L4RollingFrequencyHourly]) {
+            doRollover = ([nowDateComponents year] != [lastDateComponents year]) 
+            || ([nowDateComponents month] != [lastDateComponents month])
+            || ([nowDateComponents day] != [lastDateComponents day])
+            || ([nowDateComponents hour] != [lastDateComponents hour]); 
+            
+            format = @"yyyy-MM-dd-HH";
+            
+        } else if ([self.rollingFrequency isEqualToString:L4RollingFrequencyMinutely]) {
+            doRollover = ([nowDateComponents year] != [lastDateComponents year]) 
+            || ([nowDateComponents month] != [lastDateComponents month])
+            || ([nowDateComponents day] != [lastDateComponents day])
+            || ([nowDateComponents hour] != [lastDateComponents hour])
+            || ([nowDateComponents minute] != [lastDateComponents minute]); 
+            
+            format = @"yyyy-MM-dd-HH-mm";
+        }
+        
+        if (doRollover) {
+            // generate the new filename extension
+            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+            [dateFormatter setDateFormat:format];
+            NSString *filenameExtension = [dateFormatter stringFromDate:[self lastRolloverDate]];
+            [dateFormatter release];
             
             // generate the new rollover log file name
-            newFileName = [[self fileName] stringByAppendingPathExtension:pathExtension];
+            NSString *newFileName = [[self fileName] stringByAppendingPathExtension:filenameExtension];
             
             // close the current log file
             [self closeFile];
             
             // rename the current log file to the new rollover log file name
-            if (![fileManager moveItemAtPath:[self fileName] toPath:newFileName error:nil])
-            {
+            NSFileManager *fileManager = [NSFileManager defaultManager];
+            if (![fileManager moveItemAtPath:[self fileName] toPath:newFileName error:nil]) {
                 // if we can't rename the file, log an error
-				[L4LogLog error:[NSString stringWithFormat:@"Unable to move file from %@ to %@", [self fileName], newFileName]];
+                [L4LogLog error:[NSString stringWithFormat:@"Unable to move file from %@ to %@", [self fileName], newFileName]];
             }
             
             // re-activate this appender (this will open a new log file named [self fileName])
             [self setupFile];
+            
+            [self setLastRolloverDate:now];
         }
-        */
-        [tempLastRolloverDate release];
-        tempLastRolloverDate = nil;
+        
     }
 }
 @end
