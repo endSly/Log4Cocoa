@@ -3,7 +3,7 @@
  */
 
 #import "L4StringMatchFilter.h"
-#import "L4LoggingEvent.h"
+#import "L4LogEvent.h"
 #import "L4Properties.h"
 
 @implementation L4StringMatchFilter
@@ -58,7 +58,7 @@
 	return stringToMatch;
 }
 
--(L4FilterResult) decide:(L4LoggingEvent *) logEvent
+-(L4FilterResult) decide:(L4LogEvent *) logEvent
 {
 	L4FilterResult filterResult = L4FilterNeutral;
 	if ([logEvent message] != nil && [[logEvent message] rangeOfString:stringToMatch].location != NSNotFound) {

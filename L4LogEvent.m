@@ -2,7 +2,7 @@
  * For copyright & license, see COPYRIGHT.txt.
  */
 
-#import "L4LoggingEvent.h"
+#import "L4LogEvent.h"
 #import "L4Logger.h"
 
 static int   NO_LINE_NUMBER = -1;
@@ -11,7 +11,7 @@ static char *NO_METHOD_NAME = "";
 
 static NSDate *startTime = nil;
 
-@implementation L4LoggingEvent
+@implementation L4LogEvent
 
 + (void) initialize
 {
@@ -23,7 +23,7 @@ static NSDate *startTime = nil;
 	return startTime;
 }
 
-+ (L4LoggingEvent *) logger:(L4Logger *) aLogger
++ (L4LogEvent *) logger:(L4Logger *) aLogger
 					  level:(L4Level *) aLevel
 					message:(id) aMessage
 {
@@ -36,7 +36,7 @@ static NSDate *startTime = nil;
 			  exception:nil];
 }
 
-+ (L4LoggingEvent *) logger:(L4Logger *) aLogger
++ (L4LogEvent *) logger:(L4Logger *) aLogger
 					  level:(L4Level *) aLevel
 					message:(id) aMessage
 				  exception:(NSException *) e;
@@ -50,7 +50,7 @@ static NSDate *startTime = nil;
 			  exception:e];
 }
 
-+ (L4LoggingEvent *) logger:(L4Logger *) aLogger
++ (L4LogEvent *) logger:(L4Logger *) aLogger
 					  level:(L4Level *) aLevel
 				 lineNumber:(int) aLineNumber
 				   fileName:(char *) aFileName
@@ -58,7 +58,7 @@ static NSDate *startTime = nil;
 					message:(id) aMessage
 				  exception:(NSException *) e
 {
-	return [[[L4LoggingEvent alloc] initWithLogger:aLogger
+	return [[[L4LogEvent alloc] initWithLogger:aLogger
 											 level:aLevel
 										lineNumber:aLineNumber
 										  fileName:aFileName

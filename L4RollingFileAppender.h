@@ -2,7 +2,7 @@
 #import "L4FileAppender.h"
 
 @class L4Layout;
-@class L4LoggingEvent;
+@class L4LogEvent;
 
 /**
  * The default maximum file size, which is 10MB.
@@ -113,7 +113,7 @@ extern const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize;
  * If so, it rolls the file over according to the maxBackupIndex setting.
  * @param event An L4LoggingEvent that contains logging specific information
  */
-- (void)subAppend:(L4LoggingEvent*)event;
+- (void)subAppend:(L4LogEvent*)event;
 
 @end
 // For copyright & license, see COPYRIGHT.txt.

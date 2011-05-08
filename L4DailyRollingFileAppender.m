@@ -99,7 +99,7 @@ NSString *const L4RollingFrequencyMinutely = @"L4RollingFrequencyMinutely";
 /* ********************************************************************* */
 #pragma mark Protected methods
 /* ********************************************************************* */
-- (void)subAppend:(L4LoggingEvent*)event
+- (void)subAppend:(L4LogEvent*)event
 {
 	[self rollOver];	
 	[super subAppend:event];

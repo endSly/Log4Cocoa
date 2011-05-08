@@ -3,7 +3,7 @@
  */
 
 #import "L4JSONLayout.h"
-#import "L4LoggingEvent.h"
+#import "L4LogEvent.h"
 
 @implementation L4JSONLayout
 
@@ -11,7 +11,7 @@
     return [[[L4JSONLayout alloc] init] autorelease];
 }
 
-- (NSString *) format:(L4LoggingEvent *) event {
+- (NSString *) format:(L4LogEvent *) event {
     /*
      {\n
      \t     \"logger\":\"%@\"\n

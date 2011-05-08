@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 #import "L4AppenderProtocols.h"
 
-@class L4LoggingEvent, L4SimpleLayout, L4Properties;
+@class L4LogEvent, L4SimpleLayout, L4Properties;
 
 /**
  * This class represents formating a line of log output.
@@ -29,7 +29,7 @@
  * @param event the event to be formatted.
  * @return a string of the formatted event.
  */
-- (NSString *) format:(L4LoggingEvent *) event;
+- (NSString *) format:(L4LogEvent *) event;
 
 /**
  * The MIME type of the string returned by the format:method.

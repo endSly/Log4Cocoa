@@ -5,7 +5,7 @@
 #import "L4AppenderSkeleton.h"
 #import "L4Filter.h"
 #import "L4Level.h"
-#import "L4LoggingEvent.h"
+#import "L4LogEvent.h"
 #import "L4LogLog.h"
 #import "L4Layout.h"
 #import "L4Properties.h"
@@ -89,7 +89,7 @@
 	[super dealloc];
 }
 
-- (void) append:(L4LoggingEvent *) anEvent
+- (void) append:(L4LogEvent *) anEvent
 {
 }
 
@@ -162,7 +162,7 @@
 #pragma mark L4AppenderCategory methods
 /* ********************************************************************* */
 // calls [self append:anEvent] after doing threshold checks
-- (void) doAppend:(L4LoggingEvent *) anEvent
+- (void) doAppend:(L4LogEvent *) anEvent
 {
     L4Filter *aFilter = [self headFilter];
     BOOL breakLoop = NO;

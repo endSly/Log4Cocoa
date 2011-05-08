@@ -6,7 +6,7 @@
 #import "L4LoggerProtocols.h"
 #import "L4Level.h"
 
-@class L4AppenderAttachable, L4Level, L4LoggingEvent;
+@class L4AppenderAttachable, L4Level, L4LogEvent;
 
 /**
  * This is the primary interface into the logging framework. 
@@ -113,7 +113,7 @@
  * If no appender could be found to append to, a warning is emited to that effect.
  * @param event the logging event.
  */
-- (void) callAppenders:(L4LoggingEvent *) event;
+- (void) callAppenders:(L4LogEvent *) event;
 
 /**
  * Accessor for the appender attached to this logger.
@@ -252,7 +252,7 @@
  *
  * @param event the event to be logged.
  */
-- (void) forcedLog:(L4LoggingEvent *) event;
+- (void) forcedLog:(L4LogEvent *) event;
 
 /* ********************************************************************* */
 #pragma mark Logger management methods

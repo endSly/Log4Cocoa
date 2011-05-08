@@ -21,7 +21,7 @@
 #import "L4Logging.h"
 #import "L4LoggerProtocols.h"
 #import "L4LoggerStore.h"
-#import "L4LoggingEvent.h"
+#import "L4LogEvent.h"
 #import "L4PatternLayout.h"
 #import "L4Properties.h"
 #import "L4PropertyConfigurator.h"

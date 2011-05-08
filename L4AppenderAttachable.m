@@ -7,7 +7,7 @@
 
 @implementation L4AppenderAttachable
 
-- (NSUInteger) appendLoopOnAppenders:(L4LoggingEvent *) event
+- (NSUInteger) appendLoopOnAppenders:(L4LogEvent *) event
 {
 	NSUInteger size = 0;
 

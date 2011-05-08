@@ -3,7 +3,7 @@
  */
 
 #import "L4Filter.h"
-#import "L4LoggingEvent.h"
+#import "L4LogEvent.h"
 
 
 @implementation L4Filter
@@ -19,7 +19,7 @@
     [super dealloc];
 }
 
-- (L4FilterResult) decide:(L4LoggingEvent *) event
+- (L4FilterResult) decide:(L4LogEvent *) event
 {
 	return L4FilterNeutral;
 }

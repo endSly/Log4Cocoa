@@ -4,7 +4,7 @@
 
 #import "L4Layout.h"
 #import "L4SimpleLayout.h"
-#import "L4LoggingEvent.h"
+#import "L4LogEvent.h"
 
 @implementation L4Layout
 
@@ -18,7 +18,7 @@
    return [super init];
 }
 
-- (NSString *) format:(L4LoggingEvent *)event
+- (NSString *) format:(L4LogEvent *)event
 {
 	return [event description];
 }

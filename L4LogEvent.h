@@ -6,7 +6,7 @@
 /**
  * An event to be logged.  This class embodies all of the information needed to generate a log message to an appender.
  */
-@interface L4LoggingEvent : NSObject {
+@interface L4LogEvent : NSObject {
 	NSNumber *lineNumber; /**< The line number where the event was generated.*/
 	NSString *fileName; /**< The name of the file where the event was generated.*/
 	NSString *methodName; /**< The name of the method where the event was generated.*/
@@ -42,7 +42,7 @@
  * @param aMessage the message to be logged.
  * @return the new logging event.
  */
-+ (L4LoggingEvent *) logger:(L4Logger *) aLogger
++ (L4LogEvent *) logger:(L4Logger *) aLogger
 					  level:(L4Level *) aLevel
 					message:(id) aMessage;
 
@@ -54,7 +54,7 @@
  * @param e an exception to go along with this log event.
  * @return the new logging event.
  */
-+ (L4LoggingEvent *) logger:(L4Logger *) aLogger
++ (L4LogEvent *) logger:(L4Logger *) aLogger
 					  level:(L4Level *) aLevel
 					message:(id) aMessage
 				  exception:(NSException *) e;
@@ -70,7 +70,7 @@
  * @param e an exception to go along with this log event.
  * @return the new logging event.
  */
-+ (L4LoggingEvent *) logger:(L4Logger *) aLogger
++ (L4LogEvent *) logger:(L4Logger *) aLogger
 					  level:(L4Level *) aLevel
 				 lineNumber:(int) aLineNumber
 				   fileName:(char *) aFileName

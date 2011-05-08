@@ -35,7 +35,7 @@ extern NSString* const L4InvalidBraceClauseException;
  */
 #define L4PatternLayoutTrailingBracesSpecifiers	[NSCharacterSet characterSetWithCharactersInString:@"Cd"]
 
-@class L4LoggingEvent;
+@class L4LogEvent;
 @class L4PatternParser;
 
 /**
@@ -270,7 +270,7 @@ extern NSString* const L4InvalidBraceClauseException;
  * @throw L4InvalidBraceClauseException when a conversion specifier's brace clause is invalid for any reason. 
  * @return	A formatted logging message that adheres to the L4PatternLayout's conversion pattern.
 */
-- (NSString *)format:(L4LoggingEvent *)event;
+- (NSString *)format:(L4LogEvent *)event;
 
 /**
  * Returns the pattern layout's conversion pattern
@@ -329,7 +329,7 @@ extern NSString* const L4InvalidBraceClauseException;
  * @param convertedString A reference to an NSString that will contain the result of the token string's conversion upon exiting the method
  * @return Return YES to indicate that you have converted the token string.  Return NO to let the pattern layout's default behavior attempt to convert it.
  */
-- (BOOL)convertTokenString:(NSString*)token withLoggingEvent:(L4LoggingEvent*)logEvent intoString:(NSString**)convertedString;
+- (BOOL)convertTokenString:(NSString*)token withLoggingEvent:(L4LogEvent*)logEvent intoString:(NSString**)convertedString;
 
 @end
 

@@ -6,7 +6,7 @@
 #import "L4AppenderAttachable.h"
 #import "L4Level.h"
 #import "L4LoggerStore.h"
-#import "L4LoggingEvent.h"
+#import "L4LogEvent.h"
 #import "L4LogLog.h"
 #import "L4RootLogger.h"
 
@@ -21,7 +21,7 @@ static L4LoggerStore *_loggerRepository = nil;
 	_loggerRepository = [[L4LoggerStore alloc] initWithRoot:rootLogger];
 	[rootLogger autorelease];
 
-	[L4LoggingEvent startTime];
+	[L4LogEvent startTime];
 }
 
 - init
@@ -133,7 +133,7 @@ static L4LoggerStore *_loggerRepository = nil;
 #pragma mark AppenderRelatedMethods methods
 /* ********************************************************************* */
 
-- (void) callAppenders:(L4LoggingEvent *) event
+- (void) callAppenders:(L4LogEvent *) event
 {
 	int writes = 0;
 
@@ -285,7 +285,7 @@ static L4LoggerStore *_loggerRepository = nil;
 	}
 	
 	if([aLevel isGreaterOrEqual:[self effectiveLevel]]) {
-		[self forcedLog:[L4LoggingEvent logger:self
+		[self forcedLog:[L4LogEvent logger:self
 										 level:aLevel
 									lineNumber:lineNumber
 									  fileName:fileName
@@ -295,7 +295,7 @@ static L4LoggerStore *_loggerRepository = nil;
 	}
 }
 
-- (void) forcedLog:(L4LoggingEvent *) event
+- (void) forcedLog:(L4LogEvent *) event
 {
 	[self callAppenders:event];
 }

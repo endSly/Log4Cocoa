@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 
-@class L4Logger, L4Filter, L4Layout, L4LoggingEvent, L4Properties;
+@class L4Logger, L4Filter, L4Layout, L4LogEvent, L4Properties;
 
 /**
  * Appenders are responsible for adding a log message to log.
@@ -18,7 +18,7 @@
  * Appender log this event.
  * @param anEvent the event to append.
  */
-- (void) doAppend:(L4LoggingEvent *) anEvent;
+- (void) doAppend:(L4LogEvent *) anEvent;
 
 /**
  * Appends to the end of list.

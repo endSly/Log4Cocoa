@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 #import "L4AppenderProtocols.h"
 
-@class L4Filter, L4Level, L4LoggingEvent, L4Properties;
+@class L4Filter, L4Level, L4LogEvent, L4Properties;
 
 /**
  * This class acts as a superclass for classes that want to log. It is not intended
@@ -29,7 +29,7 @@
  * Appends an event to the log.
  * @param anEvent the event to be appended.
  */
-- (void) append:(L4LoggingEvent *)anEvent;
+- (void) append:(L4LogEvent *)anEvent;
 
 /**
  * Used to determine if a given event would be logged by this appender

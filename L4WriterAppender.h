@@ -52,7 +52,7 @@
  * 		- checkEntryConditions();
  * 		- subAppend();
  */
-- (void) append:(L4LoggingEvent *)anEvent;
+- (void) append:(L4LogEvent *)anEvent;
 
 /**
  * Actual writing occurs here.
@@ -60,7 +60,7 @@
  * <p>Most subclasses of <code>WriterAppender</code> will need to
  * override this method.
  */
-- (void) subAppend:(L4LoggingEvent *)anEvent;
+- (void) subAppend:(L4LogEvent *)anEvent;
 
 /**
  * NOTE --- this method adds a lineBreakChar between log messages.

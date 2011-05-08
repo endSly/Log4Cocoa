@@ -4,7 +4,7 @@
 
 #import "L4XMLLayout.h"
 
-#import "L4LoggingEvent.h"
+#import "L4LogEvent.h"
 
 @implementation L4XMLLayout
 
@@ -12,7 +12,7 @@
     return [[[L4XMLLayout alloc] init] autorelease];
 }
 
-- (NSString *) format:(L4LoggingEvent *) event {
+- (NSString *) format:(L4LogEvent *) event {
 
     NSMutableString *formattedEventString = [[NSMutableString alloc] initWithCapacity:1024];
     

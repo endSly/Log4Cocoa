@@ -1,6 +1,6 @@
 #import "L4WriterAppender.h"
 #import "L4Layout.h"
-#import "L4LoggingEvent.h"
+#import "L4LogEvent.h"
 #import "L4LogLog.h"
 
 static NSData *lineBreakChar;
@@ -64,7 +64,7 @@ static NSData *lineBreakChar;
 	immediateFlush = flush;
 }
 
-- (void) append:(L4LoggingEvent *) anEvent
+- (void) append:(L4LogEvent *) anEvent
 {
     @synchronized(self) {
         if([self checkEntryConditions]) {
@@ -73,7 +73,7 @@ static NSData *lineBreakChar;
     }
 }
 
-- (void) subAppend:(L4LoggingEvent *) anEvent
+- (void) subAppend:(L4LogEvent *) anEvent
 {
 	[self write:[layout format:anEvent]];
 }

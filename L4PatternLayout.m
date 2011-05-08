@@ -5,7 +5,7 @@
 #import <math.h>
 #import "L4PatternLayout.h"
 #import "L4Layout.h"
-#import "L4LoggingEvent.h"
+#import "L4LogEvent.h"
 #import "L4Properties.h"
 #import "L4LogLog.h"
 
@@ -98,7 +98,7 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
 	converterDelegate = cd;
 }
 
-- (NSString *)format:(L4LoggingEvent *)event
+- (NSString *)format:(L4LogEvent *)event
 {
 	BOOL				handled = NO;
 	NSMutableString*	formattedString = nil;
@@ -273,7 +273,7 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
 }
 
 - (BOOL)convertTokenString:(NSString*)token 
-		  withLoggingEvent:(L4LoggingEvent*)logEvent 
+		  withLoggingEvent:(L4LogEvent*)logEvent 
 				intoString:(NSString**)convertedString
 {
 	NSScanner*			scanner = nil;

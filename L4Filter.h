@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 #import "L4AppenderProtocols.h"
 
-@class L4LoggingEvent, L4Properties;
+@class L4LogEvent, L4Properties;
 
 /**
  * An enumeration of the allowed L4Filter actions.
@@ -36,7 +36,7 @@ typedef enum {
  * @param event the event to check.
  * @return one of L4FilterDeny, L4FilterNeutral, or L4FilterAccept. 
  */
-- (L4FilterResult) decide:(L4LoggingEvent *) event;
+- (L4FilterResult) decide:(L4LogEvent *) event;
 
 /**
  * Accessor for the next filter.

@@ -4,7 +4,7 @@
 
 #import "L4RollingFileAppender.h"
 #import "L4Layout.h"
-#import "L4LoggingEvent.h"
+#import "L4LogEvent.h"
 #import "L4LogLog.h"
 
 const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize = (1024 * 1024 * 10);
@@ -121,7 +121,7 @@ const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize = (1024 * 1024
 /* ********************************************************************* */
 #pragma mark Protected methods
 /* ********************************************************************* */
-- (void)subAppend:(L4LoggingEvent*)event
+- (void)subAppend:(L4LogEvent*)event
 {
     @synchronized(self) {
         // if the file's size has exceeded maximumFileSize, roll the file over

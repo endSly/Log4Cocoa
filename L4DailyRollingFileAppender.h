@@ -65,7 +65,7 @@ extern NSString *const L4RollingFrequencyMinutely;  /**< Roll the file over ever
  * If so, it rolls the file over.
  * @param event An L4LoggingEvent that contains logging specific information.
  */
-- (void)subAppend: (L4LoggingEvent*)event;
+- (void)subAppend: (L4LogEvent*)event;
 
 @end
 // For copyright & license, see COPYRIGHT.txt.

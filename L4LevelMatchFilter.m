@@ -2,7 +2,7 @@
  * For copyright & license, see COPYRIGHT.txt.
  */
 #import "L4LevelMatchFilter.h"
-#import "L4LoggingEvent.h"
+#import "L4LogEvent.h"
 #import "L4Level.h"
 #import "L4Properties.h"
 
@@ -68,7 +68,7 @@
 	return levelToMatch;
 }
 
-- (L4FilterResult) decide:(L4LoggingEvent *)event 
+- (L4FilterResult) decide:(L4LogEvent *)event 
 {
 	// Default stance.
 	L4FilterResult action = L4FilterNeutral;

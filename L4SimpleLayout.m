@@ -3,11 +3,11 @@
  */
 
 #import "L4SimpleLayout.h"
-#import "L4LoggingEvent.h"
+#import "L4LogEvent.h"
 
 @implementation L4SimpleLayout
 
-- (NSString *) format: (L4LoggingEvent *) anEvent
+- (NSString *) format: (L4LogEvent *) anEvent
 {
 	return [NSString stringWithFormat:@"%@ - %ldms (%@:%@) %@ - %@",
 				[[anEvent level] stringValue], 

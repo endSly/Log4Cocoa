@@ -3,7 +3,7 @@
  */
 
 #import "L4LevelRangeFilter.h"
-#import "L4LoggingEvent.h"
+#import "L4LogEvent.h"
 #import "L4Level.h"
 #import "L4LogLog.h"
 
@@ -64,7 +64,7 @@
 	return maximumLevelToMatch;
 }
 
-- (L4FilterResult) decide:(L4LoggingEvent *) logEvent
+- (L4FilterResult) decide:(L4LogEvent *) logEvent
 {
 	L4FilterResult shouldAccept = L4FilterNeutral;
 	BOOL matches = NO;
