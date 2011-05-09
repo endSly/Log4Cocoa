@@ -3,11 +3,12 @@
 // ALL < DEBUG < INFO < WARN < ERROR < FATAL < OFF
 
 #define   OFF_INT  99
-#define FATAL_INT  50
-#define ERROR_INT  40
-#define  WARN_INT  30
-#define  INFO_INT  20
-#define DEBUG_INT  10
+#define FATAL_INT  60
+#define ERROR_INT  50
+#define  WARN_INT  40
+#define  INFO_INT  30
+#define DEBUG_INT  20
+#define TRACE_INT  10
 #define   ALL_INT  0
 
 @interface L4Level : NSObject {
@@ -65,6 +66,12 @@
  * @return debug off instance.
  */
 + (L4Level *) debug;
+
+/**
+ * Accessor for the default instance with a level of trace.
+ * @return trace off instance.
+ */
++ (L4Level *) trace;
 
 /**
  * Accessor for the default instance with a level of all.

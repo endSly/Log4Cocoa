@@ -16,7 +16,7 @@
 	NSString *renderedMessage; /**< The string version of message. */
 	NSException *exception; /**< Any exception that was logged as part of this event.*/
 	NSDate *timestamp; /**< The timestamp for when this event was generated.*/
-
+    
 	char *rawFileName; /**< The raw filename for where the event was generated.*/
 	char *rawMethodName; /**< The raw method name for where the event was generated. */
 	int   rawLineNumber; /**< The raw line number for where the event was generated. */
@@ -31,7 +31,7 @@
 /**
  * The time the class was initialized; used to determine how long an event 
  * occured into the appliction run.
- *@return the start time of the application.
+ * @return the start time of the application.
  */
 + (NSDate *) startTime;
 
@@ -43,8 +43,8 @@
  * @return the new logging event.
  */
 + (L4LogEvent *) logger:(L4Logger *) aLogger
-					  level:(L4Level *) aLevel
-					message:(id) aMessage;
+                  level:(L4Level *) aLevel
+                message:(id) aMessage;
 
 /**
  * Creates a logging event with the given parameters.
@@ -55,9 +55,9 @@
  * @return the new logging event.
  */
 + (L4LogEvent *) logger:(L4Logger *) aLogger
-					  level:(L4Level *) aLevel
-					message:(id) aMessage
-				  exception:(NSException *) e;
+                  level:(L4Level *) aLevel
+                message:(id) aMessage
+              exception:(NSException *) e;
 
 /**
  * Creates a logging event with the given parameters.
@@ -71,12 +71,12 @@
  * @return the new logging event.
  */
 + (L4LogEvent *) logger:(L4Logger *) aLogger
-					  level:(L4Level *) aLevel
-				 lineNumber:(int) aLineNumber
-				   fileName:(char *) aFileName
-				 methodName:(char *) aMethodName
-					message:(id) aMessage
-				  exception:(NSException *) e;
+                  level:(L4Level *) aLevel
+             lineNumber:(int) aLineNumber
+               fileName:(char *) aFileName
+             methodName:(char *) aMethodName
+                message:(id) aMessage
+              exception:(NSException *) e;
 
 /**
  * Creates a logging event with the given parameters.
@@ -113,4 +113,4 @@
 - (NSString *) renderedMessage; /**< Accessor for the renderedMessage attribute.*/
 
 @end
-// For copyright & license, see COPYRIGHT.txt.
+// For copyright & license, see LICENSE.
