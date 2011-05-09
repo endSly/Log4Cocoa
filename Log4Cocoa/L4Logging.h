@@ -32,6 +32,7 @@ LOG4COCOA_EXTERN void log4Log(id object, int line, const char *file, const char 
 /* ********************************************************************* */
 #pragma mark Macros that log from objects
 /* ********************************************************************* */
+#define log4Trace(message, ...) if([[self l4Logger] isDebugEnabled]){ log4Log(L4_LOG([L4Level trace], nil), message, ##__VA_ARGS__);}
 #define log4Debug(message, ...) if([[self l4Logger] isDebugEnabled]){ log4Log(L4_LOG([L4Level debug], nil), message, ##__VA_ARGS__);}
 #define log4Info(message, ...)  if([[self l4Logger] isInfoEnabled]){ log4Log(L4_LOG([L4Level info], nil), message, ##__VA_ARGS__);}
 #define log4Warn(message, ...)  log4Log(L4_LOG([L4Level warn], nil), message, ##__VA_ARGS__)

@@ -1,4 +1,4 @@
-Log4Cocoa Usage (May 4, 2011)
+## Log4Cocoa Usage (May 4, 2011)
 Read COPYRIGHT
 
 This document will (hopefully) soon undergo radical redesign & rewriting.  Until then, use the forums or e-mail me.
@@ -7,7 +7,7 @@ NOTE: I've removed L4LogManager;  I did this because all the code did was class 
 
 See below for usage.
 
-I. Usage
+# I. Usage
 To use this framework for logging, in your applications main method, do something liek the following:
 	// initialize the logging system.
 	[[L4Logger rootLogger] setLevel:[L4Level all]];
@@ -107,7 +107,7 @@ Since, +logger; & -logger; are implemented as categories on NSObject, you can ov
 
 For setting level of logging for methods, there is a convenience class L4FunctionLogger that serves; however, keep in mind that any changes to the log level here effect logging from all methods.
 
-II. Embedding Log4Cocoa
+# II. Embedding Log4Cocoa
 
 To actually embed Log4Cocoa in your application, you'll need to add a copy phase to your build target.  Your application will run as long as Log4Cocoa is installed in your Framework search path but embedding it will make deployment much easier and gdb gets messed up when you use an embedded framework but don't actually embed it.
 

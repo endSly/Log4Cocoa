@@ -24,16 +24,16 @@
  *  </dl>
  */
 @interface L4Logger : NSObject {
-	NSString *name; /**< The name of this logger.*/
-	L4Level *level; /**< The level of this logger. Nil means use parent's*/
-	L4Logger *parent; /**< The parent of this logger.*/
-	id <L4LoggerRepository> repository; /**< Don't know.*/
-	 /**
-	  * Flag for if log messages are additive.  If YES, logging events are set to parent loggers.  
-	  * If NO, parents are not called. 
-	  */
-	BOOL additivity;
-	L4AppenderAttachable *aai; /**< What does the actual appending for this logger.*/
+    NSString *name;         /**< The name of this logger.*/
+    L4Level *level;         /**< The level of this logger. Nil means use parent's*/
+    L4Logger *parent;       /**< The parent of this logger.*/
+    id <L4LoggerRepository> repository;     /**< Don't know.*/
+    /**
+     * Flag for if log messages are additive.  If YES, logging events are set to parent loggers.  
+     * If NO, parents are not called. 
+     */
+    BOOL additivity;
+    L4AppenderAttachable *aai;  /**< What does the actual appending for this logger.*/
 }
 
 
@@ -170,7 +170,13 @@
 /* ********************************************************************* */
 #pragma mark CoreLoggingMethods methods
 /* ********************************************************************* */
-/* ALL < DEBUG < INFO < WARN < ERROR < FATAL < OFF */
+/* ALL < TRACE < DEBUG < INFO < WARN < ERROR < FATAL < OFF */
+
+/**
+ * Determines if a trace message should be logged.
+ * @return YES if debug messages are enabled, NO if they are not.
+ */
+- (BOOL) isTraceEnabled;
 
 /**
  * Determines if a debug message should be logged.

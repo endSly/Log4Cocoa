@@ -20,7 +20,7 @@ static L4LoggerStore *_loggerRepository = nil;
 	id rootLogger = [[L4RootLogger alloc] initWithLevel:[L4Level debug]];
 	_loggerRepository = [[L4LoggerStore alloc] initWithRoot:rootLogger];
 	[rootLogger autorelease];
-
+    
 	[L4LogEvent startTime];
 }
 
@@ -56,7 +56,7 @@ static L4LoggerStore *_loggerRepository = nil;
 
 - (void) setAdditivity:(BOOL) newAdditivity
 {
-        additivity = newAdditivity;
+    additivity = newAdditivity;
 }
 
 - (L4Logger *) parent
@@ -106,7 +106,7 @@ static L4LoggerStore *_loggerRepository = nil;
             aLogger = aLogger->parent;
         }
     }
-        
+    
     if (effectiveLevel == nil) {
         [L4LogLog error:@"Root Logger Not Found!"];
     }
@@ -136,9 +136,9 @@ static L4LoggerStore *_loggerRepository = nil;
 - (void) callAppenders:(L4LogEvent *) event
 {
 	int writes = 0;
-
+    
 	@synchronized(self) {
-	
+        
         for( L4Logger *aLogger = self; aLogger != nil; aLogger = [aLogger parent] ) {
             if( [aLogger aai] != nil ) {
                 writes += [[aLogger aai] appendLoopOnAppenders:event];
@@ -148,7 +148,7 @@ static L4LoggerStore *_loggerRepository = nil;
             }
         }
     }
-        
+    
     if( writes == 0 ) {
         [repository emitNoAppenderWarning:self];
     }
@@ -226,8 +226,12 @@ static L4LoggerStore *_loggerRepository = nil;
 #pragma mark CoreLoggingMethods methods
 /* ********************************************************************* */
 
-// ALL < DEBUG < INFO < WARN < ERROR < FATAL < OFF
+// ALL < TRACE < DEBUG < INFO < WARN < ERROR < FATAL < OFF
 
+- (BOOL) isTraceEnabled 
+{ 
+	return [self isEnabledFor:[L4Level trace]]; 
+}
 - (BOOL) isDebugEnabled 
 { 
 	return [self isEnabledFor:[L4Level debug]]; 
@@ -286,12 +290,12 @@ static L4LoggerStore *_loggerRepository = nil;
 	
 	if([aLevel isGreaterOrEqual:[self effectiveLevel]]) {
 		[self forcedLog:[L4LogEvent logger:self
-										 level:aLevel
-									lineNumber:lineNumber
-									  fileName:fileName
-									methodName:methodName
-									   message:aMessage
-									 exception:e]];
+                                     level:aLevel
+                                lineNumber:lineNumber
+                                  fileName:fileName
+                                methodName:methodName
+                                   message:aMessage
+                                 exception:e]];
 	}
 }
 
