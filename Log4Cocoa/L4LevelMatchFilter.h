@@ -15,8 +15,8 @@
  * If levelToMatch is set to ALL, then any L4LoggingEvent is a match.
  */
 @interface L4LevelMatchFilter : L4Filter {
-	BOOL acceptOnMatch; /**< YES to allow logging on a match of levelToMatch, NO to prevent logging on a match. */
-	L4Level *levelToMatch; /**<  The level to test against. */
+    BOOL acceptOnMatch; /**< YES to allow logging on a match of levelToMatch, NO to prevent logging on a match. */
+    L4Level *levelToMatch; /**<  The level to test against. */
 }
 
 /**
@@ -51,4 +51,4 @@
 -(L4Level *) levelToMatch;
 
 @end
-// For copyright & license, see COPYRIGHT.txt.
+// For copyright & license, see LICENSE.

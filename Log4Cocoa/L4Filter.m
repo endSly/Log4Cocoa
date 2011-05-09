@@ -1,5 +1,5 @@
 /**
- * For copyright & license, see COPYRIGHT.txt.
+ * For copyright & license, see LICENSE.
  */
 
 #import "L4Filter.h"
@@ -7,6 +7,8 @@
 
 
 @implementation L4Filter
+
+@synthesize next;
 
 - (id) initWithProperties:(L4Properties *) initProperties
 {
@@ -22,21 +24,6 @@
 - (L4FilterResult) decide:(L4LogEvent *) event
 {
 	return L4FilterNeutral;
-}
-
-- (L4Filter *) next
-{
-	return next;
-}
-
-- (void) setNext:(L4Filter *) newNext
-{
-    @synchronized(self) {
-        if( next != newNext ) {
-            [next autorelease];
-            next = [newNext retain];
-        }
-    }
 }
 
 @end

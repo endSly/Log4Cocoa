@@ -68,4 +68,4 @@ extern NSString *const L4RollingFrequencyMinutely;  /**< Roll the file over ever
 - (void)subAppend: (L4LogEvent*)event;
 
 @end
-// For copyright & license, see COPYRIGHT.txt.
+// For copyright & license, see LICENSE.

@@ -123,4 +123,4 @@
 - (void) removeAppenderWithName:(NSString *)aName;
 
 @end
-// For copyright & license, see COPYRIGHT.txt.
+// For copyright & license, see LICENSE.

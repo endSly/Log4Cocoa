@@ -100,4 +100,4 @@ extern NSString* const L4PropertyMissingException;
 - (L4Properties *) subsetForPrefix:(NSString *)aPrefix;
 
 @end
-// For copyright & license, see COPYRIGHT.txt.
+// For copyright & license, see LICENSE.

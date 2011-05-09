@@ -19,4 +19,4 @@
 - (NSUInteger) appendLoopOnAppenders:(L4LogEvent *) event;
 
 @end
-// For copyright & license, see COPYRIGHT.txt.
+// For copyright & license, see LICENSE.

@@ -1,7 +1,7 @@
 /**
  * This appender appends logging messages to a file whose path you specify.  This class is a subclass of L4WriterAppender.
  * The L4FileAppender does not support buffering configuration.  Any methods or arguments that refer to buffering are ignored.
- * For copyright & license, see COPYRIGHT.txt.
+ * For copyright & license, see LICENSE.
  */
 
 #import <Foundation/Foundation.h>
@@ -85,4 +85,4 @@
 
 
 @end
-// For copyright & license, see COPYRIGHT.txt.
+// For copyright & license, see LICENSE.

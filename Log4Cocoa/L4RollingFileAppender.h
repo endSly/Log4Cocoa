@@ -116,4 +116,4 @@ extern const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize;
 - (void)subAppend:(L4LogEvent*)event;
 
 @end
-// For copyright & license, see COPYRIGHT.txt.
+// For copyright & license, see LICENSE.

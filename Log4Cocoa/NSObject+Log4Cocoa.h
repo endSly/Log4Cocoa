@@ -1,4 +1,4 @@
-// For copyright & license, see COPYRIGHT.txt.
+// For copyright & license, see LICENSE.
 
 #import <Foundation/Foundation.h>
 @class L4Logger;

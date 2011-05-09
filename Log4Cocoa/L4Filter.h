@@ -18,10 +18,11 @@ typedef enum {
  * the only way a flter would actually be used would be to subclass it and over-ride the 
  * decide:method.
  */
-@interface L4Filter : NSObject 
-{
-	L4Filter *next; /**< The next filter in the chain.*/
+@interface L4Filter : NSObject  {
+    L4Filter *next;     /**< The next filter in the chain.*/
 }
+
+@property (retain) L4Filter * next; /**< Accessor for the next filter. */
 
 /**
  * Initializes an instance from properties.  Currently there are no properties that apply to this class.
@@ -38,17 +39,5 @@ typedef enum {
  */
 - (L4FilterResult) decide:(L4LogEvent *) event;
 
-/**
- * Accessor for the next filter.
- * @return the next filter.
- */
-- (L4Filter *) next;
-
-/**
- * Mutator for the next filter.
- * @param newNext the new next filter.
- */
-- (void) setNext:(L4Filter *) newNext;
-
 @end
-// For copyright & license, see COPYRIGHT.txt.
+// For copyright & license, see LICENSE.

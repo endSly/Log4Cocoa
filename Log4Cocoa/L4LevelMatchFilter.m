@@ -1,5 +1,5 @@
 /**
- * For copyright & license, see COPYRIGHT.txt.
+ * For copyright & license, see LICENSE.
  */
 #import "L4LevelMatchFilter.h"
 #import "L4LogEvent.h"

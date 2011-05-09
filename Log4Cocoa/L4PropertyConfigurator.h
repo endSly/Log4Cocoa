@@ -143,4 +143,4 @@
 - (void) configure;
 
 @end
-// For copyright & license, see COPYRIGHT.txt.
+// For copyright & license, see LICENSE.

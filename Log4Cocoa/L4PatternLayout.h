@@ -354,4 +354,4 @@ extern NSString* const L4InvalidBraceClauseException;
 - (NSArray *)tokenArray;
 @end
 
-// For copyright & license, see COPYRIGHT.txt.
+// For copyright & license, see LICENSE.

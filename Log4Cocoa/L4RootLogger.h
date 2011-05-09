@@ -29,4 +29,4 @@
 - (L4Level *) effectiveLevel;
 
 @end
-// For copyright & license, see COPYRIGHT.txt.
+// For copyright & license, see LICENSE.
