@@ -1,2 +1,3 @@
 .DS_Store
-**/xcuserdata/**
+Log4Cocoa.xcodeproj/project.xcworkspace/xcuserdata/*
+Log4Cocoa.xcodeproj/xcuserdata/*
