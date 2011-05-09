@@ -8,16 +8,19 @@
 
 @implementation L4LevelMatchFilter
 
+@synthesize acceptOnMatch;
+@synthesize levelToMatch;
+
 - (id) initWithAcceptOnMatch:(BOOL)shouldAccept andLevelToMatch:(L4Level *)aLevel
 {
 	self = [super init];
-	if (self != nil) {
-		acceptOnMatch = shouldAccept;
+	if (self) {
+		self.acceptOnMatch = shouldAccept;
 		if (aLevel == nil) {
 			self = nil;
 			[NSException raise:NSInvalidArgumentException format:@"aLevel is not allowed to be nil."];
 		} else {
-			levelToMatch = [aLevel retain];
+			self.levelToMatch = [aLevel retain];
 		}
 	}
 	return self;
@@ -26,20 +29,17 @@
 - (id) initWithProperties:(L4Properties *)initProperties
 {
 	self = [super initWithProperties:initProperties];
-	if (self != nil) {
-		acceptOnMatch = YES;
+	if (self) {
 		NSString *acceptIfMatched = [initProperties stringForKey:@"AcceptOnMatch"];
-		if (acceptIfMatched) {
-			acceptOnMatch = [acceptIfMatched boolValue];
-		}
+		self.acceptOnMatch = acceptIfMatched ? [acceptIfMatched boolValue] : YES;
 		
 		NSString *levelName = [initProperties stringForKey:@"LevelToMatch"];
 		
 		if (levelName) {
 			// Returns nil if no level with specified name is found
-			levelToMatch = [[L4Level levelWithName:levelName] retain];
+			self.levelToMatch = [L4Level levelWithName:levelName];
 			
-			if (levelToMatch == nil) {
+			if (!self.levelToMatch) {
 				[NSException raise:L4PropertyMissingException 
 							format:@"L4Level name [%@] not found.", levelName];
 			}
@@ -47,25 +47,13 @@
 			[NSException raise:L4PropertyMissingException 
 						format:@"LevelToMatch is a required property."];
 		}
-		
 	}
 	return self;
 }
 
 - (void) dealloc
 {
-	[levelToMatch release];
 	[super dealloc];
-}
-
-- (BOOL) acceptOnMatch
-{
-	return acceptOnMatch;
-}
-
-- (L4Level *) levelToMatch
-{
-	return levelToMatch;
 }
 
 - (L4FilterResult) decide:(L4LogEvent *)event 

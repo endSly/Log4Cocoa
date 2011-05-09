@@ -19,10 +19,8 @@
     L4Level *levelToMatch; /**<  The level to test against. */
 }
 
-/**
- * Accessor for the acceptOnMatch property. 
- */
-- (BOOL) acceptOnMatch;
+@property (nonatomic) BOOL acceptOnMatch;   /**< Accessor for the acceptOnMatch property. */
+@property (nonatomic, assign) L4Level * levelToMatch; /**< Accessor for the levelToMatch property. */
 
 /**
  * Initializes an instance from properties.  The properties supported are:
@@ -45,10 +43,7 @@
  */
 - (id) initWithAcceptOnMatch:(BOOL)shouldAccept andLevelToMatch:(L4Level *)aLevel;
 
-/**
- * Accessor for the levelToMatch property. 
- */
--(L4Level *) levelToMatch;
+
 
 @end
 // For copyright & license, see LICENSE.
