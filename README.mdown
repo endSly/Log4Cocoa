@@ -1,4 +1,4 @@
-## Log4Cocoa Usage (May 4, 2011)
+# Log4Cocoa Usage (May 4, 2011)
 Read COPYRIGHT
 
 This document will (hopefully) soon undergo radical redesign & rewriting.  Until then, use the forums or e-mail me.
@@ -7,29 +7,35 @@ NOTE: I've removed L4LogManager;  I did this because all the code did was class 
 
 See below for usage.
 
-# I. Usage
+## I. Usage
 To use this framework for logging, in your applications main method, do something liek the following:
-	// initialize the logging system.
-	[[L4Logger rootLogger] setLevel:[L4Level all]];
-	[[L4Logger rootLogger] addAppender: [[L4ConsoleAppender alloc] initTarget:YES withLayout: [L4Layout simpleLayout]]];
-	L4Logger *theLogger = [L4Logger loggerForClass:[L4FunctionLogger class]];
-	[theLogger setLevel:[L4Level info]];
-	log4CDebug(@"The logging system has been initialized.");
+
+<pre>
+// initialize the logging system.
+[[L4Logger rootLogger] setLevel:[L4Level all]];
+[[L4Logger rootLogger] addAppender: [[L4ConsoleAppender alloc] initTarget:YES withLayout: [L4Layout simpleLayout]]];
+L4Logger *theLogger = [L4Logger loggerForClass:[L4FunctionLogger class]];
+[theLogger setLevel:[L4Level info]];
+log4CDebug(@"The logging system has been initialized.");
+</pre>
 
 Don't forget to:
-#import <Log4Cocoa/Log4Cocoa.h>
+
+`#import <Log4Cocoa/Log4Cocoa.h>`
 
 The above code does the following:
-    *) sets the system wide logging level to all (everything gets logged) (this also initializes the logging system).
-    *) sets the default appender to be a console appender using a simple layout.  To see the log output, you'll need the console visible (not Console.app, but stdout).
-    *) Get's the logger instance used by methods
-    *) sets the level to info for all logging from all methods (so debug's won't show).
-    *) Logs the string "The logging system has been initialized."
+* sets the system wide logging level to all (everything gets logged) (this also initializes the logging system).
+* sets the default appender to be a console appender using a simple layout.  To see the log output, you'll need the console visible (not Console.app, but stdout).
+* Get's the logger instance used by methods
+* sets the level to info for all logging from all methods (so debug's won't show).
+* Logs the string "The logging system has been initialized."
 
 
 To make Log4Cocoa easier, there are several high level macros, as follows (currently nothing is done with the exception; one of the layout classes would need to process it):
 
 For classes:
+
+<pre>
 log4Debug(message);
 log4Info(message);
 log4Warn(message);
@@ -43,8 +49,11 @@ log4ErrorWithException(message, e);
 log4FatalWithException(message, e);
 
 log4Assert(assertion, message);
+</pre>
 
 For functions:
+
+<pre>
 log4CDebug(message);
 log4CInfo(message);
 log4CWarn(message);
@@ -58,48 +67,59 @@ log4CErrorWithException(message, e);
 log4CFatalWithException(message, e);
 
 log4CAssert(assertion, message);
+</pre>
 
 NOTE: when using the xxxWithException macros, the exception goes before any arguments to the message.  This is due to the way the macro expands and the way variable length arguments work.  Previously, you would wrap the message and it's arguments in parenthesis, followed by the exception.  Don't do that now.
 
 To log a message from an IBAction (as a simple usage example):
+
+<pre>
 - (IBAction)logit:(id) sender
 {
 	log4Debug(@"Hello %@", [sender description]);
 }
+</pre>
 
 To log a message with an exception:
+
+<pre>
 - (void) someMethod
 {
 	NSException *exception = [NSException exceptionWithName:@"Foo" reason:@"Bar" userInfo:nil];
 	log4DebugWithException(@"Hello %@", exception, @"world!");
 
 }
+</pre>
 
 
 The macro's for use with functions have the 'C' in them; this seems to be in keeping with what Apple does (for example, with assertions).
 
-Both versions of the Debug & Info macros expand into methods that are wrapped by an "isEnabled" if statement.
+Both versions of the Debug & Info macros expand into methods that are wrapped by an `isEnabled` if statement.
 
-All of the other levels expand out to their counterparts, but are not enclosed by the "isEnabled" if statement.
+All of the other levels expand out to their counterparts, but are not enclosed by the `isEnabled` if statement.
 
-log4Assert() & log4CAssert() both take a BOOL as an assertion expression that must evaluate to YES, or else it logs the message as a n error.
+`log4Assert()` & `log4CAssert()` both take a `BOOL` as an assertion expression that must evaluate to `YES`, or else it logs the message as a n error.
 
 NOTE: none of these macro's include a final semi-colon, so make sure to use one when invoking them.
 
-The two core logging convenience methods are implemented as categories on NSObject (if you want to log off of an NSProxy, you'll need to implement these there too ... maybe we'll provide these convenience methods there, but we haven't yet).  Since these are categories on NSObject we've added the 'l4' prefix to be more paranoid and avoid the remote possiblity of a name collision with someone elses category.
+The two core logging convenience methods are implemented as categories on `NSObject` (if you want to log off of an `NSProxy`, you'll need to implement these there too ... maybe we'll provide these convenience methods there, but we haven't yet).  Since these are categories on `NSObject` we've added the 'l4' prefix to be more paranoid and avoid the remote possiblity of a name collision with someone elses category.
 
-    @interface NSObject (L4CocoaMethods)
+<pre>
+@interface NSObject (L4CocoaMethods)
 
-    + (L4Logger *) l4Logger;
-    - (L4Logger *) l4Logger;
++ (L4Logger *) l4Logger;
+- (L4Logger *) l4Logger;
 
-    @end
+@end
+</pre>
 
-Therefore, [self l4Logger] returns a L4Logger instance based on the calling class object.  To log a message, without using the above macros, the usage is: 
+Therefore, `[self l4Logger]` returns a L4Logger instance based on the calling class object.  To log a message, without using the above macros, the usage is: 
 
-    [[self l4Logger] l4fatal: @"Crap something fatal happened.  You're screwed.  Game Over."];
+<pre>
+[[self l4Logger] l4fatal: @"Crap something fatal happened.  You're screwed.  Game Over."];
 
-    [[self l4Logger] l4debug: @"Debug info goes here.  La de da.  All the King's horses & all the kings men couldn't put Humpty Dumpty back together again."];
+[[self l4Logger] l4debug: @"Debug info goes here.  La de da.  All the King's horses & all the kings men couldn't put Humpty Dumpty back together again."];
+</pre>
 
 Frankly, I don't know why you wouldn't want to use these macros, but the non-macro versions are still there in case that's what you want or for some reason you can't use the macro versions.
 
@@ -107,7 +127,7 @@ Since, +logger; & -logger; are implemented as categories on NSObject, you can ov
 
 For setting level of logging for methods, there is a convenience class L4FunctionLogger that serves; however, keep in mind that any changes to the log level here effect logging from all methods.
 
-# II. Embedding Log4Cocoa
+## II. Embedding Log4Cocoa
 
 To actually embed Log4Cocoa in your application, you'll need to add a copy phase to your build target.  Your application will run as long as Log4Cocoa is installed in your Framework search path but embedding it will make deployment much easier and gdb gets messed up when you use an embedded framework but don't actually embed it.
 
@@ -120,13 +140,13 @@ Copy the Framework Into the Application
 In the application’s target, you need to add a copy-files build phase that copies the framework into the application.
 
 
-1) Add the framework to the application’s target. See “Adding Files and Frameworks”. If the application’s target and framework’s target are in the same project, you should also make the application’s target dependent on the framework’s target. See “Managing Target Dependencies”.
+1. Add the framework to the application’s target. See “Adding Files and Frameworks”. If the application’s target and framework’s target are in the same project, you should also make the application’s target dependent on the framework’s target. See “Managing Target Dependencies”.
 
-2) In the project window, click the Targets tab and open the application target.
+2. In the project window, click the Targets tab and open the application target.
 
-3) Click the last build phase under Build Phases, and choose Project > New Build Phase > New Copy Files Build Phase.
+3. Click the last build phase under Build Phases, and choose Project > New Build Phase > New Copy Files Build Phase.
 
-4) Choose Frameworks from the Where pop-up menu, select the “Copy only when installing” option, and drag the framework to the Files field.
+4. Choose Frameworks from the Where pop-up menu, select the “Copy only when installing” option, and drag the framework to the Files field.
 
 You can find the framework in the Products group in the project’s Files list.
 
