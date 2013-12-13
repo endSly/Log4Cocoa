@@ -20,7 +20,7 @@
 			self = nil;
 			[NSException raise:NSInvalidArgumentException format:@"aLevel is not allowed to be nil."];
 		} else {
-			self.levelToMatch = [aLevel retain];
+			self.levelToMatch = aLevel;
 		}
 	}
 	return self;
@@ -51,10 +51,6 @@
 	return self;
 }
 
-- (void) dealloc
-{
-	[super dealloc];
-}
 
 - (L4FilterResult) decide:(L4LogEvent *)event 
 {

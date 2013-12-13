@@ -10,7 +10,7 @@
 
 + (L4Layout *) simpleLayout
 {
-	return [[[L4SimpleLayout alloc] init] autorelease];
+	return [[L4SimpleLayout alloc] init];
 }
 
 - (id) initWithProperties:(L4Properties *)initProperties

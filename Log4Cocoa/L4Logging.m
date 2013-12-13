@@ -15,7 +15,7 @@ void log4Log(id object, int line, const char *file, const char *method, SEL sel,
 		combinedMessage = [[NSString alloc] initWithFormat:message arguments:args];
 		va_end(args);
 	} else {
-		combinedMessage = [message retain];
+		combinedMessage = message;
 	}
 	
 	if ( isAssertion ) {
@@ -24,6 +24,5 @@ void log4Log(id object, int line, const char *file, const char *method, SEL sel,
 		objc_msgSend([object l4Logger], sel, line, file, method, combinedMessage, level, exception);
 	}
 	
-	[combinedMessage release];
 }
 

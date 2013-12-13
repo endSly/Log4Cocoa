@@ -22,7 +22,7 @@ typedef enum {
     L4Filter *next;     /**< The next filter in the chain.*/
 }
 
-@property (retain) L4Filter * next; /**< Accessor for the next filter. */
+@property (strong) L4Filter * next; /**< Accessor for the next filter. */
 
 /**
  * Initializes an instance from properties.  Currently there are no properties that apply to this class.

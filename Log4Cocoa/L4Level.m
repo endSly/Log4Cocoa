@@ -34,7 +34,7 @@ static L4Level *L4_ALL   = nil;
 
 + (L4Level *) level:(int)aLevel withName:(NSString *)aName syslogEquivalent:(int)sysLogLevel
 {
-	return [[[L4Level alloc] initLevel:aLevel withName:aName syslogEquivalent:sysLogLevel] autorelease];
+	return [[L4Level alloc] initLevel:aLevel withName:aName syslogEquivalent:sysLogLevel];
 }
 
 + (L4Level *) off
@@ -130,8 +130,7 @@ static L4Level *L4_ALL   = nil;
 /* ********************************************************************* */
 - (id) init
 {
-	[self autorelease];
-	return [[L4Level debug] retain]; // ok since not mutable and no "set" methods exist.
+	return [L4Level debug]; // ok since not mutable and no "set" methods exist.
 }
 
 - (id) initLevel:(int)aLevel withName:(NSString *)aName syslogEquivalent:(int)sysLogLevel
@@ -159,9 +158,7 @@ static L4Level *L4_ALL   = nil;
 
 - (void) dealloc
 {
-	[name release];
 	name = nil;
-	[super dealloc];
 }
 
 - (NSString *) description
@@ -193,17 +190,6 @@ static L4Level *L4_ALL   = nil;
 - (BOOL) isEnabledFor:(L4Level *) aLevel
 {
 	return intValue >= [aLevel intValue];
-}
-
-// Meke it a singleton
-- (id) retain
-{
-	return self;
-}
-
-- (oneway void) release
-{
-	return;
 }
 
 @end

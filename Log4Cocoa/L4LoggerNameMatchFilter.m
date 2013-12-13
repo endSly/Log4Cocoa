@@ -5,6 +5,7 @@
 #import "L4LoggerNameMatchFilter.h"
 #import "L4LogEvent.h"
 #import "L4Properties.h"
+#import "L4Logger.h"
 
 @implementation L4LoggerNameMatchFilter
 
@@ -34,7 +35,7 @@
 			acceptOnMatch = [acceptIfMatched boolValue];
 		}
 		
-		stringToMatch = [[initProperties stringForKey:@"StringToMatch"] retain];	
+		stringToMatch = [initProperties stringForKey:@"StringToMatch"];	
 		if (stringToMatch == nil) {
 			[NSException raise:L4PropertyMissingException format: @"StringToMatch is a required property."];
 		}
@@ -42,11 +43,6 @@
 	return self;
 }
 
--(void) dealloc
-{
-	[stringToMatch release];
-	[super dealloc];
-}
 
 -(BOOL) acceptOnMatch
 {

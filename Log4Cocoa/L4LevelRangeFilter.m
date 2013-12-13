@@ -6,6 +6,7 @@
 #import "L4LogEvent.h"
 #import "L4Level.h"
 #import "L4LogLog.h"
+#import "L4Properties.h"
 
 @implementation L4LevelRangeFilter
 - (id) initWithAcceptOnMatch:(BOOL)shouldAccept fromLevel:(L4Level *)minimumLevel toLevel:(L4Level *)maximumLevel
@@ -13,8 +14,8 @@
 	self = [super init];
 	if (self != nil) {
 		acceptOnMatch = shouldAccept;
-		minimumLevelToMatch = [minimumLevel retain];
-		maximumLevelToMatch = [maximumLevel retain];
+		minimumLevelToMatch = minimumLevel;
+		maximumLevelToMatch = maximumLevel;
 	}
 	return self;
 }
@@ -42,12 +43,6 @@
 	return self;
 }
 
-- (void) dealloc
-{
-	[minimumLevelToMatch release];
-	[maximumLevelToMatch release];
-	[super dealloc];
-}
 
 - (BOOL) acceptOnMatch
 {

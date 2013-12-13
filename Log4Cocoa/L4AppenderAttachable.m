@@ -25,9 +25,7 @@
 
 - (void) dealloc
 {
-	[appenderList release];
 	appenderList = nil;
-	[super dealloc];
 }
 
 /* ********************************************************************* */
@@ -106,7 +104,6 @@
             [[NSNotificationCenter defaultCenter] postNotificationName:APPENDER_REMOVED_EVENT object:anAppender];
         }
         [appenderList removeAllObjects];
-        [appenderList release];
         appenderList = nil;
     }
 }

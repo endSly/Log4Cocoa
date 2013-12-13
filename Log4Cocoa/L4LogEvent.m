@@ -15,7 +15,7 @@ static NSDate *startTime = nil;
 
 + (void) initialize
 {
-	startTime = [[NSDate date] retain];
+	startTime = [NSDate date];
 }
 
 + (NSDate *) startTime
@@ -58,19 +58,18 @@ static NSDate *startTime = nil;
 					message:(id) aMessage
 				  exception:(NSException *) e
 {
-	return [[[L4LogEvent alloc] initWithLogger:aLogger
+	return [[L4LogEvent alloc] initWithLogger:aLogger
 											 level:aLevel
 										lineNumber:aLineNumber
 										  fileName:aFileName
 										methodName:aMethodName
 										   message:aMessage
 										 exception:e
-									eventTimestamp:[NSDate date]] autorelease];
+									eventTimestamp:[NSDate date]];
 }
 
 - (id) init
 {
-	[self autorelease];
 	return nil;
 }
 
@@ -94,41 +93,32 @@ static NSDate *startTime = nil;
 		fileName = nil;
 		methodName = nil;
 		
-		logger = [aLogger retain];
-		level = [aLevel retain];
-		message = [aMessage retain];
-		exception = [e retain];
-		timestamp = [aDate retain];
+		logger = aLogger;
+		level = aLevel;
+		message = aMessage;
+		exception = e;
+		timestamp = aDate;
 	}
 	return self;
 }
 
 - (void) dealloc
 {
-	[logger release];
 	logger = nil;
-	[level release];
 	level = nil;
-	[message release];
 	message = nil;
-	[exception release];
 	exception = nil;
-	[timestamp release];
 	timestamp = nil;
 	
 	if (lineNumber != nil){
-		[lineNumber release];
 		lineNumber = nil;
 	}
 	if (fileName != nil ){
-		[fileName release];
 		fileName = nil;
 	}
 	if (methodName != nil ){
-		[methodName release];
 		methodName = nil;
 	}
-	[super dealloc];
 }
 
 - (L4Logger *) logger
@@ -144,9 +134,9 @@ static NSDate *startTime = nil;
 - (NSNumber *) lineNumber
 {
 	if((lineNumber == nil) && (rawLineNumber != NO_LINE_NUMBER)) {
-		lineNumber = [[NSNumber numberWithInt:rawLineNumber] retain];
+		lineNumber = [NSNumber numberWithInt:rawLineNumber];
 	} else if (rawLineNumber == NO_LINE_NUMBER) {
-		lineNumber = [[NSNumber numberWithInt:NO_LINE_NUMBER] retain];
+		lineNumber = [NSNumber numberWithInt:NO_LINE_NUMBER];
 	}
 	return lineNumber;
 }
@@ -154,9 +144,9 @@ static NSDate *startTime = nil;
 - (NSString *) fileName
 {
 	if((fileName == nil) && (rawFileName != NO_FILE_NAME)) {
-		fileName = [[NSString stringWithCString:rawFileName encoding:NSUTF8StringEncoding] retain];
+		fileName = [NSString stringWithCString:rawFileName encoding:NSUTF8StringEncoding];
 	} else if (rawFileName == NO_FILE_NAME) {
-		fileName = [[NSString stringWithString:@"No file name!"] retain];
+		fileName = [NSString stringWithString:@"No file name!"];
 	}
 	return fileName;
 }
@@ -164,9 +154,9 @@ static NSDate *startTime = nil;
 - (NSString *) methodName
 {
 	if((methodName == nil) && (rawMethodName != NO_METHOD_NAME)) {
-		methodName = [[NSString stringWithCString:rawMethodName encoding:NSUTF8StringEncoding] retain];
+		methodName = [NSString stringWithCString:rawMethodName encoding:NSUTF8StringEncoding];
 	} else if (rawMethodName == NO_METHOD_NAME) {
-		methodName = [[NSString stringWithString:@"No method name!"] retain];
+		methodName = [NSString stringWithString:@"No method name!"];
 	}
 	return methodName;
 }

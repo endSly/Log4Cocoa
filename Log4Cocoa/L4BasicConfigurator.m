@@ -9,7 +9,7 @@
 
 + (L4BasicConfigurator *) basicConfigurator 
 {
- 	return [[[L4BasicConfigurator alloc] init] autorelease];
+ 	return [[L4BasicConfigurator alloc] init];
 }
 
 - (id) init

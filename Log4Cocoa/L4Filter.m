@@ -15,11 +15,6 @@
 	return [super init];
 }
 
-- (void)dealloc
-{
-    [next release];
-    [super dealloc];
-}
 
 - (L4FilterResult) decide:(L4LogEvent *) event
 {

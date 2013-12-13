@@ -4,6 +4,7 @@
 
 #import "L4SimpleLayout.h"
 #import "L4LogEvent.h"
+#import "L4Level.h"
 
 @implementation L4SimpleLayout
 

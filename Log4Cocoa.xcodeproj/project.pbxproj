@@ -429,6 +429,7 @@
 		0D5B4EFF14C36987008A00B6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				DSTROOT = /tmp/Log4Cocoa.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Log4Cocoa/Log4Cocoa-Prefix.pch";
@@ -441,6 +442,7 @@
 		0D5B4F0014C36987008A00B6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				DSTROOT = /tmp/Log4Cocoa.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Log4Cocoa/Log4Cocoa-Prefix.pch";

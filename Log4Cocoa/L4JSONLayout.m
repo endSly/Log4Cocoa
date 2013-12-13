@@ -4,11 +4,13 @@
 
 #import "L4JSONLayout.h"
 #import "L4LogEvent.h"
+#import "L4Properties.h"
+#import "L4Logger.h"
 
 @implementation L4JSONLayout
 
 + (L4JSONLayout *) JSONLayout {
-    return [[[L4JSONLayout alloc] init] autorelease];
+    return [[L4JSONLayout alloc] init];
 }
 
 - (NSString *) format:(L4LogEvent *) event {

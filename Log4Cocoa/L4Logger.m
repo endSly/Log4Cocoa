@@ -19,7 +19,6 @@ static L4LoggerStore *_loggerRepository = nil;
 {
 	id rootLogger = [[L4RootLogger alloc] initWithLevel:[L4Level debug]];
 	_loggerRepository = [[L4LoggerStore alloc] initWithRoot:rootLogger];
-	[rootLogger autorelease];
     
 	[L4LogEvent startTime];
 }
@@ -40,14 +39,6 @@ static L4LoggerStore *_loggerRepository = nil;
 	return self;
 }
 
-- (void) dealloc
-{
-	[repository release];
-	[parent release];
-	[name release];
-	[aai release];
-	[super dealloc];
-}
 
 - (BOOL) additivity
 {
@@ -67,8 +58,7 @@ static L4LoggerStore *_loggerRepository = nil;
 - (void) setParent:(L4Logger *) theParent
 {
     @synchronized(self) {
-        [parent autorelease];
-        parent = [theParent retain];
+        parent = theParent;
     }
 }
 
@@ -86,8 +76,7 @@ static L4LoggerStore *_loggerRepository = nil;
 {
     @synchronized(self) {
         if( repository != aRepository ) {
-            [repository autorelease];
-            repository = [aRepository retain];
+            repository = aRepository;
         }
     }
 }
@@ -123,8 +112,7 @@ static L4LoggerStore *_loggerRepository = nil;
 {
     @synchronized(self) {
     	if( level != aLevel ) {
-	    	[level autorelease];
-		    level = [aLevel retain];
+		    level = aLevel;
 	    }
 	}
 }
@@ -207,7 +195,6 @@ static L4LoggerStore *_loggerRepository = nil;
 {
     @synchronized(self) {
         [aai removeAllAppenders];
-        [aai release];
         aai = nil;
     }
 }
@@ -362,8 +349,6 @@ static L4FunctionLogger *instance;
 
 - (void) dealloc
 {
-	[instance release];
 	instance = nil;
-	[super dealloc];
 }
 @end

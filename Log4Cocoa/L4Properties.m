@@ -45,12 +45,12 @@ NSString* const L4PropertyMissingException = @"L4PropertyMissingException";
 
 + (L4Properties *) propertiesWithFileName:(NSString *)aName
 {
- 	return [[[L4Properties alloc] initWithFileName:aName] autorelease];
+ 	return [[L4Properties alloc] initWithFileName:aName];
 }
 
 + (L4Properties *) propertiesWithProperties:(NSDictionary *)aProperties
 {
- 	return [[[L4Properties alloc] initWithProperties:aProperties] autorelease];
+ 	return [[L4Properties alloc] initWithProperties:aProperties];
 }
 
 /* ********************************************************************* */
@@ -69,10 +69,8 @@ NSString* const L4PropertyMissingException = @"L4PropertyMissingException";
 
 - (void)dealloc
 {
-	[properties release];
 	properties = nil;
  	
-	[super dealloc];
 }
 
 - (NSString *) description
@@ -89,7 +87,7 @@ NSString* const L4PropertyMissingException = @"L4PropertyMissingException";
 {
     self = [super init];
 	if ( self != nil ) {
-		properties = [[NSMutableDictionary dictionary] retain];
+		properties = [NSMutableDictionary dictionary];
   		
   		NSString *fileContents = [NSString stringWithContentsOfFile:aName encoding:NSUTF8StringEncoding error:nil];
   		

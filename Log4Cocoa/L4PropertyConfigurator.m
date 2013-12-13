@@ -47,12 +47,12 @@
 /* ********************************************************************* */
 + (L4PropertyConfigurator *) propertyConfiguratorWithFileName:(NSString *) aName
 {
- 	return [[[self alloc] initWithFileName: aName] autorelease];
+ 	return [[self alloc] initWithFileName: aName];
 }
 
 + (L4PropertyConfigurator *) propertyConfiguratorWithProperties:(L4Properties *) aProperties
 {
- 	return [[(L4PropertyConfigurator *) [self alloc] initWithProperties: aProperties] autorelease];
+ 	return [(L4PropertyConfigurator *) [self alloc] initWithProperties: aProperties];
 }
 
 /* ********************************************************************* */
@@ -109,12 +109,9 @@
 
 - (void)dealloc
 {
-	[properties release];
 	properties = nil;
- 	[appenders release];
  	appenders = nil;
  	
-	[super dealloc];
 }
 
 - (id) init
@@ -131,7 +128,7 @@
 {
     self = [super init];
  	if ( self != nil ) {
-  		properties = [[initProperties subsetForPrefix:@"log4cocoa."] retain];
+  		properties = [initProperties subsetForPrefix:@"log4cocoa."];
   		appenders = [[NSMutableDictionary alloc] init];
  	}
  	
@@ -158,7 +155,7 @@
 			  @"Failed to create instance with name \"%@\" since it does not conform to the %@ protocol.", 
 			  apenderProtocolName, appenderProtocol]];
 	 	} else {
-	  		newAppender = [[(id <L4Appender>)[appenderClass alloc] initWithProperties:appenderProperties] autorelease];
+	  		newAppender = [(id <L4Appender>)[appenderClass alloc] initWithProperties:appenderProperties];
 	 	}
 	}
 	return newAppender;

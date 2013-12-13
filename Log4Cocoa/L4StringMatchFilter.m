@@ -34,7 +34,7 @@
 			acceptOnMatch = [acceptIfMatched boolValue];
 		}
 		
-		stringToMatch = [[initProperties stringForKey:@"StringToMatch"] retain];	
+		stringToMatch = [initProperties stringForKey:@"StringToMatch"];	
 		if (stringToMatch == nil) {
 			[NSException raise:L4PropertyMissingException format:@"StringToMatch is a required property."];
 		}
@@ -42,11 +42,6 @@
 	return self;
 }
 
--(void) dealloc
-{
-	[stringToMatch release];
-	[super dealloc];
-}
 
 -(BOOL) acceptOnMatch
 {

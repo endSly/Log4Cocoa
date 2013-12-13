@@ -5,11 +5,12 @@
 #import "L4XMLLayout.h"
 
 #import "L4LogEvent.h"
+#import "L4Logger.h"
 
 @implementation L4XMLLayout
 
 + (L4XMLLayout *) XMLLayout {
-    return [[[L4XMLLayout alloc] init] autorelease];
+    return [[L4XMLLayout alloc] init];
 }
 
 - (NSString *) format:(L4LogEvent *) event {
@@ -27,8 +28,7 @@
     
     [formattedEventString appendFormat:@"</log4cocoa:event>\n", [event renderedMessage]];
     
-    NSString *result = [[formattedEventString copy] autorelease];
-    [formattedEventString release];
+    NSString *result = [formattedEventString copy];
     
     return result;
 }

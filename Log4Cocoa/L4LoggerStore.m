@@ -55,7 +55,7 @@
 {
 	self = [super init];
 	if( self != nil ) {
-		root = [rootLogger retain];
+		root = rootLogger;
 		
 		repository = [[NSMutableDictionary alloc] init];
 		loggers = [[NSMutableArray alloc] init];
@@ -67,19 +67,11 @@
 		emittedNoAppenderWarning = NO;
 		emittedNoResourceBundleWarning = NO;
 	} else {
-		[rootLogger release];  // ### todo - ???
+		  // ### todo - ???
 	}
 	return self;
 }
 
-- (void) dealloc
-{
-	[root release];
-	[repository release];
-	[loggers release];
-	[threshold release];
-	[super dealloc];
-}
 
 - (BOOL) isDisabled:(int) aLevel
 {
@@ -94,8 +86,7 @@
 - (void) setThreshold:(L4Level *) aLevel
 {
     @synchronized(self) {
-        [threshold autorelease];
-        threshold = [aLevel retain];
+        threshold = aLevel;
         thresholdInt = [aLevel intValue];
     }
 }
@@ -186,7 +177,7 @@
 {
     NSArray *currentLoggers = nil;
     @synchronized(self) {
-        currentLoggers = [[loggers copy] autorelease];
+        currentLoggers = [loggers copy];
     }
     return currentLoggers;
 }
@@ -263,7 +254,7 @@
 		[pseudoFqcn insertString:@"." atIndex:0];
 		[pseudoFqcn insertString:NSStringFromClass(theClass) atIndex:0];
 	}
-	return [pseudoFqcn autorelease];
+	return pseudoFqcn;
 }
 
 - (void) updateParentsOfLogger:(L4Logger *) aLogger

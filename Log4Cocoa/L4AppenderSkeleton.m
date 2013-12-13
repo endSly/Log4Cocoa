@@ -46,7 +46,6 @@
             } else {
                 [L4LogLog error:[NSString stringWithFormat:
                                   @"Error while creating layout \"%@\".", className]];
-                [self release];
                 return nil;
             }
         }
@@ -71,7 +70,6 @@
             } else {
                 [L4LogLog error:[NSString stringWithFormat:
                                   @"Error while creating filter \"%@\".", className]];
-                [self release];
                 return nil;
             }
         }
@@ -80,14 +78,6 @@
     return self;
 }
 
-- (void) dealloc
-{
-	[name release];
-	[layout release];
-	[threshold release];
-	[headFilter release];
-	[super dealloc];
-}
 
 - (void) append:(L4LogEvent *) anEvent
 {
@@ -111,8 +101,7 @@
 {
     @synchronized(self) {
         if( threshold != aLevel ) {
-            [threshold autorelease];
-            threshold = [aLevel retain];
+            threshold = aLevel;
         }
     }
 }
@@ -128,12 +117,12 @@
 	if ( filterClass == nil ) {
 	 	[L4LogLog error:[NSString stringWithFormat:@"Cannot find L4Filter class with name:\"%@\".", filterClassName]];
 	} else {	  		
-	 	if ( ![[[[filterClass alloc] init] autorelease] isKindOfClass:[L4Filter class]] ) {
+	 	if ( ![[[filterClass alloc] init] isKindOfClass:[L4Filter class]] ) {
 	  		[L4LogLog error:
 			 [NSString stringWithFormat:
 			  @"Failed to create instance with name \"%@\" since it is not of kind L4Filter.", filterClass]];
 	 	} else {
-	  		newFilter = [[(L4Filter *)[filterClass alloc] initWithProperties:filterProperties] autorelease];
+	  		newFilter = [(L4Filter *)[filterClass alloc] initWithProperties:filterProperties];
 	 	}
 	}
 	return newFilter;
@@ -147,12 +136,12 @@
 	if ( layoutClass == nil ) {
 	 	[L4LogLog error:[NSString stringWithFormat:@"Cannot find L4Layout class with name:\"%@\".", layoutClassName]];
 	} else {	  		
-	 	if ( ![[[[layoutClass alloc] init] autorelease] isKindOfClass:[L4Layout class]] ) {
+	 	if ( ![[[layoutClass alloc] init] isKindOfClass:[L4Layout class]] ) {
 	  		[L4LogLog error:
 			 [NSString stringWithFormat:
 			  @"Failed to create instance with name \"%@\" since it is not of kind L4Layout.", layoutClass]];
 	 	} else {
-	  		newLayout = [[(L4Layout *)[layoutClass alloc] initWithProperties:layoutProperties] autorelease];
+	  		newLayout = [(L4Layout *)[layoutClass alloc] initWithProperties:layoutProperties];
 	 	}
 	}
 	return newLayout;
@@ -206,7 +195,7 @@
 {
     @synchronized(self) {
         if( headFilter == nil ) {
-            headFilter = [newFilter retain];
+            headFilter = newFilter;
             tailFilter = newFilter; // don't retain at the tail, just the head.
         } else {
             [tailFilter setNext:newFilter];
@@ -222,19 +211,19 @@
 
 - (void) clearFilters
 {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    @autoreleasepool {
 
-    @synchronized(self) {
-        id aFilter;
-        [headFilter autorelease];
-        for( aFilter = headFilter; aFilter != nil; aFilter = [headFilter next] ) {
-            [aFilter setNext:nil];
+        @synchronized(self) {
+            id aFilter;
+
+            for( aFilter = headFilter; aFilter != nil; aFilter = [headFilter next] ) {
+                [aFilter setNext:nil];
+            }
+            headFilter = nil;
+            tailFilter = nil;
         }
-        headFilter = nil;
-        tailFilter = nil;
-    }
     
-    [pool release];
+    }
 }
 
 - (void) close
@@ -255,7 +244,6 @@
 {
     @synchronized(self) {
         if( name != aName ) {
-            [name autorelease];
             name = [aName copy];
         }
     }
@@ -270,8 +258,7 @@
 {
     @synchronized(self) {
         if( layout != aLayout ) {
-            [layout autorelease];
-            layout = [aLayout retain];
+            layout = aLayout;
         }
     }
 }

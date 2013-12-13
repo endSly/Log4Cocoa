@@ -12,7 +12,7 @@ static NSData *lineBreakChar;
 @implementation L4LogLog
 + (void) initialize
 {
-	lineBreakChar = [[@"\n" dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] retain];
+	lineBreakChar = [@"\n" dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
 }
 
 + (BOOL) internalDebuggingEnabled

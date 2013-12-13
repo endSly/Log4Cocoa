@@ -343,7 +343,7 @@ extern NSString* const L4InvalidBraceClauseException;
  * @param cp The conversion pattern to be parsed
  * @param tokenStringArray A mutable array to hold the parsed tokens
  */
-- (void)parseConversionPattern:(NSString*)cp intoArray:(NSMutableArray**)tokenStringArray;
+- (void)parseConversionPattern:(NSString*)cp intoArray:(NSMutableArray* __autoreleasing *)tokenStringArray;
 
 @end
 

@@ -5,6 +5,8 @@
 #import "L4DailyRollingFileAppender.h"
 #import "L4Layout.h"
 #import "L4LogLog.h"
+#import "L4Properties.h"
+
 #import <math.h>
 
 NSString *const L4RollingFrequencyKey = @"L4RollingFrequency";
@@ -57,13 +59,10 @@ NSString *const L4RollingFrequencyMinutely = @"L4RollingFrequencyMinutely";
 
 - (void)dealloc
 {
-	[_lastRolloverDate release];
 	_lastRolloverDate = nil;
     
-    [_rollingFrequency release];
     _rollingFrequency = nil;
 	
-	[super dealloc];
 }
 
 - (NSString *)rollingFrequency
@@ -73,7 +72,6 @@ NSString *const L4RollingFrequencyMinutely = @"L4RollingFrequencyMinutely";
 
 - (void)setRollingFrequency:(NSString *)aRollingFrequency
 {	
-    [_rollingFrequency release];
 	_rollingFrequency = [aRollingFrequency copy];
 	[self setLastRolloverDate:[NSDate date]];
 }
@@ -117,8 +115,7 @@ NSString *const L4RollingFrequencyMinutely = @"L4RollingFrequencyMinutely";
 {
     @synchronized(self) {
         if (_lastRolloverDate != date) {
-            [_lastRolloverDate release];
-            _lastRolloverDate = [date retain];
+            _lastRolloverDate = date;
         }
     }
 }
@@ -198,7 +195,6 @@ NSString *const L4RollingFrequencyMinutely = @"L4RollingFrequencyMinutely";
             NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
             [dateFormatter setDateFormat:format];
             NSString *filenameExtension = [dateFormatter stringFromDate:[self lastRolloverDate]];
-            [dateFormatter release];
             
             // generate the new rollover log file name
             NSString *newFileName = [[self fileName] stringByAppendingPathExtension:filenameExtension];

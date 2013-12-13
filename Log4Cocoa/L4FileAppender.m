@@ -5,6 +5,7 @@
 #import "L4FileAppender.h"
 #import "L4Layout.h"
 #import "L4LogLog.h"
+#import "L4Properties.h"
 
 @implementation L4FileAppender
 
@@ -22,10 +23,9 @@
         NSString *buf = [initProperties stringForKey:@"File"];
         if ( buf == nil ) {
             [L4LogLog error:@"Invalid filename; L4FileAppender properties require a file be specified."];
-            [self release];
             return nil;
         }
-        fileName = [[buf stringByExpandingTildeInPath] retain];
+        fileName = [buf stringByExpandingTildeInPath];
         
         // Support for appender.Append in properties configuration file
         append = YES;
@@ -50,7 +50,7 @@
 	if (self != nil)
 	{
 		[self setLayout:aLayout];
-		fileName = [[aName stringByExpandingTildeInPath] retain];
+		fileName = [aName stringByExpandingTildeInPath];
 		append = flag;
 		[self setupFile];
 	}
@@ -59,10 +59,8 @@
 
 - (void)dealloc
 {
-	[fileName release];
 	fileName = nil;
 	
-	[super dealloc];
 }
 
 - (void)setupFile
@@ -72,7 +70,6 @@
 	@synchronized(self) {
         if (fileName == nil || [fileName length] <= 0) {
             [self closeFile];
-            [fileName release];
             fileName = nil;
             [self setFileHandle:nil];
         } else {
@@ -124,7 +121,6 @@
         [fileHandle closeFile];
         
         // Deallocate the file handle because trying to read from or write to a closed file raises exceptions.  Sending messages to nil objects are no-ops.
-        [fileHandle release];
         fileHandle = nil;
     }
 }

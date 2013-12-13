@@ -8,6 +8,8 @@
 #import "L4LogEvent.h"
 #import "L4Properties.h"
 #import "L4LogLog.h"
+#import "L4Level.h"
+#import "L4Logger.h"
 
 NSString* const L4PatternLayoutDefaultConversionPattern	= @"%m%n";
 NSString* const L4InvalidSpecifierException = @"L4InvalidSpecifierException";
@@ -48,13 +50,10 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
 
 - (void)dealloc
 {
-	[conversionPattern release];
 	conversionPattern = nil;
 	
-	[tokenArray release];
 	tokenArray = nil;
 	
-	[super dealloc];
 }
 
 - (NSString*)conversionPattern
@@ -66,7 +65,6 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
 {
     @synchronized(self) {
         if (![conversionPattern isEqualToString:cp]) {
-            [conversionPattern release];
             conversionPattern = nil;
             conversionPattern = [cp copy];
             
@@ -118,7 +116,9 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
         // let delegate handle it first
         if (parserDelegate != nil && [parserDelegate respondsToSelector:@selector(parseConversionPattern:intoArray:)]) {
             if ([tokenArray count] <= 0) {
-                [parserDelegate parseConversionPattern:conversionPattern intoArray:&tokenArray];
+                NSMutableArray *newTokenArray;
+                [parserDelegate parseConversionPattern:conversionPattern intoArray:&newTokenArray];
+                tokenArray = newTokenArray;
             }
             
             for (index = 0; index < [tokenArray count]; index++) {
@@ -149,7 +149,9 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
             }
         } else {
             if ([tokenArray count] <= 0) {
-                [self parseConversionPattern:conversionPattern intoArray:&tokenArray];
+                NSMutableArray *newTokenArray;
+                [parserDelegate parseConversionPattern:conversionPattern intoArray:&newTokenArray];
+                tokenArray = newTokenArray;
             }
             
             for (index = 0; index < [tokenArray count]; index++) {
@@ -183,7 +185,7 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
 	return formattedString;
 }
 
-- (void)parseConversionPattern:(NSString*)cp intoArray:(NSMutableArray**)tokenStringArray
+- (void)parseConversionPattern:(NSString*)cp intoArray:(NSMutableArray* __autoreleasing *)tokenStringArray
 {
 	NSScanner*				scanner = nil;
 	NSCharacterSet*			percentCharacterSet = nil;
@@ -420,7 +422,9 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
 								// if there's anything between the braces, get string description of the logging event's 
 								// timestamp with the format we just found
 								if ([scanner scanUpToString:@"}" intoString:&tempString2]) {
-									tempString = [[logEvent timestamp] descriptionWithCalendarFormat:tempString2];
+                                    //// ToDo: Fix this
+									//tempString = [[logEvent timestamp] descriptionWithCalendarFormat:tempString2];
+                                    tempString = [[logEvent timestamp] descriptionWithLocale:nil];
 									
 									// skip closing brace
 									charsToSkip++;
@@ -566,6 +570,7 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
  */
 - (NSArray *)tokenArray
 {
+    NSMutableArray *tokenArray;
 	[self parseConversionPattern:conversionPattern intoArray:&tokenArray];
 	return tokenArray;
 }
