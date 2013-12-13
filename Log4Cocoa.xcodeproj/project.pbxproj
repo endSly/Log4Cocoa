@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		0D5B4EF514C36987008A00B6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D5B4EF414C36987008A00B6 /* Foundation.framework */; };
+		0DDBCE03185BB18000B42744 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DDBCE02185BB18000B42744 /* XCTest.framework */; };
+		0DDBCE04185BB18000B42744 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D5B4EF414C36987008A00B6 /* Foundation.framework */; };
+		0DDBCE06185BB18000B42744 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DDBCE05185BB18000B42744 /* UIKit.framework */; };
+		0DDBCE0C185BB18000B42744 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0DDBCE0A185BB18000B42744 /* InfoPlist.strings */; };
+		0DDBCE0E185BB18000B42744 /* Log4Cocoa_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DDBCE0D185BB18000B42744 /* Log4Cocoa_Tests.m */; };
 		0DE9855C14C36A7F001E0E1A /* L4AppenderAttachable.h in Headers */ = {isa = PBXBuildFile; fileRef = 0DE9851E14C36A7F001E0E1A /* L4AppenderAttachable.h */; };
 		0DE9855D14C36A7F001E0E1A /* L4AppenderAttachable.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DE9851F14C36A7F001E0E1A /* L4AppenderAttachable.m */; };
 		0DE9855E14C36A7F001E0E1A /* L4AppenderProtocols.h in Headers */ = {isa = PBXBuildFile; fileRef = 0DE9852014C36A7F001E0E1A /* L4AppenderProtocols.h */; };
@@ -72,10 +77,27 @@
 		0DE9859914C36A7F001E0E1A /* NSObject+Log4Cocoa.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DE9855B14C36A7F001E0E1A /* NSObject+Log4Cocoa.m */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		0DDBCE10185BB18000B42744 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0D5B4EE814C36987008A00B6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0D5B4EF014C36987008A00B6;
+			remoteInfo = Log4Cocoa;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		0D5B4EF114C36987008A00B6 /* libLog4Cocoa.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libLog4Cocoa.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		0D5B4EF414C36987008A00B6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		0D5B4EF814C36987008A00B6 /* Log4Cocoa-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Log4Cocoa-Prefix.pch"; sourceTree = "<group>"; };
+		0DDBCE01185BB18000B42744 /* Log4Cocoa Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Log4Cocoa Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0DDBCE02185BB18000B42744 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		0DDBCE05185BB18000B42744 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		0DDBCE09185BB18000B42744 /* Log4Cocoa Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Log4Cocoa Tests-Info.plist"; sourceTree = "<group>"; };
+		0DDBCE0B185BB18000B42744 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		0DDBCE0D185BB18000B42744 /* Log4Cocoa_Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Log4Cocoa_Tests.m; sourceTree = "<group>"; };
+		0DDBCE0F185BB18000B42744 /* Log4Cocoa Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Log4Cocoa Tests-Prefix.pch"; sourceTree = "<group>"; };
 		0DE9851E14C36A7F001E0E1A /* L4AppenderAttachable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = L4AppenderAttachable.h; sourceTree = "<group>"; };
 		0DE9851F14C36A7F001E0E1A /* L4AppenderAttachable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = L4AppenderAttachable.m; sourceTree = "<group>"; };
 		0DE9852014C36A7F001E0E1A /* L4AppenderProtocols.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = L4AppenderProtocols.h; sourceTree = "<group>"; };
@@ -149,6 +171,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0DDBCDFE185BB18000B42744 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0DDBCE03185BB18000B42744 /* XCTest.framework in Frameworks */,
+				0DDBCE06185BB18000B42744 /* UIKit.framework in Frameworks */,
+				0DDBCE04185BB18000B42744 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -156,6 +188,7 @@
 			isa = PBXGroup;
 			children = (
 				0D5B4EF614C36987008A00B6 /* Log4Cocoa */,
+				0DDBCE07185BB18000B42744 /* Log4Cocoa Tests */,
 				0D5B4EF314C36987008A00B6 /* Frameworks */,
 				0D5B4EF214C36987008A00B6 /* Products */,
 			);
@@ -165,6 +198,7 @@
 			isa = PBXGroup;
 			children = (
 				0D5B4EF114C36987008A00B6 /* libLog4Cocoa.a */,
+				0DDBCE01185BB18000B42744 /* Log4Cocoa Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -173,6 +207,8 @@
 			isa = PBXGroup;
 			children = (
 				0D5B4EF414C36987008A00B6 /* Foundation.framework */,
+				0DDBCE02185BB18000B42744 /* XCTest.framework */,
+				0DDBCE05185BB18000B42744 /* UIKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -255,6 +291,25 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		0DDBCE07185BB18000B42744 /* Log4Cocoa Tests */ = {
+			isa = PBXGroup;
+			children = (
+				0DDBCE0D185BB18000B42744 /* Log4Cocoa_Tests.m */,
+				0DDBCE08185BB18000B42744 /* Supporting Files */,
+			);
+			path = "Log4Cocoa Tests";
+			sourceTree = "<group>";
+		};
+		0DDBCE08185BB18000B42744 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				0DDBCE09185BB18000B42744 /* Log4Cocoa Tests-Info.plist */,
+				0DDBCE0A185BB18000B42744 /* InfoPlist.strings */,
+				0DDBCE0F185BB18000B42744 /* Log4Cocoa Tests-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -318,6 +373,24 @@
 			productReference = 0D5B4EF114C36987008A00B6 /* libLog4Cocoa.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		0DDBCE00185BB18000B42744 /* Log4Cocoa Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0DDBCE12185BB18000B42744 /* Build configuration list for PBXNativeTarget "Log4Cocoa Tests" */;
+			buildPhases = (
+				0DDBCDFD185BB18000B42744 /* Sources */,
+				0DDBCDFE185BB18000B42744 /* Frameworks */,
+				0DDBCDFF185BB18000B42744 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0DDBCE11185BB18000B42744 /* PBXTargetDependency */,
+			);
+			name = "Log4Cocoa Tests";
+			productName = "Log4Cocoa Tests";
+			productReference = 0DDBCE01185BB18000B42744 /* Log4Cocoa Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -326,6 +399,11 @@
 			attributes = {
 				LastUpgradeCheck = 0420;
 				ORGANIZATIONNAME = EPD;
+				TargetAttributes = {
+					0DDBCE00185BB18000B42744 = {
+						TestTargetID = 0D5B4EF014C36987008A00B6;
+					};
+				};
 			};
 			buildConfigurationList = 0D5B4EEB14C36987008A00B6 /* Build configuration list for PBXProject "Log4Cocoa" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -340,9 +418,21 @@
 			projectRoot = "";
 			targets = (
 				0D5B4EF014C36987008A00B6 /* Log4Cocoa */,
+				0DDBCE00185BB18000B42744 /* Log4Cocoa Tests */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		0DDBCDFF185BB18000B42744 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0DDBCE0C185BB18000B42744 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		0D5B4EED14C36987008A00B6 /* Sources */ = {
@@ -381,7 +471,34 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0DDBCDFD185BB18000B42744 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0DDBCE0E185BB18000B42744 /* Log4Cocoa_Tests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0DDBCE11185BB18000B42744 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0D5B4EF014C36987008A00B6 /* Log4Cocoa */;
+			targetProxy = 0DDBCE10185BB18000B42744 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		0DDBCE0A185BB18000B42744 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0DDBCE0B185BB18000B42744 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		0D5B4EFC14C36987008A00B6 /* Debug */ = {
@@ -452,6 +569,82 @@
 			};
 			name = Release;
 		};
+		0DDBCE13185BB18000B42744 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Log4Cocoa Tests/Log4Cocoa Tests-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = "Log4Cocoa Tests/Log4Cocoa Tests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		0DDBCE14185BB18000B42744 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Log4Cocoa Tests/Log4Cocoa Tests-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = "Log4Cocoa Tests/Log4Cocoa Tests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -472,6 +665,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		0DDBCE12185BB18000B42744 /* Build configuration list for PBXNativeTarget "Log4Cocoa Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0DDBCE13185BB18000B42744 /* Debug */,
+				0DDBCE14185BB18000B42744 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
