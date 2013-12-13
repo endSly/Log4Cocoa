@@ -134,9 +134,9 @@ static NSDate *startTime = nil;
 - (NSNumber *) lineNumber
 {
 	if((lineNumber == nil) && (rawLineNumber != NO_LINE_NUMBER)) {
-		lineNumber = [NSNumber numberWithInt:rawLineNumber];
+		lineNumber = @(rawLineNumber);
 	} else if (rawLineNumber == NO_LINE_NUMBER) {
-		lineNumber = [NSNumber numberWithInt:NO_LINE_NUMBER];
+		lineNumber = @(NO_LINE_NUMBER);
 	}
 	return lineNumber;
 }
@@ -144,9 +144,9 @@ static NSDate *startTime = nil;
 - (NSString *) fileName
 {
 	if((fileName == nil) && (rawFileName != NO_FILE_NAME)) {
-		fileName = [NSString stringWithCString:rawFileName encoding:NSUTF8StringEncoding];
+		fileName = @(rawFileName);
 	} else if (rawFileName == NO_FILE_NAME) {
-		fileName = [NSString stringWithString:@"No file name!"];
+		fileName = @"No file name!";
 	}
 	return fileName;
 }
@@ -154,9 +154,9 @@ static NSDate *startTime = nil;
 - (NSString *) methodName
 {
 	if((methodName == nil) && (rawMethodName != NO_METHOD_NAME)) {
-		methodName = [NSString stringWithCString:rawMethodName encoding:NSUTF8StringEncoding];
+		methodName = @(rawMethodName);
 	} else if (rawMethodName == NO_METHOD_NAME) {
-		methodName = [NSString stringWithString:@"No method name!"];
+		methodName = @"No method name!";
 	}
 	return methodName;
 }

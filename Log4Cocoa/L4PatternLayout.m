@@ -128,16 +128,16 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
                 // let delegate handle it first
                 if (converterDelegate != nil && 
 					[converterDelegate respondsToSelector:@selector(convertTokenString:withLoggingEvent:intoString:)]) {
-                    handled = [converterDelegate convertTokenString:[tokenArray objectAtIndex:index] 
+                    handled = [converterDelegate convertTokenString:tokenArray[index] 
 												   withLoggingEvent:event 
 														 intoString:&convertedString];
                     if (!handled) {
-                        [self convertTokenString:[tokenArray objectAtIndex:index] 
+                        [self convertTokenString:tokenArray[index] 
 								withLoggingEvent:event 
 									  intoString:&convertedString];
                     }
                 } else {
-                    [self convertTokenString:[tokenArray objectAtIndex:index] 
+                    [self convertTokenString:tokenArray[index] 
 							withLoggingEvent:event 
 								  intoString:&convertedString];
                 }
@@ -161,16 +161,16 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
                 // let delegate handle it first
                 if (converterDelegate != nil && 
 					[converterDelegate respondsToSelector:@selector(convertTokenString:withLoggingEvent:intoString:)]) {
-                    handled = [converterDelegate convertTokenString:[tokenArray objectAtIndex:index] 
+                    handled = [converterDelegate convertTokenString:tokenArray[index] 
 												   withLoggingEvent:event 
 														 intoString:&convertedString];
                     if (!handled) {
-                        [self convertTokenString:[tokenArray objectAtIndex:index] 
+                        [self convertTokenString:tokenArray[index] 
 								withLoggingEvent:event 
 									  intoString:&convertedString];
                     }
                 } else {
-                    [self convertTokenString:[tokenArray objectAtIndex:index] 
+                    [self convertTokenString:tokenArray[index] 
 							withLoggingEvent:event 
 								  intoString:&convertedString];
                 }
@@ -203,7 +203,7 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
 	// the scanner.
 	locale = [NSMutableDictionary 
 			  dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
-	[locale setObject:@"." forKey:NSLocaleDecimalSeparator];
+	locale[NSLocaleDecimalSeparator] = @".";
 	
 	scanner = [NSScanner scannerWithString:cp];
 	[scanner setLocale:locale];
@@ -327,20 +327,20 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
 					fieldLengthArray = [tempString2 componentsSeparatedByString:@"."];
 
 					// check for left justification character (-)
-					if ([[fieldLengthArray objectAtIndex:0] rangeOfString:@"-"].location != NSNotFound) {
+					if ([fieldLengthArray[0] rangeOfString:@"-"].location != NSNotFound) {
 						leftJustify = YES;
 					} else {
 						leftJustify = NO;
 					}
 
 					// check for minimum field width
-					minLength = abs([[fieldLengthArray objectAtIndex:0] intValue]);
+					minLength = abs([fieldLengthArray[0] intValue]);
 					if (minLength == 0) {
 						minLength = -1;
 					}
 
 					if ([fieldLengthArray count] > 1) {
-						maxLength = abs([[fieldLengthArray objectAtIndex:([fieldLengthArray count] - 1)] intValue]);
+						maxLength = abs([fieldLengthArray[([fieldLengthArray count] - 1)] intValue]);
 						if (maxLength == 0) {
 							maxLength = -1;
 						}
@@ -485,7 +485,7 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
 						case 'r':
 							// skip the 'r'
 							charsToSkip++;
-							tempString = [NSString stringWithFormat:@"%d", [logEvent millisSinceStart]];
+							tempString = [NSString stringWithFormat:@"%ld", [logEvent millisSinceStart]];
 							break;
 						
 						case 't':
@@ -570,9 +570,9 @@ NSString* const L4InvalidBraceClauseException = @"L4InvalidBraceClauseException"
  */
 - (NSArray *)tokenArray
 {
-    NSMutableArray *tokenArray;
-	[self parseConversionPattern:conversionPattern intoArray:&tokenArray];
-	return tokenArray;
+    NSMutableArray *newTokenArray;
+	[self parseConversionPattern:conversionPattern intoArray:&newTokenArray];
+	return newTokenArray;
 }
 
 @end

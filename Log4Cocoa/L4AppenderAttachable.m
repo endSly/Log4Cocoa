@@ -16,7 +16,7 @@
             int i;
             size = [appenderList count];
             for( i = 0; i < size; i++ ) {
-                [[appenderList objectAtIndex:i] doAppend:event];
+                [appenderList[i] doAppend:event];
             }
         }
     }

@@ -59,8 +59,8 @@
         // Configure the filters
         L4Properties *filtersProperties = [initProperties subsetForPrefix:@"filters."];
         int filterCount = 0;
-        while ( [filtersProperties stringForKey:[[NSNumber numberWithInt:++filterCount] stringValue]] != nil ) {
-            NSString *filterName = [[NSNumber numberWithInt:filterCount] stringValue];
+        while ( [filtersProperties stringForKey:[@(++filterCount) stringValue]] != nil ) {
+            NSString *filterName = [@(filterCount) stringValue];
             L4Properties *filterProperties = [filtersProperties subsetForPrefix:[filterName stringByAppendingString:@"."]];
             NSString *className = [filtersProperties stringForKey:filterName];
             L4Filter *newFilter = [self filterForClassName:className andProperties:filterProperties];

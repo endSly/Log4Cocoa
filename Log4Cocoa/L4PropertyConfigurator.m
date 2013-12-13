@@ -98,7 +98,7 @@
 
  	// Set the Appenders
  	while ( ( component = [componentEnum nextObject] ) != nil ) {
-  		id <L4Appender> appender = [appenders objectForKey:component];
+  		id <L4Appender> appender = appenders[component];
   		if ( appender == nil ) {
 			[L4LogLog error:[NSString stringWithFormat:@"Invalid appender: \"%@\".", component]];
 			continue;
@@ -199,7 +199,7 @@
 			
 			if ( newAppender != nil ) {
 				[newAppender setName:key];
-				[appenders setObject:newAppender forKey:key];
+				appenders[key] = newAppender;
 			} else {
 				[L4LogLog error:
 				 [NSString stringWithFormat: 

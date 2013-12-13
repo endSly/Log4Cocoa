@@ -100,8 +100,7 @@ NSString* const L4PropertyMissingException = @"L4PropertyMissingException";
 				NSRange range = [currentLine rangeOfString:@"="];
 				
 				if ( ( range.location != NSNotFound ) && ( [currentLine length] > range.location + 1 ) ) {
-					[properties setObject:[currentLine substringFromIndex:range.location + 1]
-								   forKey:[currentLine substringToIndex:range.location]];
+					properties[[currentLine substringToIndex:range.location]] = [currentLine substringFromIndex:range.location + 1];
 				}
 			}
   		}
@@ -128,7 +127,7 @@ NSString* const L4PropertyMissingException = @"L4PropertyMissingException";
 
 - (void) setString:(NSString *)aString forKey:(NSString *)aKey
 {
- 	[properties setObject:aString forKey:aKey];
+ 	properties[aKey] = aString;
     [self replaceEnvironmentVariables];
 }
 
@@ -139,7 +138,7 @@ NSString* const L4PropertyMissingException = @"L4PropertyMissingException";
 
 - (NSString *) stringForKey:(NSString *)aKey withDefaultValue:(NSString *)aDefaultValue
 {
- 	NSString *string = [properties objectForKey:aKey];
+ 	NSString *string = properties[aKey];
  	
  	if ( string == nil ) {
   		return aDefaultValue;
@@ -158,7 +157,7 @@ NSString* const L4PropertyMissingException = @"L4PropertyMissingException";
   		NSRange range = [key rangeOfString:aPrefix options:0 range:NSMakeRange(0, [key length])];
   		if ( range.location != NSNotFound ) {
 			NSString *subKey = [key substringFromIndex:range.length];
-			[subset setObject:[properties objectForKey:key] forKey:subKey];
+			subset[subKey] = properties[key];
   		}
  	}
  	
@@ -215,7 +214,7 @@ NSString* const L4PropertyMissingException = @"L4PropertyMissingException";
 				NSString *key = [aString substringWithRange:j];
 				char *replacement = getenv([key UTF8String]);
 				if ( replacement != NULL ) {
-					[buf appendString:[NSString stringWithUTF8String:replacement]];
+					[buf appendString:@(replacement)];
 				}
 				i.location += (k.location + DELIM_STOP_LEN);
 				i.length -= i.location;

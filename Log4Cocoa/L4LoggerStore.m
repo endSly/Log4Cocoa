@@ -107,12 +107,12 @@
 	if( aClass != nil ) {
         
         @synchronized(self) {
-            theLogger = [repository objectForKey:aClass];
+            theLogger = repository[aClass];
             
             if( theLogger == nil ) {
                 NSString *pseudoFqcn = [self pseudoFqcnForClass:aClass];
                 theLogger = [self loggerForName:pseudoFqcn factory:self];
-                [repository setObject:theLogger forKey:aClass];
+                repository[aClass] = theLogger;
             }
         }
     }
@@ -131,7 +131,7 @@
 	id theNode;
 	
     @synchronized(self) {
-        theNode = [repository objectForKey:aName];
+        theNode = repository[aName];
         
         if( theNode == nil ) {
             //
@@ -140,7 +140,7 @@
             //
             theLogger = [aFactory newLoggerInstance:aName];
             [theLogger setLoggerRepository:self];
-            [repository setObject:theLogger forKey:aName];
+            repository[aName] = theLogger;
             [self updateParentsOfLogger:theLogger];
             [loggers addObject:theLogger];
             
@@ -154,7 +154,7 @@
             //
             theLogger = [aFactory newLoggerInstance:aName];
             [theLogger setLoggerRepository:self];
-            [repository setObject:theLogger forKey:aName];
+            repository[aName] = theLogger;
             [self updateChildren:theNode withParent:theLogger ];
             [self updateParentsOfLogger:theLogger];
             [loggers addObject:theLogger];
@@ -274,13 +274,13 @@
 	for( i = [keys count] - 1; i > 0; --i ) {
 		theRange.length = i;
 		keyPath = [[keys subarrayWithRange:theRange] componentsJoinedByString:@"."];
-		node = [repository objectForKey:keyPath];
+		node = repository[keyPath];
 		
 		if(node == nil) {
 			// didn't find a parent or a placeholder, create a placeholder
 			// node, i.e. a MutalbeArray, and add this logger as a child
 			//
-			[repository setObject:[NSMutableArray arrayWithObject:aLogger] forKey:keyPath];
+			repository[keyPath] = [NSMutableArray arrayWithObject:aLogger];
 		} else if([node isKindOfClass:[L4Logger class]]) {
 			parent = node;
 			break;
@@ -298,7 +298,7 @@
 	L4Logger *child = nil;
 	
 	for( i = 0; i < last; i++ ) {
-		child = (L4Logger *)[node objectAtIndex:i];
+		child = (L4Logger *)node[i];
 		
 		// If the child's parent's name starts with the name of the new logger then its a child of the new logger leave the child alone, we'll get
 		// to the child's parent in this list.  Otherwise the parent is higher & insert the new logger.  All children that go through this same
