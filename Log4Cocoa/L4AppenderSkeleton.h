@@ -1,3 +1,5 @@
+// For copyright & license, see LICENSE.
+
 #import <Foundation/Foundation.h>
 #import "L4AppenderProtocols.h"
 
@@ -10,9 +12,6 @@
  * standard, generic logging behaviour.
  */
 @interface L4AppenderSkeleton : NSObject <L4Appender> {
-	NSString    * _name;        /**< The name for this appender.*/
-	L4Layout    * _layout;      /**< The layout used by this appender.*/
-	L4Level     * _threshold;   /**< The level below which this appender will not log.*/
 	L4Filter    * _headFilter;  /**< The firsst filter used by this appender.*/
 	L4Filter    * _tailFilter;  /**< The last filter used by this appender.*/
 	BOOL          _closed;      /**< Tracks if this appender has been closed.*/
@@ -22,6 +21,16 @@
  * Accessor for the threshold attribute that tracks the level at wich this appnded will log an event.
  */
 @property (nonatomic) L4Level * threshold;
+
+/**
+ * The layout used by this appender.
+ */
+@property (atomic, strong) L4Layout * layout;
+
+/**
+ * The name for this appender.
+ */
+@property (atomic, strong) NSString * name;
 
 /**
  * Initializes an instance from properties.
@@ -46,5 +55,4 @@
 
 @end
 
-// For copyright & license, see LICENSE.
 

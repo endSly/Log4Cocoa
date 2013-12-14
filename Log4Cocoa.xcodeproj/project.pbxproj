@@ -220,7 +220,6 @@
 				0DDBCE15185C1BCE00B42744 /* Appenders */,
 				0DE9851E14C36A7F001E0E1A /* L4AppenderAttachable.h */,
 				0DE9851F14C36A7F001E0E1A /* L4AppenderAttachable.m */,
-				0DE9852014C36A7F001E0E1A /* L4AppenderProtocols.h */,
 				0DE9852314C36A7F001E0E1A /* L4BasicConfigurator.h */,
 				0DE9852414C36A7F001E0E1A /* L4BasicConfigurator.m */,
 				0DE9852914C36A7F001E0E1A /* L4DenyAllFilter.h */,
@@ -297,6 +296,7 @@
 		0DDBCE15185C1BCE00B42744 /* Appenders */ = {
 			isa = PBXGroup;
 			children = (
+				0DE9852014C36A7F001E0E1A /* L4AppenderProtocols.h */,
 				0DE9852114C36A7F001E0E1A /* L4AppenderSkeleton.h */,
 				0DE9852214C36A7F001E0E1A /* L4AppenderSkeleton.m */,
 				0DE9855414C36A7F001E0E1A /* L4WriterAppender.h */,

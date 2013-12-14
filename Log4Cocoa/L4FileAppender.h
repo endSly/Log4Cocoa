@@ -7,17 +7,16 @@
 #import <Foundation/Foundation.h>
 #import "L4WriterAppender.h"
 
-@interface L4FileAppender : L4WriterAppender
-{
-	BOOL			append; /**< Tracks if we should append or over-right.*/
-	NSString*		fileName; /**< The name of the file we write to.*/
+@interface L4FileAppender : L4WriterAppender {
+	BOOL        append;     /**< Tracks if we should append or over-right.*/
+	NSString  * fileName;   /**< The name of the file we write to.*/
 }
 
 /**
  * A basic initializer.
  * This method calls <code>initWithLayout:fileName:append:bufferIO:bufferSize:</code> with layout and file name set to nil,
  * append is NO, bufferIO is NO, bufferSize is 0
-*/
+ */
 - (id) init;
 
 /**
@@ -33,13 +32,13 @@
 
 /**
  * Initializes an L4FileAppender instance with the specified layout and file path name.
- * This method calls <code>initWithLayout:fileName:append:bufferIO:bufferSize:</code> with the specified layout and file name, 
+ * This method calls <code>initWithLayout:fileName:append:bufferIO:bufferSize:</code> with the specified layout and file name,
  * append is NO, bufferIO is NO, bufferSize is 0
  * @param aLayout The layout that this appender should use
  * @param aName The file path of the file you want log output to be written to.  If the file does not exist, it will be created if possible.  If the file cannot be created for some reason, a FileNotFoundException will be raised.
- * @throws 
+ * @throws
  * @return An initialized L4FileAppender object
-*/
+ */
 - (id) initWithLayout:(L4Layout *) aLayout fileName:(NSString *) aName;
 
 /**
@@ -51,7 +50,7 @@
  * @param flag YES = log output should be appended to the file.  NO = the file's previous contents should be overwritten
  * @throws
  * @return An initialized L4FileAppender object
-*/
+ */
 - (id) initWithLayout:(L4Layout *) aLayout fileName:(NSString *) aName append:(BOOL) flag;
 
 /**

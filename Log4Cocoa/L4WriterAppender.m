@@ -45,7 +45,7 @@ static NSData *lineBreakChar;
 {
 	if (!(self = [self init])) return nil; // call designated initializer
 	fileHandle= aFileHandle;
-	[self set_layout:aLayout];
+	[self setLayout:aLayout];
 	return self;
 }
 
@@ -71,23 +71,23 @@ static NSData *lineBreakChar;
 
 - (void) subAppend:(L4LogEvent *) anEvent
 {
-	[self write:[_layout format:anEvent]];
+	[self write:[self.layout format:anEvent]];
 }
 
 - (BOOL) checkEntryConditions
 {
-	if( _closed ) {
+	if (_closed) {
 		[L4LogLog warn:@"Not allowed to write to a closed appender."];
 		return NO;
 	}
 
-	if( fileHandle == nil ) {
-		[L4LogLog error:[@"No file handle for output stream set for the appender named:" stringByAppendingString:_name]];
+	if (fileHandle) {
+		[L4LogLog error:[@"No file handle for output stream set for the appender named:" stringByAppendingString:self.name]];
 		return NO;
 	}
 
-	if( _layout == nil ) {
-		[L4LogLog error:[@"No layout set for the appender named:" stringByAppendingString:_name]];
+	if (self.layout) {
+		[L4LogLog error:[@"No layout set for the appender named:" stringByAppendingString:self.name]];
 		return NO;
 	}
 	
@@ -141,12 +141,12 @@ static NSData *lineBreakChar;
 
 - (void) writeHeader
 {
-	[self write:[_layout header]];
+	[self write:[self.layout header]];
 }
 
 - (void) writeFooter
 {
-	[self write:[_layout footer]];
+	[self write:[self.layout footer]];
 }
 
 - (NSStringEncoding) encoding

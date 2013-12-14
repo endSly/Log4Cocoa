@@ -30,19 +30,21 @@
 
 @implementation L4AppenderSkeleton
 
-- (id) initWithProperties:(L4Properties *) initProperties
+@synthesize layout = _layout;
+
+- (id) initWithProperties:(L4Properties *)initProperties
 {
     self = [super init];
     
-    if ( self != nil ) {
+    if (self) {
         // Configure the layout
-        if ( [initProperties stringForKey:@"layout"] != nil ) {
+        if ([initProperties stringForKey:@"layout"]) {
             L4Properties *layoutProperties = [initProperties subsetForPrefix:@"layout."];
             NSString *className = [initProperties stringForKey:@"layout"];
             L4Layout *newLayout = [self layoutForClassName:className andProperties:layoutProperties];
             
             if ( newLayout != nil ) {
-                [self set_layout:newLayout];
+                [self setLayout:newLayout];
             } else {
                 [L4LogLog error:[NSString stringWithFormat:
                                   @"Error while creating layout \"%@\".", className]];
@@ -92,23 +94,8 @@
     return isAsSevere;
 }
 
-- (L4Level *) threshold
-{
-	return _threshold;
-}
+#pragma mark - Private methods
 
-- (void) setThreshold:(L4Level *) aLevel
-{
-    @synchronized(self) {
-        if( _threshold != aLevel ) {
-            _threshold = aLevel;
-        }
-    }
-}
-
-/* ********************************************************************* */
-#pragma mark Private methods
-/* ********************************************************************* */
 - (L4Filter *) filterForClassName:(NSString *)filterClassName andProperties:(L4Properties *)filterProperties
 {
 	L4Filter *newFilter = nil;
@@ -128,7 +115,7 @@
 	return newFilter;
 }
 
-- (L4Layout *) layoutForClassName:(NSString *)layoutClassName andProperties:(L4Properties *)layoutProperties
+- (L4Layout *)layoutForClassName:(NSString *)layoutClassName andProperties:(L4Properties *)layoutProperties
 {
 	L4Layout *newLayout = nil;
 	Class layoutClass = NSClassFromString(layoutClassName);
@@ -147,11 +134,10 @@
 	return newLayout;
 }
 
-/* ********************************************************************* */
-#pragma mark L4AppenderCategory methods
-/* ********************************************************************* */
+#pragma mark - L4AppenderCategory methods
+
 // calls [self append:anEvent] after doing threshold checks
-- (void) doAppend:(L4LogEvent *) anEvent
+- (void)doAppend:(L4LogEvent *)anEvent
 {
     L4Filter *aFilter = [self headFilter];
     BOOL breakLoop = NO;
@@ -164,12 +150,12 @@
     
     @synchronized(self) {
 
-        if( _closed ) {
-            [L4LogLog error:[@"Attempted to append to closed appender named:" stringByAppendingString:_name]];
+        if (_closed) {
+            [L4LogLog error:[NSString stringWithFormat:@"Attempted to append to closed appender named: %@", _name]];
             isOkToAppend = NO;
         }
         
-        while((aFilter != nil) && !breakLoop) {
+        while (aFilter && !breakLoop) {
             switch([aFilter decide:anEvent]) {
                 case L4FilterDeny:
                     isOkToAppend = NO;
@@ -185,13 +171,13 @@
             }
         }
         
-        if(isOkToAppend) {
+        if (isOkToAppend) {
             [self append:anEvent]; // passed all threshold checks, append event.
         }
     }
 }
 
-- (void) appendFilter:(L4Filter *) newFilter
+- (void)appendFilter:(L4Filter *)newFilter
 {
     @synchronized(self) {
         if( _headFilter == nil ) {
@@ -204,20 +190,18 @@
     }
 }
 
-- (L4Filter *) headFilter
+- (L4Filter *)headFilter
 {
 	return _headFilter;
 }
 
-- (void) clearFilters
+- (void)clearFilters
 {
     @autoreleasepool {
 
         @synchronized(self) {
-            id aFilter;
-
-            for( aFilter = _headFilter; aFilter != nil; aFilter = [_headFilter next] ) {
-                [aFilter setNext:nil];
+            for (L4Filter *filter = _headFilter; filter; filter = [_headFilter next] ) {
+                [filter setNext:nil];
             }
             _headFilter = nil;
             _tailFilter = nil;
@@ -226,41 +210,13 @@
     }
 }
 
-- (void) close
+- (void)close
 {
 }
 
-- (BOOL) requiresLayout
+- (BOOL)requiresLayout
 {
 	return NO;
-}
-
-- (NSString *) _name
-{
-	return _name;
-}
-
-- (void) set_name:(NSString *) aName
-{
-    @synchronized(self) {
-        if( _name != aName ) {
-            _name = [aName copy];
-        }
-    }
-}
-
-- (L4Layout *) _layout
-{
-	return _layout;
-}
-
-- (void) set_layout:(L4Layout *) aLayout
-{
-    @synchronized(self) {
-        if( _layout != aLayout ) {
-            _layout = aLayout;
-        }
-    }
 }
 
 @end

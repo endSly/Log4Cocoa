@@ -49,7 +49,7 @@
 		} else {
 			[self setStandardErr];
 		}
-		[self set_layout:aLayout];
+		[self setLayout:aLayout];
 	}
 	return self;
 }

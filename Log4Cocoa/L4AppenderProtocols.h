@@ -13,13 +13,17 @@
 /**
  * Accessor for unique name attribute for this appender.
  */
-@property (readwrite) NSString * _name;
+@property (readwrite) NSString * name;
 
 /**
  * Accessor for layout of this appender.
  */
-@property (readwrite) L4Layout * _layout;
+@property (readwrite) L4Layout * layout;
 
+/**
+ * Returns if the appender requires layout.
+ */
+@property (readonly) BOOL requiresLayout;
 
 /**
  * Initializes an instance from a collection of configuration properties.  
@@ -52,15 +56,9 @@
 - (void)clearFilters;
 
 /**
- * it is a programing error to append to a close appender.
+ * It is a programing error to append to a close appender.
  */
 - (void)close;
-
-/**
- * Returns if the appender requires layout.
- * @return YES if the appender requires layout, NO if it does not.
- */
-- (BOOL)requiresLayout;
 
 @end
 

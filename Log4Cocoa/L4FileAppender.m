@@ -49,7 +49,7 @@
     self = [super init];
 	if (self != nil)
 	{
-		[self set_layout:aLayout];
+		[self setLayout:aLayout];
 		fileName = [aName stringByExpandingTildeInPath];
 		append = flag;
 		[self setupFile];
