@@ -218,26 +218,13 @@
 			children = (
 				0DDBCE16185C1C3100B42744 /* Layouts */,
 				0DDBCE15185C1BCE00B42744 /* Appenders */,
-				0DE9851E14C36A7F001E0E1A /* L4AppenderAttachable.h */,
-				0DE9851F14C36A7F001E0E1A /* L4AppenderAttachable.m */,
-				0DE9852314C36A7F001E0E1A /* L4BasicConfigurator.h */,
-				0DE9852414C36A7F001E0E1A /* L4BasicConfigurator.m */,
-				0DE9852914C36A7F001E0E1A /* L4DenyAllFilter.h */,
-				0DE9852A14C36A7F001E0E1A /* L4DenyAllFilter.m */,
-				0DE9852D14C36A7F001E0E1A /* L4Filter.h */,
-				0DE9852E14C36A7F001E0E1A /* L4Filter.m */,
+				0DDBCE17185C7DD300B42744 /* Configurators */,
+				0DDBCE18185C7E6200B42744 /* Loggers */,
+				0DDBCE19185CAB3C00B42744 /* Filters */,
 				0DE9853314C36A7F001E0E1A /* L4Level.h */,
 				0DE9853414C36A7F001E0E1A /* L4Level.m */,
-				0DE9853514C36A7F001E0E1A /* L4LevelMatchFilter.h */,
-				0DE9853614C36A7F001E0E1A /* L4LevelMatchFilter.m */,
-				0DE9853714C36A7F001E0E1A /* L4LevelRangeFilter.h */,
-				0DE9853814C36A7F001E0E1A /* L4LevelRangeFilter.m */,
 				0DE9853914C36A7F001E0E1A /* L4LogEvent.h */,
 				0DE9853A14C36A7F001E0E1A /* L4LogEvent.m */,
-				0DE9853B14C36A7F001E0E1A /* L4Logger.h */,
-				0DE9853C14C36A7F001E0E1A /* L4Logger.m */,
-				0DE9853D14C36A7F001E0E1A /* L4LoggerNameMatchFilter.h */,
-				0DE9853E14C36A7F001E0E1A /* L4LoggerNameMatchFilter.m */,
 				0DE9853F14C36A7F001E0E1A /* L4LoggerProtocols.h */,
 				0DE9854014C36A7F001E0E1A /* L4LoggerStore.h */,
 				0DE9854114C36A7F001E0E1A /* L4LoggerStore.m */,
@@ -245,18 +232,6 @@
 				0DE9854314C36A7F001E0E1A /* L4Logging.m */,
 				0DE9854414C36A7F001E0E1A /* L4LogLog.h */,
 				0DE9854514C36A7F001E0E1A /* L4LogLog.m */,
-				0DE9854614C36A7F001E0E1A /* L4PatternLayout.h */,
-				0DE9854714C36A7F001E0E1A /* L4PatternLayout.m */,
-				0DE9854814C36A7F001E0E1A /* L4Properties.h */,
-				0DE9854914C36A7F001E0E1A /* L4Properties.m */,
-				0DE9854A14C36A7F001E0E1A /* L4PropertyConfigurator.h */,
-				0DE9854B14C36A7F001E0E1A /* L4PropertyConfigurator.m */,
-				0DE9854C14C36A7F001E0E1A /* L4RollingFileAppender.h */,
-				0DE9854D14C36A7F001E0E1A /* L4RollingFileAppender.m */,
-				0DE9854E14C36A7F001E0E1A /* L4RootLogger.h */,
-				0DE9854F14C36A7F001E0E1A /* L4RootLogger.m */,
-				0DE9855214C36A7F001E0E1A /* L4StringMatchFilter.h */,
-				0DE9855314C36A7F001E0E1A /* L4StringMatchFilter.m */,
 				0DE9855814C36A7F001E0E1A /* Log4Cocoa.h */,
 				0DE9855914C36A7F001E0E1A /* Log4CocoaDefines.h */,
 				0DE9855A14C36A7F001E0E1A /* NSObject+Log4Cocoa.h */,
@@ -297,6 +272,8 @@
 			isa = PBXGroup;
 			children = (
 				0DE9852014C36A7F001E0E1A /* L4AppenderProtocols.h */,
+				0DE9851E14C36A7F001E0E1A /* L4AppenderAttachable.h */,
+				0DE9851F14C36A7F001E0E1A /* L4AppenderAttachable.m */,
 				0DE9852114C36A7F001E0E1A /* L4AppenderSkeleton.h */,
 				0DE9852214C36A7F001E0E1A /* L4AppenderSkeleton.m */,
 				0DE9855414C36A7F001E0E1A /* L4WriterAppender.h */,
@@ -305,6 +282,8 @@
 				0DE9852C14C36A7F001E0E1A /* L4FileAppender.m */,
 				0DE9852514C36A7F001E0E1A /* L4ConsoleAppender.h */,
 				0DE9852614C36A7F001E0E1A /* L4ConsoleAppender.m */,
+				0DE9854C14C36A7F001E0E1A /* L4RollingFileAppender.h */,
+				0DE9854D14C36A7F001E0E1A /* L4RollingFileAppender.m */,
 				0DE9852714C36A7F001E0E1A /* L4DailyRollingFileAppender.h */,
 				0DE9852814C36A7F001E0E1A /* L4DailyRollingFileAppender.m */,
 			);
@@ -322,8 +301,53 @@
 				0DE9853014C36A7F001E0E1A /* L4JSONLayout.m */,
 				0DE9855614C36A7F001E0E1A /* L4XMLLayout.h */,
 				0DE9855714C36A7F001E0E1A /* L4XMLLayout.m */,
+				0DE9854614C36A7F001E0E1A /* L4PatternLayout.h */,
+				0DE9854714C36A7F001E0E1A /* L4PatternLayout.m */,
 			);
 			name = Layouts;
+			sourceTree = "<group>";
+		};
+		0DDBCE17185C7DD300B42744 /* Configurators */ = {
+			isa = PBXGroup;
+			children = (
+				0DE9854814C36A7F001E0E1A /* L4Properties.h */,
+				0DE9854914C36A7F001E0E1A /* L4Properties.m */,
+				0DE9854A14C36A7F001E0E1A /* L4PropertyConfigurator.h */,
+				0DE9854B14C36A7F001E0E1A /* L4PropertyConfigurator.m */,
+				0DE9852314C36A7F001E0E1A /* L4BasicConfigurator.h */,
+				0DE9852414C36A7F001E0E1A /* L4BasicConfigurator.m */,
+			);
+			name = Configurators;
+			sourceTree = "<group>";
+		};
+		0DDBCE18185C7E6200B42744 /* Loggers */ = {
+			isa = PBXGroup;
+			children = (
+				0DE9853B14C36A7F001E0E1A /* L4Logger.h */,
+				0DE9853C14C36A7F001E0E1A /* L4Logger.m */,
+				0DE9854E14C36A7F001E0E1A /* L4RootLogger.h */,
+				0DE9854F14C36A7F001E0E1A /* L4RootLogger.m */,
+			);
+			name = Loggers;
+			sourceTree = "<group>";
+		};
+		0DDBCE19185CAB3C00B42744 /* Filters */ = {
+			isa = PBXGroup;
+			children = (
+				0DE9852D14C36A7F001E0E1A /* L4Filter.h */,
+				0DE9852E14C36A7F001E0E1A /* L4Filter.m */,
+				0DE9852914C36A7F001E0E1A /* L4DenyAllFilter.h */,
+				0DE9852A14C36A7F001E0E1A /* L4DenyAllFilter.m */,
+				0DE9853514C36A7F001E0E1A /* L4LevelMatchFilter.h */,
+				0DE9853614C36A7F001E0E1A /* L4LevelMatchFilter.m */,
+				0DE9853714C36A7F001E0E1A /* L4LevelRangeFilter.h */,
+				0DE9853814C36A7F001E0E1A /* L4LevelRangeFilter.m */,
+				0DE9855214C36A7F001E0E1A /* L4StringMatchFilter.h */,
+				0DE9855314C36A7F001E0E1A /* L4StringMatchFilter.m */,
+				0DE9853D14C36A7F001E0E1A /* L4LoggerNameMatchFilter.h */,
+				0DE9853E14C36A7F001E0E1A /* L4LoggerNameMatchFilter.m */,
+			);
+			name = Filters;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

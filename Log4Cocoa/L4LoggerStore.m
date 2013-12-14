@@ -61,7 +61,7 @@
 		loggers = [[NSMutableArray alloc] init];
 
 		[loggers addObject:root];
-		[root setLoggerRepository:self];
+		root.repository = self;
 		[self setThreshold:[L4Level all]];
 
 		emittedNoAppenderWarning = NO;
@@ -139,7 +139,7 @@
             // a new leaf node, since no placeholder node was found.
             //
             theLogger = [aFactory newLoggerInstance:aName];
-            [theLogger setLoggerRepository:self];
+            theLogger.repository = self;
             repository[aName] = theLogger;
             [self updateParentsOfLogger:theLogger];
             [loggers addObject:theLogger];
@@ -153,7 +153,7 @@
             // and to point to their parent.
             //
             theLogger = [aFactory newLoggerInstance:aName];
-            [theLogger setLoggerRepository:self];
+            theLogger.repository = self;
             repository[aName] = theLogger;
             [self updateChildren:theNode withParent:theLogger ];
             [self updateParentsOfLogger:theLogger];

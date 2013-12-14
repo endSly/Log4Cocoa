@@ -23,62 +23,21 @@ static L4LoggerStore *_loggerRepository = nil;
 	[L4LogEvent startTime];
 }
 
-- init
+- (id)init
 {
 	return nil; // never use this constructor
 }
 
-- (id) initWithName:(NSString *) aName
+- (id)initWithName:(NSString *) aName
 {
 	self = [super init];
-	if( self != nil ) {
-		name = [aName copy];
-		additivity = YES;
+    
+	if (self) {
+		_name = [aName copy];
+		_additivity = YES;
 	}
 	
 	return self;
-}
-
-
-- (BOOL) additivity
-{
-	return additivity;
-}
-
-- (void) setAdditivity:(BOOL) newAdditivity
-{
-    additivity = newAdditivity;
-}
-
-- (L4Logger *) parent
-{
-	return parent;
-}
-
-- (void) setParent:(L4Logger *) theParent
-{
-    @synchronized(self) {
-        parent = theParent;
-    }
-}
-
-- (NSString *) name
-{
-	return name;
-}
-
-- (id <L4LoggerRepository>) loggerRepository
-{
-	return repository;
-}
-
-- (void) setLoggerRepository:(id <L4LoggerRepository>) aRepository
-{
-    @synchronized(self) {
-        if( repository != aRepository ) {
-            repository = aRepository;
-        }
-    }
 }
 
 // NO METHOD CALLING - PERFORMANCE TWEAKED METHOD
@@ -86,35 +45,18 @@ static L4LoggerStore *_loggerRepository = nil;
 {
 	L4Level *effectiveLevel = nil;
     @synchronized(self) {
-        L4Logger *aLogger = self;
-        while (aLogger != nil) {
-            if((aLogger->level) != nil) {
-                effectiveLevel = aLogger->level;
+        for (L4Logger *logger = self; logger; logger = logger.parent) {
+            if(logger.level) {
+                effectiveLevel = logger.level;
                 break;
             }
-            aLogger = aLogger->parent;
         }
     }
     
-    if (effectiveLevel == nil) {
+    if (!effectiveLevel) {
         [L4LogLog error:@"Root Logger Not Found!"];
     }
 	return effectiveLevel;
-}
-
-- (L4Level *) level
-{
-	return level;
-}
-
-/* nil is ok, because then we just pick up the parent's level */
-- (void) setLevel:(L4Level *) aLevel
-{
-    @synchronized(self) {
-    	if( level != aLevel ) {
-		    level = aLevel;
-	    }
-	}
 }
 
 /* ********************************************************************* */
@@ -138,7 +80,7 @@ static L4LoggerStore *_loggerRepository = nil;
     }
     
     if( writes == 0 ) {
-        [repository emitNoAppenderWarning:self];
+        [self.repository emitNoAppenderWarning:self];
     }
 }
 
@@ -242,7 +184,7 @@ static L4LoggerStore *_loggerRepository = nil;
 
 - (BOOL) isEnabledFor:(L4Level *) aLevel
 {
-	if([repository isDisabled:[aLevel intValue]]) {
+	if([self.repository isDisabled:[aLevel intValue]]) {
 		return NO;
 	}
 	return [aLevel isGreaterOrEqual:[self effectiveLevel]];
@@ -271,7 +213,7 @@ static L4LoggerStore *_loggerRepository = nil;
 			  level:(L4Level *) aLevel
 		  exception:(NSException *) e
 {
-	if([repository isDisabled:[aLevel intValue]]) {
+	if ([self.repository isDisabled:[aLevel intValue]]) {
 		return;
 	}
 	

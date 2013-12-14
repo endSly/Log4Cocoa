@@ -14,13 +14,10 @@
  *
  * If levelToMatch is set to ALL, then any L4LoggingEvent is a match.
  */
-@interface L4LevelMatchFilter : L4Filter {
-    BOOL acceptOnMatch; /**< YES to allow logging on a match of levelToMatch, NO to prevent logging on a match. */
-    L4Level *__weak levelToMatch; /**<  The level to test against. */
-}
+@interface L4LevelMatchFilter : L4Filter
 
-@property (nonatomic) BOOL acceptOnMatch;   /**< Accessor for the acceptOnMatch property. */
-@property (nonatomic, weak) L4Level * levelToMatch; /**< Accessor for the levelToMatch property. */
+@property (nonatomic) BOOL acceptOnMatch;   /**< YES to allow logging on a match of levelToMatch, NO to prevent logging on a match. */
+@property (nonatomic, weak) L4Level * levelToMatch; /**<  The level to test against. */
 
 /**
  * Initializes an instance from properties.  The properties supported are:

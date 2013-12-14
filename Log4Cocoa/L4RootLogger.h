@@ -7,8 +7,7 @@
  * This class serves as the rot of the logging infrastructure; the logger that is typically
  * the first created when the logging system is initialized.
  */
-@interface L4RootLogger : L4Logger {
-}
+@interface L4RootLogger : L4Logger
 
 /**
  * Initialize the new instace with a specified level.

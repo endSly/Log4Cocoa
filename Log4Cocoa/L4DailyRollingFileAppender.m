@@ -22,7 +22,7 @@ NSString *const L4RollingFrequencyMinutely = @"L4RollingFrequencyMinutely";
 /**
  * Private methods for the L4DailyRollingFileAppender class.
  */
-@interface L4DailyRollingFileAppender (Private)
+@interface L4DailyRollingFileAppender ()
 /**
  * Accessor for the lastRolloverDate property.
  */
@@ -60,9 +60,7 @@ NSString *const L4RollingFrequencyMinutely = @"L4RollingFrequencyMinutely";
 - (void)dealloc
 {
 	_lastRolloverDate = nil;
-    
     _rollingFrequency = nil;
-	
 }
 
 - (NSString *)rollingFrequency
@@ -160,15 +158,15 @@ NSString *const L4RollingFrequencyMinutely = @"L4RollingFrequencyMinutely";
         } else if ([self.rollingFrequency isEqualToString:L4RollingFrequencyDaily]) {
             doRollover = ([nowDateComponents year] != [lastDateComponents year]) 
             || ([nowDateComponents month] != [lastDateComponents month])
-            || ([nowDateComponents day] != [lastDateComponents day])
-            || (([nowDateComponents hour] / 12) != ([lastDateComponents hour] / 12));
+            || ([nowDateComponents day] != [lastDateComponents day]);
             
             format = @"yyyy-MM-dd";
             
         } else if ([self.rollingFrequency isEqualToString:L4RollingFrequencyHalfDaily]) {
             doRollover = ([nowDateComponents year] != [lastDateComponents year]) 
             || ([nowDateComponents month] != [lastDateComponents month])
-            || ([nowDateComponents day] != [lastDateComponents day]); 
+            || ([nowDateComponents day] != [lastDateComponents day])
+            || (([nowDateComponents hour] / 12) != ([lastDateComponents hour] / 12));
             
             format = @"yyyy-MM-dd-HH";
             
@@ -193,7 +191,7 @@ NSString *const L4RollingFrequencyMinutely = @"L4RollingFrequencyMinutely";
         if (doRollover) {
             // generate the new filename extension
             NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-            [dateFormatter setDateFormat:format];
+            dateFormatter.dateFormat = format;
             NSString *filenameExtension = [dateFormatter stringFromDate:[self lastRolloverDate]];
             
             // generate the new rollover log file name

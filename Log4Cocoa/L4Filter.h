@@ -6,11 +6,11 @@
 /**
  * An enumeration of the allowed L4Filter actions.
  */
-typedef enum {
+typedef NS_ENUM(NSUInteger, L4FilterResult) {
 	L4FilterDeny	= -1, /**< Prevent the request to log the event. */
 	L4FilterNeutral = 0,  /**< Do not affect the request to log the event. */
 	L4FilterAccept  = 1   /**< Allow the request to log he event. */
-} L4FilterResult;
+};
 
 /**
  * Filter for log events.
@@ -18,9 +18,7 @@ typedef enum {
  * the only way a flter would actually be used would be to subclass it and over-ride the 
  * decide:method.
  */
-@interface L4Filter : NSObject  {
-    L4Filter *next;     /**< The next filter in the chain.*/
-}
+@interface L4Filter : NSObject
 
 @property (strong) L4Filter * next; /**< Accessor for the next filter. */
 
@@ -29,7 +27,7 @@ typedef enum {
  * @param initProperties the proterties to use.
  * @throw L4PropertyMissingException if a required property is missing.
  */
-- (id) initWithProperties:(L4Properties *) initProperties;
+- (id)initWithProperties:(L4Properties *)initProperties;
 
 /**
  * Decide what this filter should do with event.
@@ -37,7 +35,7 @@ typedef enum {
  * @param event the event to check.
  * @return one of L4FilterDeny, L4FilterNeutral, or L4FilterAccept. 
  */
-- (L4FilterResult) decide:(L4LogEvent *) event;
+- (L4FilterResult)decide:(L4LogEvent *)event;
 
 @end
 // For copyright & license, see LICENSE.

@@ -8,15 +8,13 @@
 
 @implementation L4Filter
 
-@synthesize next;
-
-- (id) initWithProperties:(L4Properties *) initProperties
+- (id)initWithProperties:(L4Properties *)initProperties
 {
 	return [super init];
 }
 
 
-- (L4FilterResult) decide:(L4LogEvent *) event
+- (L4FilterResult)decide:(L4LogEvent *)event
 {
 	return L4FilterNeutral;
 }

@@ -8,9 +8,6 @@
 
 @implementation L4LevelMatchFilter
 
-@synthesize acceptOnMatch;
-@synthesize levelToMatch;
-
 - (id) initWithAcceptOnMatch:(BOOL)shouldAccept andLevelToMatch:(L4Level *)aLevel
 {
 	self = [super init];
@@ -56,8 +53,8 @@
 {
 	// Default stance.
 	L4FilterResult action = L4FilterNeutral;
-	if ([[event level] intValue] == [levelToMatch intValue] || [levelToMatch intValue] == [[L4Level all] intValue]){
-		action =  acceptOnMatch ? L4FilterAccept :L4FilterDeny;
+	if (event.level.intValue == self.levelToMatch.intValue || self.levelToMatch.intValue == [L4Level all].intValue){
+		action =  self.acceptOnMatch ? L4FilterAccept : L4FilterDeny;
 	}
 	
 	return action;

@@ -24,84 +24,47 @@
  *  </dl>
  */
 @interface L4Logger : NSObject {
-    NSString *name;         /**< The name of this logger.*/
-    L4Level *level;         /**< The level of this logger. Nil means use parent's*/
-    L4Logger *parent;       /**< The parent of this logger.*/
-    id <L4LoggerRepository> repository;     /**< Don't know.*/
-    /**
-     * Flag for if log messages are additive.  If YES, logging events are set to parent loggers.  
-     * If NO, parents are not called. 
-     */
-    BOOL additivity;
     L4AppenderAttachable *aai;  /**< What does the actual appending for this logger.*/
 }
+
+/**
+ * The level of this logger. Nil means use parent's
+ */
+@property (strong) L4Level * level;
+
+/**
+ * The name of this logger.
+ */
+@property (readonly) NSString * name;
+
+/**
+ * The parent of this logger.
+ */
+@property (strong) L4Logger * parent;
+
+/**
+ * Flag for if log messages are additive.  If YES, logging events are set to parent loggers.
+ * If NO, parents are not called.
+ */
+@property BOOL additivity;
+
+/**
+ * Acccessor for this loggers repository.
+ */
+@property (strong) id <L4LoggerRepository> repository;
 
 
 /**
  * DON'T USE, only for use of log manager
  * @param loggerName the name of this logger.
  */
-- (id) initWithName:(NSString *) loggerName;
-
-/**
- * Accessor for additivity.
- * @return YES if this logger is additive, NO if it is not.
- */
-- (BOOL) additivity;
-
-/**
- * Mutator for additivity.
- * @param newAdditivity YES if this logger is to be additive, NO if it is not.
- */
-- (void) setAdditivity:(BOOL) newAdditivity;
-
-/**
- * Accessor for the loggers parent.
- * @return parent; root Logger returs nil.
- */
-- (L4Logger *) parent;
-
-/**
- * Mutator for this loggers parent.
- * @param theParent the new parent.
- */
-- (void) setParent:(L4Logger *) theParent;
-
-/**
- * Accessor for the name attribute.
- * @return the name for this logger.
- */
-- (NSString *) name;
-
-/**
- * Acccessor for this loggers repository.
- * @return the repository for this logger.
- */
-- (id <L4LoggerRepository>) loggerRepository;
-
-/**
- * The mutator for this loggers repository.
- * @param aRepository the new value.
- */
-- (void) setLoggerRepository:(id <L4LoggerRepository>) aRepository;
+- (id) initWithName:(NSString *)loggerName;
 
 /**
  * The efective level for this logger.  Events with a level below this will not be logged.
  * @return the minimum level this logger will log.
  */
 - (L4Level *) effectiveLevel;
-
-/**
- * Accessor for the level of this logger.
- * @return the level of this logger.
- */
-- (L4Level *) level;
-
-/**
- * Mutator for the level of this logger.
- * @param aLevel the new level for this logger.
- */
-- (void) setLevel:(L4Level *) aLevel; // nil is ok, because then we just pick up the parent's level
 
 /* ********************************************************************* */
 #pragma mark AppenderRelatedMethods methods
