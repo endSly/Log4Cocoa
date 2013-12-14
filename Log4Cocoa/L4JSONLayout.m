@@ -24,17 +24,25 @@
      \t     \"message\":\"%@\"\n
      }\n
      */
-    return [NSString stringWithFormat:@"{\n\t\"logger\":\"%@\"\n\t\"level\":\"%@\",\n\t\"time\":\"%ldms\",\n\t\"file\":\"%@:%@\",\n\t\"method\":\"%@\",\n\t\"message\":\"%@\"\n}\n",
-            [[event logger] name],
-            [[event level] stringValue], 
-            [event millisSinceStart],
-            [event fileName],
-            [[event lineNumber] stringValue],
-            [event methodName],
-            [event renderedMessage]];
+    return [NSString stringWithFormat:
+            @"{\n"
+            "t\"logger\":\"%@\",\n"
+            "\t\"level\":\"%@\",\n"
+            "\t\"time\":\"%ldms\",\n"
+            "\t\"file\":\"%@:%@\",\n"
+            "\t\"method\":\"%@\",\n"
+            "\t\"message\":\"%@\"\n"
+            "}\n",
+            event.logger.name,
+            event.level.stringValue,
+            event.millisSinceStart,
+            event.fileName,
+            event.lineNumber.stringValue,
+            event.methodName,
+            event.renderedMessage];
 }
 
-- (NSString *) contentType {
+- (NSString *)contentType {
     return @"application/json";
 }
 

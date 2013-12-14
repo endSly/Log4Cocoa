@@ -5,9 +5,7 @@
 /**
  *  This class represents formating a JSON object for error.
  */
-@interface L4JSONLayout : L4Layout {
-    
-}
+@interface L4JSONLayout : L4Layout
 
 + (L4JSONLayout *) JSONLayout;
 

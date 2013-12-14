@@ -8,37 +8,37 @@
 
 @implementation L4Layout
 
-+ (L4Layout *) simpleLayout
++ (L4Layout *)simpleLayout
 {
 	return [[L4SimpleLayout alloc] init];
 }
 
-- (id) initWithProperties:(L4Properties *)initProperties
+- (id)initWithProperties:(L4Properties *)initProperties
 {
    return [super init];
 }
 
-- (NSString *) format:(L4LogEvent *)event
+- (NSString *)format:(L4LogEvent *)event
 {
 	return [event description];
 }
 
-- (NSString *) contentType
+- (NSString *)contentType
 {
 	return @"text/plain";
 }
 
-- (NSString *) header
+- (NSString *)header
 {
 	return nil;
 }
 
-- (NSString *) footer
+- (NSString *)footer
 {
 	return nil;
 }
 
-- (BOOL) ignoresExceptions
+- (BOOL)ignoresExceptions
 {
 	return YES;
 }
