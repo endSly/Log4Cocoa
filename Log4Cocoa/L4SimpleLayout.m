@@ -8,15 +8,15 @@
 
 @implementation L4SimpleLayout
 
-- (NSString *) format: (L4LogEvent *) anEvent
+- (NSString *)format:(L4LogEvent *)event
 {
 	return [NSString stringWithFormat:@"%@ - %ldms (%@:%@) %@ - %@",
-				[[anEvent level] stringValue], 
-				[anEvent millisSinceStart],
-				[anEvent fileName],
-				[[anEvent lineNumber] stringValue],
-				[anEvent methodName],
-				[anEvent renderedMessage]];
+            event.level.stringValue,
+            event.millisSinceStart,
+            event.fileName,
+            event.lineNumber,
+            event.methodName,
+            event.renderedMessage];
 }
 
 @end

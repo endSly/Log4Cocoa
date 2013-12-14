@@ -7,6 +7,6 @@
  */
 @interface L4JSONLayout : L4Layout
 
-+ (L4JSONLayout *) JSONLayout;
++ (instancetype)JSONLayout;
 
 @end

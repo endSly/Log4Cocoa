@@ -9,20 +9,22 @@
 
 @implementation L4JSONLayout
 
-+ (L4JSONLayout *) JSONLayout {
++ (instancetype)JSONLayout
+{
     return [[L4JSONLayout alloc] init];
 }
 
-- (NSString *) format:(L4LogEvent *) event {
+- (NSString *)format:(L4LogEvent *)event
+{
     /*
-     {\n
-     \t     \"logger\":\"%@\"\n
-     \t     \"level\":\"%@\"\n
-     \t     \"time\":\"%ldms\"\n
-     \t     \"file\":\"%@:%@\"\n
-     \t     \"method\":\"%@\"\n
-     \t     \"message\":\"%@\"\n
-     }\n
+     {
+          "logger": "%@"
+          "level": "%@"
+          "time": "%ldms"
+          "file": "%@:%@"
+          "method": "%@"
+          "message": "%@"
+     }
      */
     return [NSString stringWithFormat:
             @"{\n"

@@ -3,10 +3,8 @@
 
 #import "L4Layout.h"
 
-@interface L4XMLLayout : L4Layout {
-    
-}
+@interface L4XMLLayout : L4Layout
 
-+ (L4XMLLayout *) XMLLayout;
++ (instancetype)XMLLayout;
 
 @end

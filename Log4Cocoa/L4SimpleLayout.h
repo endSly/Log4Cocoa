@@ -1,3 +1,5 @@
+// For copyright & license, see LICENSE.
+
 #import <Foundation/Foundation.h>
 #import "L4Layout.h"
 
@@ -13,8 +15,8 @@
  * 5) the name of the method the event was logged from.
  * 6) the message of the event, if supplied to the log message.
  */
-@interface L4SimpleLayout : L4Layout {
-}
+@interface L4SimpleLayout : L4Layout
+
 
 @end
-// For copyright & license, see LICENSE.
+
