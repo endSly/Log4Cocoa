@@ -4,107 +4,80 @@
 
 #import "L4AppenderAttachable.h"
 
+NSString * const kL4AppenderAddedEvent   = @"kL4AppenderAddedEvent";
+NSString * const kL4AppenderRemovedEvent = @"kL4AppenderRemovedEvent";
 
-@implementation L4AppenderAttachable
+@implementation L4AppenderAttachable {
+	NSMutableArray  * _appenderList; /**< The collection of log appenders.*/
+}
 
-- (NSUInteger) appendLoopOnAppenders:(L4LogEvent *) event
+- (NSUInteger)appendLoopOnAppenders:(L4LogEvent *)event
 {
-	NSUInteger size = 0;
-
     @synchronized(self) {
-        if( appenderList != nil ) {
-            int i;
-            size = [appenderList count];
-            for( i = 0; i < size; i++ ) {
-                [appenderList[i] doAppend:event];
-            }
-        }
+        for (id <L4Appender> appender in _appenderList)
+            [appender doAppend:event];
     }
-	return size;
+	return _appenderList.count;
 }
 
-- (void) dealloc
-{
-	appenderList = nil;
-}
+#pragma mark Appender Attachable Methods protocol methods
 
-/* ********************************************************************* */
-#pragma mark L4AppenderAttachableMethods protocol methods
-/* ********************************************************************* */
-- (void) addAppender:(id <L4Appender>) newAppender
+- (void)addAppender:(id <L4Appender>)appender
 {
-	if( newAppender == nil ) {
-		return; // sanity check
-	}
+	if (!appender) // sanity check
+		return;
 	
     @synchronized(self) {
-        if( appenderList == nil ) {
+        if (!_appenderList) {
             // only place appenderList array is recreated if its nil.
-            appenderList = [[NSMutableArray alloc] init];
+            _appenderList = [NSMutableArray arrayWithObject:appender];
+            return;
         }
         
-        if(![appenderList containsObject:newAppender]) {
-            [appenderList addObject:newAppender];
-            [[NSNotificationCenter defaultCenter] postNotificationName:APPENDER_ADDED_EVENT object:newAppender];
+        if(![_appenderList containsObject:appender]) {
+            [_appenderList addObject:appender];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kL4AppenderAddedEvent object:appender];
         }
     }
 }
 
-- (NSArray *) allAppenders
+- (NSArray *)allAppenders
 {
-	return appenderList;
+	return _appenderList;
 }
 
-- (id <L4Appender>) appenderWithName:(NSString *) aName
+- (id <L4Appender>)appenderWithName:(NSString *)name
 {
-	id <L4Appender> anAppender = nil;
-    @synchronized(self) {
-        NSEnumerator *enumerator = [appenderList objectEnumerator];
-        
-        while ((anAppender = (id <L4Appender>)[enumerator nextObject])) {
-            if( [[anAppender name] isEqualToString:aName ]) {
-                break;
-            }
-        }
-    }
-	return anAppender;
+	return [_appenderList filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name = %@", name]].lastObject;
 }
 
-- (BOOL) isAttached:(id <L4Appender>) appender
+- (BOOL)isAttached:(id <L4Appender>)appender
 {
-	if((appender == nil) || (appenderList == nil)) {
+	if (!appender || !_appenderList)
 		return NO; // short circuit the test
-	}
-	return [appenderList containsObject:appender]; 
+	
+	return [_appenderList containsObject:appender]; 
 }
 
-- (void) removeAppenderWithName:(NSString *) aName
+- (void) removeAppenderWithName:(NSString *)name
 {
-	[self removeAppender:[self appenderWithName:aName]];
+	[self removeAppender:[self appenderWithName:name]];
 }
 
 - (void) removeAppender:(id <L4Appender>) appender
 {
-	[appenderList removeObject:appender];
-	[[NSNotificationCenter defaultCenter] postNotificationName:APPENDER_REMOVED_EVENT object:appender];
+	[_appenderList removeObject:appender];
+	[[NSNotificationCenter defaultCenter] postNotificationName:kL4AppenderRemovedEvent object:appender];
 }
 
 - (void) removeAllAppenders
 {
     @synchronized(self) {
-        NSEnumerator *enumerator = [appenderList objectEnumerator];
-        id <L4Appender> anAppender;
-        
-        while ((anAppender = (id <L4Appender>)[enumerator nextObject]))
-        {
-            // why only call close in removeAllAppenders & not removeAppender:????
-            // just doing it like they did it in Log4J ... will figure out later.
-            //
-            [anAppender close];
-            [[NSNotificationCenter defaultCenter] postNotificationName:APPENDER_REMOVED_EVENT object:anAppender];
+        for (id <L4Appender> appender in _appenderList) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:kL4AppenderRemovedEvent object:appender];
         }
-        [appenderList removeAllObjects];
-        appenderList = nil;
+        [_appenderList removeAllObjects];
+        _appenderList = nil;
     }
 }
 
