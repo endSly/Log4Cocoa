@@ -1,3 +1,5 @@
+// For copyright & license, see LICENSE.
+
 #import <Foundation/Foundation.h>
 
 @class L4Logger, L4Filter, L4Layout, L4LogEvent, L4Properties;
@@ -7,69 +9,58 @@
  * This formal protocol defines the messages a class used for appending needs to support.
  */
 @protocol L4Appender <NSObject>
+
+/**
+ * Accessor for unique name attribute for this appender.
+ */
+@property (readwrite) NSString * name;
+
+/**
+ * Accessor for layout of this appender.
+ */
+@property (readwrite) L4Layout * layout;
+
+
 /**
  * Initializes an instance from a collection of configuration properties.  
  * For more information on the specific appender properties, see the documentation for the particular class.
  * @param initProperties the properties to use.
  */
-- (id) initWithProperties:(L4Properties *) initProperties;
+- (id)initWithProperties:(L4Properties *)initProperties;
 
 /**
  * Appender log this event.
  * @param anEvent the event to append.
  */
-- (void) doAppend:(L4LogEvent *) anEvent;
+- (void)doAppend:(L4LogEvent *)anEvent;
 
 /**
  * Appends to the end of list.
  * @param newFilter the filter to add.
  */
-- (void) appendFilter:(L4Filter *) newFilter;
+- (void)appendFilter:(L4Filter *)newFilter;
 
 /**
  * Accessor for the head filter (the first in the list).
  * @return first filter or nil if there are none.
  */
-- (L4Filter *) headFilter;
+- (L4Filter *)headFilter;
 
 /**
  * Removes all filters from list.
  */
-- (void) clearFilters;
+- (void)clearFilters;
 
 /**
  * it is a programing error to append to a close appender.
  */
-- (void) close;
+- (void)close;
 
 /**
  * Returns if the appender requires layout.
  * @return YES if the appender requires layout, NO if it does not.
  */
-- (BOOL) requiresLayout;
-
-/**
- * Accessor for name attribute.
- * @return unique name of this appender.
- */
-- (NSString *) name;
-/**
- * Mutator for name attribute.
- * @param aName the name for this appender.
- */
-- (void) setName:(NSString *) aName;
-
-/**
- * Accessor for layout attribute.
- * @return layout of this appender.
- */
-- (L4Layout *) layout;
-
-/**
- * Mutator for layout attribute.
- * @param aLayout the layout for this appender.
- */
-- (void) setLayout:(L4Layout *) aLayout;
+- (BOOL)requiresLayout;
 
 @end
 
@@ -83,44 +74,44 @@
  * Adds an appender to be logged to.
  * @param newAppender the new appender to add.
  */
-- (void) addAppender:(id <L4Appender>) newAppender;
+- (void)addAppender:(id <L4Appender>)newAppender;
 
 /**
  * Accessor for the collection of log appenders.
  * @return an array of al appenders.
  */
-- (NSArray *) allAppenders;
+- (NSArray *)allAppenders;
 
 /**
  * Returns the L4Appender with the given name.
  * @param aName the name of the L4Appender of interest.
  * @return the L4Appender with the name aName, or nil if it does not exist.
  */
-- (id <L4Appender>) appenderWithName:(NSString *)aName;
+- (id <L4Appender>)appenderWithName:(NSString *)aName;
 
 /**
  * Returns a BOOL value that indicates whether the parameter has been attached to the appender list.
  * @param appender the L4Appender of interest.
  * @return YES if appender has been attached, NO otherwise.
  */
-- (BOOL) isAttached:(id <L4Appender>)appender;
+- (BOOL)isAttached:(id <L4Appender>)appender;
 
 /**
  * Clears all L4Appender instances that have been attached.
  */
-- (void) removeAllAppenders;
+- (void)removeAllAppenders;
 
 /**
  * Removes a given L4Appender from those attached.
  * @param appender the L4Appender to remove.
  */
-- (void) removeAppender:(id <L4Appender>)appender;
+- (void)removeAppender:(id <L4Appender>)appender;
 
 /**
  * Removes a L4Appender with the given name from those attached.
  * @param aName the name of the L4Appender to remove.
  */
-- (void) removeAppenderWithName:(NSString *)aName;
+- (void)removeAppenderWithName:(NSString *)name;
 
 @end
-// For copyright & license, see LICENSE.
+
