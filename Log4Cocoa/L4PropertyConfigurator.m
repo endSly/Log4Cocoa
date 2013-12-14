@@ -198,7 +198,7 @@
 			id <L4Appender> newAppender = [self appenderForClassName:className andProperties:appenderProperties];
 			
 			if ( newAppender != nil ) {
-				[newAppender setName:key];
+				[newAppender set_name:key];
 				appenders[key] = newAppender;
 			} else {
 				[L4LogLog error:

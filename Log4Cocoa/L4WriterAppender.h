@@ -5,8 +5,7 @@
 /**
  * An extension of L4Appender that knows how to append by writing to a filehandle.
  */
-@interface L4WriterAppender : L4AppenderSkeleton
-{
+@interface L4WriterAppender : L4AppenderSkeleton {
 	BOOL immediateFlush; /**< Flush after write; default is YES. */
 	NSStringEncoding encoding; /**< The string encoding to use; default is lossy ASCII.*/
 	BOOL lossyEncoding;	/**< Whether to allow lossy string encoding; default is YES.*/

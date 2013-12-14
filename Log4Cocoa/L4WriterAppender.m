@@ -8,7 +8,7 @@ static NSData *lineBreakChar;
 
 @implementation L4WriterAppender
 
-+ (void) initialize
++ (void)initialize
 {
     lineBreakChar = [@"\n" dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
 }
@@ -45,7 +45,7 @@ static NSData *lineBreakChar;
 {
 	if (!(self = [self init])) return nil; // call designated initializer
 	fileHandle= aFileHandle;
-	[self setLayout:aLayout];
+	[self set_layout:aLayout];
 	return self;
 }
 
@@ -71,23 +71,23 @@ static NSData *lineBreakChar;
 
 - (void) subAppend:(L4LogEvent *) anEvent
 {
-	[self write:[layout format:anEvent]];
+	[self write:[_layout format:anEvent]];
 }
 
 - (BOOL) checkEntryConditions
 {
-	if( closed ) {
+	if( _closed ) {
 		[L4LogLog warn:@"Not allowed to write to a closed appender."];
 		return NO;
 	}
 
 	if( fileHandle == nil ) {
-		[L4LogLog error:[@"No file handle for output stream set for the appender named:" stringByAppendingString:name]];
+		[L4LogLog error:[@"No file handle for output stream set for the appender named:" stringByAppendingString:_name]];
 		return NO;
 	}
 
-	if( layout == nil ) {
-		[L4LogLog error:[@"No layout set for the appender named:" stringByAppendingString:name]];
+	if( _layout == nil ) {
+		[L4LogLog error:[@"No layout set for the appender named:" stringByAppendingString:_name]];
 		return NO;
 	}
 	
@@ -141,12 +141,12 @@ static NSData *lineBreakChar;
 
 - (void) writeHeader
 {
-	[self write:[layout header]];
+	[self write:[_layout header]];
 }
 
 - (void) writeFooter
 {
-	[self write:[layout footer]];
+	[self write:[_layout footer]];
 }
 
 - (NSStringEncoding) encoding
@@ -165,8 +165,8 @@ static NSData *lineBreakChar;
 - (void) close // synchronized ... make thread safe???
 {
     @synchronized(self) {
-        if( !closed ) {
-            closed = YES;
+        if( !_closed ) {
+            _closed = YES;
             [self writeFooter];
             [self reset];
         }

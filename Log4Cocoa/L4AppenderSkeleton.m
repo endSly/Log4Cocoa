@@ -13,19 +13,19 @@
 /**
  * Private methods.
  */
-@interface L4AppenderSkeleton (Private)
+@interface L4AppenderSkeleton ()
 /**
  * Returns a new subclass of L4Filter specified by the class name, configured with the supplied properties.
  * @param filterClassName the name of the L4Filter subclass to instantiate.
  * @param filterProperties the properties used to configure the new instance.
  */
-- (L4Filter *) filterForClassName:(NSString *)filterClassName andProperties:(L4Properties *)filterProperties;
+- (L4Filter *)filterForClassName:(NSString *)filterClassName andProperties:(L4Properties *)filterProperties;
 /**
  * Returns a new subclass of L4Layout specified by the class name, configured with the supplied properties.
  * @param layoutClassName the name of the L4Layout subclass to instantiate.
  * @param layoutProperties the properties used to configure the new instance.
  */
-- (L4Layout *) layoutForClassName:(NSString *)layoutClassName andProperties:(L4Properties *)layoutProperties;
+- (L4Layout *)layoutForClassName:(NSString *)layoutClassName andProperties:(L4Properties *)layoutProperties;
 @end
 
 @implementation L4AppenderSkeleton
@@ -42,7 +42,7 @@
             L4Layout *newLayout = [self layoutForClassName:className andProperties:layoutProperties];
             
             if ( newLayout != nil ) {
-                [self setLayout:newLayout];
+                [self set_layout:newLayout];
             } else {
                 [L4LogLog error:[NSString stringWithFormat:
                                   @"Error while creating layout \"%@\".", className]];
@@ -87,21 +87,21 @@
 {
     BOOL isAsSevere = NO;
     @synchronized(self) {
-    	isAsSevere = ((threshold == nil) || ([aLevel isGreaterOrEqual:threshold]));
+    	isAsSevere = ((_threshold == nil) || ([aLevel isGreaterOrEqual:_threshold]));
     }
     return isAsSevere;
 }
 
 - (L4Level *) threshold
 {
-	return threshold;
+	return _threshold;
 }
 
 - (void) setThreshold:(L4Level *) aLevel
 {
     @synchronized(self) {
-        if( threshold != aLevel ) {
-            threshold = aLevel;
+        if( _threshold != aLevel ) {
+            _threshold = aLevel;
         }
     }
 }
@@ -164,8 +164,8 @@
     
     @synchronized(self) {
 
-        if( closed ) {
-            [L4LogLog error:[@"Attempted to append to closed appender named:" stringByAppendingString:name]];
+        if( _closed ) {
+            [L4LogLog error:[@"Attempted to append to closed appender named:" stringByAppendingString:_name]];
             isOkToAppend = NO;
         }
         
@@ -194,19 +194,19 @@
 - (void) appendFilter:(L4Filter *) newFilter
 {
     @synchronized(self) {
-        if( headFilter == nil ) {
-            headFilter = newFilter;
-            tailFilter = newFilter; // don't retain at the tail, just the head.
+        if( _headFilter == nil ) {
+            _headFilter = newFilter;
+            _tailFilter = newFilter; // don't retain at the tail, just the head.
         } else {
-            [tailFilter setNext:newFilter];
-            tailFilter = newFilter;
+            [_tailFilter setNext:newFilter];
+            _tailFilter = newFilter;
         }
     }
 }
 
 - (L4Filter *) headFilter
 {
-	return headFilter;
+	return _headFilter;
 }
 
 - (void) clearFilters
@@ -216,11 +216,11 @@
         @synchronized(self) {
             id aFilter;
 
-            for( aFilter = headFilter; aFilter != nil; aFilter = [headFilter next] ) {
+            for( aFilter = _headFilter; aFilter != nil; aFilter = [_headFilter next] ) {
                 [aFilter setNext:nil];
             }
-            headFilter = nil;
-            tailFilter = nil;
+            _headFilter = nil;
+            _tailFilter = nil;
         }
     
     }
@@ -235,30 +235,30 @@
 	return NO;
 }
 
-- (NSString *) name
+- (NSString *) _name
 {
-	return name;
+	return _name;
 }
 
-- (void) setName:(NSString *) aName
+- (void) set_name:(NSString *) aName
 {
     @synchronized(self) {
-        if( name != aName ) {
-            name = [aName copy];
+        if( _name != aName ) {
+            _name = [aName copy];
         }
     }
 }
 
-- (L4Layout *) layout
+- (L4Layout *) _layout
 {
-	return layout;
+	return _layout;
 }
 
-- (void) setLayout:(L4Layout *) aLayout
+- (void) set_layout:(L4Layout *) aLayout
 {
     @synchronized(self) {
-        if( layout != aLayout ) {
-            layout = aLayout;
+        if( _layout != aLayout ) {
+            _layout = aLayout;
         }
     }
 }

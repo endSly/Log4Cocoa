@@ -216,27 +216,17 @@
 		0D5B4EF614C36987008A00B6 /* Log4Cocoa */ = {
 			isa = PBXGroup;
 			children = (
+				0DDBCE16185C1C3100B42744 /* Layouts */,
+				0DDBCE15185C1BCE00B42744 /* Appenders */,
 				0DE9851E14C36A7F001E0E1A /* L4AppenderAttachable.h */,
 				0DE9851F14C36A7F001E0E1A /* L4AppenderAttachable.m */,
 				0DE9852014C36A7F001E0E1A /* L4AppenderProtocols.h */,
-				0DE9852114C36A7F001E0E1A /* L4AppenderSkeleton.h */,
-				0DE9852214C36A7F001E0E1A /* L4AppenderSkeleton.m */,
 				0DE9852314C36A7F001E0E1A /* L4BasicConfigurator.h */,
 				0DE9852414C36A7F001E0E1A /* L4BasicConfigurator.m */,
-				0DE9852514C36A7F001E0E1A /* L4ConsoleAppender.h */,
-				0DE9852614C36A7F001E0E1A /* L4ConsoleAppender.m */,
-				0DE9852714C36A7F001E0E1A /* L4DailyRollingFileAppender.h */,
-				0DE9852814C36A7F001E0E1A /* L4DailyRollingFileAppender.m */,
 				0DE9852914C36A7F001E0E1A /* L4DenyAllFilter.h */,
 				0DE9852A14C36A7F001E0E1A /* L4DenyAllFilter.m */,
-				0DE9852B14C36A7F001E0E1A /* L4FileAppender.h */,
-				0DE9852C14C36A7F001E0E1A /* L4FileAppender.m */,
 				0DE9852D14C36A7F001E0E1A /* L4Filter.h */,
 				0DE9852E14C36A7F001E0E1A /* L4Filter.m */,
-				0DE9852F14C36A7F001E0E1A /* L4JSONLayout.h */,
-				0DE9853014C36A7F001E0E1A /* L4JSONLayout.m */,
-				0DE9853114C36A7F001E0E1A /* L4Layout.h */,
-				0DE9853214C36A7F001E0E1A /* L4Layout.m */,
 				0DE9853314C36A7F001E0E1A /* L4Level.h */,
 				0DE9853414C36A7F001E0E1A /* L4Level.m */,
 				0DE9853514C36A7F001E0E1A /* L4LevelMatchFilter.h */,
@@ -270,10 +260,6 @@
 				0DE9855114C36A7F001E0E1A /* L4SimpleLayout.m */,
 				0DE9855214C36A7F001E0E1A /* L4StringMatchFilter.h */,
 				0DE9855314C36A7F001E0E1A /* L4StringMatchFilter.m */,
-				0DE9855414C36A7F001E0E1A /* L4WriterAppender.h */,
-				0DE9855514C36A7F001E0E1A /* L4WriterAppender.m */,
-				0DE9855614C36A7F001E0E1A /* L4XMLLayout.h */,
-				0DE9855714C36A7F001E0E1A /* L4XMLLayout.m */,
 				0DE9855814C36A7F001E0E1A /* Log4Cocoa.h */,
 				0DE9855914C36A7F001E0E1A /* Log4CocoaDefines.h */,
 				0DE9855A14C36A7F001E0E1A /* NSObject+Log4Cocoa.h */,
@@ -308,6 +294,36 @@
 				0DDBCE0F185BB18000B42744 /* Log4Cocoa Tests-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		0DDBCE15185C1BCE00B42744 /* Appenders */ = {
+			isa = PBXGroup;
+			children = (
+				0DE9852114C36A7F001E0E1A /* L4AppenderSkeleton.h */,
+				0DE9852214C36A7F001E0E1A /* L4AppenderSkeleton.m */,
+				0DE9855414C36A7F001E0E1A /* L4WriterAppender.h */,
+				0DE9855514C36A7F001E0E1A /* L4WriterAppender.m */,
+				0DE9852B14C36A7F001E0E1A /* L4FileAppender.h */,
+				0DE9852C14C36A7F001E0E1A /* L4FileAppender.m */,
+				0DE9852514C36A7F001E0E1A /* L4ConsoleAppender.h */,
+				0DE9852614C36A7F001E0E1A /* L4ConsoleAppender.m */,
+				0DE9852714C36A7F001E0E1A /* L4DailyRollingFileAppender.h */,
+				0DE9852814C36A7F001E0E1A /* L4DailyRollingFileAppender.m */,
+			);
+			name = Appenders;
+			sourceTree = "<group>";
+		};
+		0DDBCE16185C1C3100B42744 /* Layouts */ = {
+			isa = PBXGroup;
+			children = (
+				0DE9853114C36A7F001E0E1A /* L4Layout.h */,
+				0DE9853214C36A7F001E0E1A /* L4Layout.m */,
+				0DE9852F14C36A7F001E0E1A /* L4JSONLayout.h */,
+				0DE9853014C36A7F001E0E1A /* L4JSONLayout.m */,
+				0DE9855614C36A7F001E0E1A /* L4XMLLayout.h */,
+				0DE9855714C36A7F001E0E1A /* L4XMLLayout.m */,
+			);
+			name = Layouts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
