@@ -11,7 +11,11 @@
  * and as protocols can't have implementations, this class simply impliments some
  * standard, generic logging behaviour.
  */
-@interface L4AppenderSkeleton : NSObject <L4Appender>
+@interface L4AppenderSkeleton : NSObject <L4Appender> {
+    L4Filter        * _headFilter;  /**< The firsst filter used by this appender.*/
+    L4Filter __weak * _tailFilter;  /**< The last filter used by this appender.*/
+    BOOL              _closed;      /**< Tracks if this appender has been closed.*/
+}
 
 /** Accessor for the threshold attribute that tracks the level at wich this appnded will log an event.*/
 @property (nonatomic) L4Level * threshold;

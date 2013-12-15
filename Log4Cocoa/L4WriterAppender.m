@@ -21,6 +21,7 @@ static NSData *lineBreakChar;
     if (self) {
         _immediateFlush = YES;
         _lossyEncoding = YES;
+        _encoding = NSUTF8StringEncoding;
     }
     return self;
 }
@@ -40,6 +41,7 @@ static NSData *lineBreakChar;
         
         self.immediateFlush = newImmediateFlush;
         _lossyEncoding = YES;
+        _encoding = NSUTF8StringEncoding;
     }
     
     return self;
@@ -49,10 +51,11 @@ static NSData *lineBreakChar;
 {
     self = [super init];
     if (self) {
-        _fileHandle = aFileHandle;
         self.layout = aLayout;
+        _fileHandle = aFileHandle;
         _immediateFlush = YES;
         _lossyEncoding = YES;
+        _encoding = NSUTF8StringEncoding;
     }
     return self;
 }
@@ -124,7 +127,7 @@ static NSData *lineBreakChar;
                 // TODO ### -- NEED UNIX EXPERT IS THIS THE BEST WAY ??
                 // TODO - ### - NEED TO WORK ON ENCODING ISSUES (& THEN LATER LOCALIZATION)
                 //
-                [_fileHandle writeData:[string dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:_lossyEncoding]];
+                [_fileHandle writeData:[string dataUsingEncoding:_encoding allowLossyConversion:_lossyEncoding]];
                 [_fileHandle writeData:lineBreakChar];
             }
         }

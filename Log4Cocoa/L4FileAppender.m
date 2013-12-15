@@ -87,9 +87,9 @@
         
             // check the append option
             if (_append)
-                [fileHandle seekToEndOfFile];
+                [_fileHandle seekToEndOfFile];
             else
-                [fileHandle truncateFileAtOffset:0];
+                [_fileHandle truncateFileAtOffset:0];
         }
     }
 }
@@ -100,10 +100,10 @@
 - (void) closeFile
 {
     @synchronized(self) {
-        [fileHandle closeFile];
+        [_fileHandle closeFile];
         
         // Deallocate the file handle because trying to read from or write to a closed file raises exceptions.  Sending messages to nil objects are no-ops.
-        fileHandle = nil;
+        _fileHandle = nil;
     }
 }
 @end

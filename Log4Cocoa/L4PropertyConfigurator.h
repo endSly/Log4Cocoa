@@ -5,7 +5,10 @@
 /**
  * The class responsible for configuring the logging system with a properties file.
  */
-@interface L4PropertyConfigurator : NSObject
+@interface L4PropertyConfigurator : NSObject {
+    L4Properties* properties;       /**< The internal collection in which individual properties are stored.*/
+    NSMutableDictionary* appenders; /**< The internal collection in which individual configured appenders are stored.*/
+}
 
 /**
  * Returns a newly created instance of L4PropertyConfigurator set to use a given file name for the properties.

@@ -41,10 +41,7 @@
 @end
 
 
-@implementation L4PropertyConfigurator {
-    L4Properties* properties; /**< The internal collection in which individual properties are stored.*/
-    NSMutableDictionary* appenders; /**< The internal collection in which individual configured appenders are stored.*/
-}
+@implementation L4PropertyConfigurator
 
 
 #pragma mark - Class methods

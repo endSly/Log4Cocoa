@@ -31,11 +31,7 @@
 
 @end
 
-@implementation L4AppenderSkeleton {
-    L4Filter        * _headFilter;  /**< The firsst filter used by this appender.*/
-    L4Filter __weak * _tailFilter;  /**< The last filter used by this appender.*/
-    BOOL              _closed;      /**< Tracks if this appender has been closed.*/
-}
+@implementation L4AppenderSkeleton
 
 - (id)initWithProperties:(L4Properties *)initProperties
 {

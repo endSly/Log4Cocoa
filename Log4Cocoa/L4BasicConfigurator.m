@@ -7,22 +7,22 @@
 
 @implementation L4BasicConfigurator
 
-+ (L4BasicConfigurator *) basicConfigurator 
++ (L4BasicConfigurator *)basicConfigurator
 {
-     return [[L4BasicConfigurator alloc] init];
+    return [[L4BasicConfigurator alloc] init];
 }
 
 - (id) init
 {
-     self = [super initWithFileName:@""];
-     
-     if ( self != nil ) {
-          [properties setString:@"DEBUG, STDOUT" forKey:@"rootLogger"];
-          [properties setString:@"L4ConsoleAppender" forKey:@"appender.STDOUT"];
+    self = [super initWithFileName:@""];
+
+    if (self) {
+        [properties setString:@"DEBUG, STDOUT" forKey:@"rootLogger"];
+        [properties setString:@"L4ConsoleAppender" forKey:@"appender.STDOUT"];
         [properties setString:@"L4SimpleLayout" forKey:@"appender.STDOUT.layout"];
-     }
-     
-     return self;
+    }
+
+    return self;
 }
 
 @end
