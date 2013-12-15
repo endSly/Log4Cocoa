@@ -43,35 +43,35 @@ NSString *const L4RollingFrequencyMinutely = @"L4RollingFrequencyMinutely";
 
 - (id)init
 {
-	return [self initWithLayout:nil fileName:nil rollingFrequency:L4RollingFrequencyNever];
+    return [self initWithLayout:nil fileName:nil rollingFrequency:L4RollingFrequencyNever];
 }
 
 - (id)initWithLayout:(L4Layout*)aLayout fileName:(NSString*)aName rollingFrequency:(NSString *)aRollingFrequency
 {
-	self = [super initWithLayout:aLayout fileName:aName append:YES];
-	
-	if (self != nil) {
-		[self setRollingFrequency:aRollingFrequency];
-	}
-	
-	return self;
+    self = [super initWithLayout:aLayout fileName:aName append:YES];
+    
+    if (self != nil) {
+        [self setRollingFrequency:aRollingFrequency];
+    }
+    
+    return self;
 }
 
 - (void)dealloc
 {
-	_lastRolloverDate = nil;
+    _lastRolloverDate = nil;
     _rollingFrequency = nil;
 }
 
 - (NSString *)rollingFrequency
 {
-	return _rollingFrequency;
+    return _rollingFrequency;
 }
 
 - (void)setRollingFrequency:(NSString *)aRollingFrequency
-{	
-	_rollingFrequency = [aRollingFrequency copy];
-	[self setLastRolloverDate:[NSDate date]];
+{    
+    _rollingFrequency = [aRollingFrequency copy];
+    [self setLastRolloverDate:[NSDate date]];
 }
 
 /* ********************************************************************* */
@@ -97,8 +97,8 @@ NSString *const L4RollingFrequencyMinutely = @"L4RollingFrequencyMinutely";
 /* ********************************************************************* */
 - (void)subAppend:(L4LogEvent*)event
 {
-	[self rollOver];	
-	[super subAppend:event];
+    [self rollOver];    
+    [super subAppend:event];
 }
 
 /* ********************************************************************* */
@@ -106,7 +106,7 @@ NSString *const L4RollingFrequencyMinutely = @"L4RollingFrequencyMinutely";
 /* ********************************************************************* */
 - (NSDate*)lastRolloverDate
 {
-	return _lastRolloverDate;
+    return _lastRolloverDate;
 }
 
 - (void)setLastRolloverDate:(NSDate*)date
@@ -127,7 +127,7 @@ NSString *const L4RollingFrequencyMinutely = @"L4RollingFrequencyMinutely";
     if ([self.rollingFrequency isEqualToString:L4RollingFrequencyNever])
         return;
     
-	@synchronized(self) {
+    @synchronized(self) {
 
         NSDate *now = [NSDate date];
         

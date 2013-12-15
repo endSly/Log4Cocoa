@@ -17,94 +17,84 @@ static L4LoggerStore *_loggerRepository = nil;
 
 + (void) initialize
 {
-	id rootLogger = [[L4RootLogger alloc] initWithLevel:[L4Level debug]];
-	_loggerRepository = [[L4LoggerStore alloc] initWithRoot:rootLogger];
+    id rootLogger = [[L4RootLogger alloc] initWithLevel:[L4Level debug]];
+    _loggerRepository = [[L4LoggerStore alloc] initWithRoot:rootLogger];
     
-	[L4LogEvent startTime];
+    // Initialize Event timmer
+    [L4LogEvent startTime];
 }
 
 - (id)init
 {
-	return nil; // never use this constructor
+    return nil; // never use this constructor
 }
 
 - (id)initWithName:(NSString *) aName
 {
-	self = [super init];
+    self = [super init];
     
-	if (self) {
-		_name = [aName copy];
-		_additivity = YES;
-	}
-	
-	return self;
+    if (self) {
+        _name = [aName copy];
+        _additivity = YES;
+    }
+    
+    return self;
 }
 
-// NO METHOD CALLING - PERFORMANCE TWEAKED METHOD
 - (L4Level *) effectiveLevel
 {
-	L4Level *effectiveLevel = nil;
     @synchronized(self) {
         for (L4Logger *logger = self; logger; logger = logger.parent) {
-            if(logger.level) {
-                effectiveLevel = logger.level;
-                break;
-            }
+            if (logger.level)
+                return logger.level;
         }
     }
     
-    if (!effectiveLevel) {
-        [L4LogLog error:@"Root Logger Not Found!"];
-    }
-	return effectiveLevel;
+    [L4LogLog error:@"Root Logger Not Found!"];
+    return nil;
 }
 
-/* ********************************************************************* */
-#pragma mark AppenderRelatedMethods methods
-/* ********************************************************************* */
 
-- (void) callAppenders:(L4LogEvent *) event
+#pragma mark - AppenderRelatedMethods methods
+
+- (void)callAppenders:(L4LogEvent *) event
 {
-	int writes = 0;
+    int writes = 0;
     
-	@synchronized(self) {
-        
-        for( L4Logger *aLogger = self; aLogger != nil; aLogger = [aLogger parent] ) {
-            if( [aLogger aai] != nil ) {
-                writes += [[aLogger aai] appendLoopOnAppenders:event];
-            }
-            if( ![aLogger additivity] ) {
+    @synchronized(self) {
+        for (L4Logger *logger = self; logger; logger = logger.parent) {
+            if (logger.aai)
+                writes += [logger.aai appendLoopOnAppenders:event];
+            
+            if (!logger.additivity)
                 break;
-            }
         }
     }
     
-    if( writes == 0 ) {
+    if (writes == 0)
         [self.repository emitNoAppenderWarning:self];
-    }
 }
 
 - (L4AppenderAttachable *) aai
 {
-	return aai;
+    return aai;
 }
 
 - (NSArray *) allAppenders
 {
-	return [aai allAppenders];
+    return [aai allAppenders];
 }
 
 - (id <L4Appender>) appenderWithName:(NSString *) aName
 {
-	return [aai appenderWithName:aName];
+    return [aai appenderWithName:aName];
 }
 
 - (void) addAppender:(id <L4Appender>) appender
 {
     @synchronized(self) {
-        if( aai == nil ) {
+        if (!aai)
             aai = [[L4AppenderAttachable alloc] init];
-        }
         
         [aai addAppender:appender];
     }
@@ -151,129 +141,128 @@ static L4LoggerStore *_loggerRepository = nil;
     [aai removeAppenderWithName:aName];
 }
 
-/* ********************************************************************* */
-#pragma mark CoreLoggingMethods methods
-/* ********************************************************************* */
+
+#pragma mark - CoreLoggingMethods methods
 
 // ALL < TRACE < DEBUG < INFO < WARN < ERROR < FATAL < OFF
 
-- (BOOL) isTraceEnabled 
-{ 
-	return [self isEnabledFor:[L4Level trace]]; 
+- (BOOL) isTraceEnabled
+{
+    return [self isEnabledFor:[L4Level trace]];
 }
-- (BOOL) isDebugEnabled 
-{ 
-	return [self isEnabledFor:[L4Level debug]]; 
+- (BOOL) isDebugEnabled
+{
+    return [self isEnabledFor:[L4Level debug]];
 }
-- (BOOL) isInfoEnabled  
-{ 
-	return [self isEnabledFor:[L4Level info]]; 
+- (BOOL) isInfoEnabled
+{
+    return [self isEnabledFor:[L4Level info]];
 }
-- (BOOL) isWarnEnabled  
-{ 
-	return [self isEnabledFor:[L4Level warn]]; 
+- (BOOL) isWarnEnabled
+{
+    return [self isEnabledFor:[L4Level warn]];
 }
-- (BOOL) isErrorEnabled 
-{ 
-	return [self isEnabledFor:[L4Level error]]; 
+- (BOOL) isErrorEnabled
+{
+    return [self isEnabledFor:[L4Level error]];
 }
-- (BOOL) isFatalEnabled 
-{ 
-	return [self isEnabledFor:[L4Level fatal]]; 
+- (BOOL) isFatalEnabled
+{
+    return [self isEnabledFor:[L4Level fatal]];
 }
 
 - (BOOL) isEnabledFor:(L4Level *) aLevel
 {
-	if([self.repository isDisabled:[aLevel intValue]]) {
-		return NO;
-	}
-	return [aLevel isGreaterOrEqual:[self effectiveLevel]];
+    if([self.repository isDisabled:[aLevel intValue]]) {
+        return NO;
+    }
+    return [aLevel isGreaterOrEqual:[self effectiveLevel]];
 }
 
 - (void) lineNumber:(int) lineNumber
-		   fileName:(char *) fileName
-		 methodName:(char *) methodName
-			 assert:(BOOL) anAssertion
-				log:(NSString *) aMessage
+           fileName:(char *) fileName
+         methodName:(char *) methodName
+             assert:(BOOL) anAssertion
+                log:(NSString *) aMessage
 {
-	if( !anAssertion ) {
-		[self lineNumber:lineNumber 
-				fileName:fileName 
-			  methodName:methodName 
-				 message:aMessage 
-				   level:[L4Level error] 
-			   exception:nil];
-	}
+    if( !anAssertion ) {
+        [self lineNumber:lineNumber
+                fileName:fileName
+              methodName:methodName
+                 message:aMessage
+                   level:[L4Level error]
+               exception:nil];
+    }
 }
 
 - (void) lineNumber:(int) lineNumber
-		   fileName:(char *) fileName
-		 methodName:(char *) methodName
-			message:(id) aMessage
-			  level:(L4Level *) aLevel
-		  exception:(NSException *) e
+           fileName:(char *) fileName
+         methodName:(char *) methodName
+            message:(id) aMessage
+              level:(L4Level *) aLevel
+          exception:(NSException *) e
 {
-	if ([self.repository isDisabled:[aLevel intValue]]) {
-		return;
-	}
-	
-	if([aLevel isGreaterOrEqual:[self effectiveLevel]]) {
-		[self forcedLog:[L4LogEvent logger:self
+    if ([self.repository isDisabled:[aLevel intValue]]) {
+        return;
+    }
+    
+    if([aLevel isGreaterOrEqual:[self effectiveLevel]]) {
+        [self forcedLog:[L4LogEvent logger:self
                                      level:aLevel
                                 lineNumber:lineNumber
                                   fileName:fileName
                                 methodName:methodName
                                    message:aMessage
                                  exception:e]];
-	}
+    }
 }
 
 - (void) forcedLog:(L4LogEvent *) event
 {
-	[self callAppenders:event];
+    [self callAppenders:event];
 }
 
-/* ********************************************************************* */
-#pragma mark Logger management methods
-/* ********************************************************************* */
+
+#pragma mark - Logger management methods
+
 + (id <L4LoggerRepository>) loggerRepository
 {
-	return _loggerRepository;
+    return _loggerRepository;
 }
 
 + (L4Logger *) rootLogger
 {
-	return [_loggerRepository rootLogger];
+    return [_loggerRepository rootLogger];
 }
 
 + (L4Logger *) loggerForClass:(Class) aClass
 {
-	return [_loggerRepository loggerForClass:aClass];
+    return [_loggerRepository loggerForClass:aClass];
 }
 
 + (L4Logger *) loggerForName:(NSString *) aName
 {
-	return [_loggerRepository loggerForName:aName];
+    return [_loggerRepository loggerForName:aName];
 }
 
 + (L4Logger *) loggerForName:(NSString *) aName factory:(id <L4LoggerFactory>) aFactory
 {
-	return [_loggerRepository loggerForName:aName factory:aFactory];
+    return [_loggerRepository loggerForName:aName factory:aFactory];
 }
 
 + (NSArray *) currentLoggers
 {
-	return [_loggerRepository currentLoggers];
+    return [_loggerRepository currentLoggers];
 }
 
 + (void) shutdown
 {
-	return [_loggerRepository shutdown];
+    return [_loggerRepository shutdown];
 }
 
 + (void) resetConfiguration
 {
-	return [_loggerRepository resetConfiguration];
+    return [_loggerRepository resetConfiguration];
 }
 
 @end
@@ -283,14 +272,10 @@ static L4LoggerStore *_loggerRepository = nil;
 static L4FunctionLogger *instance;
 + (L4FunctionLogger *)instance
 {
-	if (instance == nil) {
-		instance = [[L4FunctionLogger alloc] init];
-	}
-	return instance;
+    if (instance == nil) {
+        instance = [[L4FunctionLogger alloc] init];
+    }
+    return instance;
 }
 
-- (void) dealloc
-{
-	instance = nil;
-}
 @end

@@ -10,7 +10,7 @@
 
 - (NSString *)format:(L4LogEvent *)event
 {
-	return [NSString stringWithFormat:@"%@ - %ldms (%@:%@) %@ - %@",
+    return [NSString stringWithFormat:@"%@ - %ldms (%@:%@) %@ - %@",
             event.level.stringValue,
             event.millisSinceStart,
             event.fileName,

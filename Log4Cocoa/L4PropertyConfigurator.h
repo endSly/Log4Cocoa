@@ -5,38 +5,35 @@
 /**
  * The class responsible for configuring the logging system with a properties file.
  */
-@interface L4PropertyConfigurator : NSObject {
-    L4Properties* properties; /**< The internal collection in which individual properties are stored.*/
-    NSMutableDictionary* appenders; /**< The internal collection in which individual configured appenders are stored.*/
-}
+@interface L4PropertyConfigurator : NSObject
 
 /**
  * Returns a newly created instance of L4PropertyConfigurator set to use a given file name for the properties.
  * @param aName the name of the file to read the properties from,
  * @return the new instance of L4PropertyConfigurator.
  */
-+ (L4PropertyConfigurator *) propertyConfiguratorWithFileName:(NSString *) aName;
++ (instancetype)propertyConfiguratorWithFileName:(NSString *)aName;
 
 /**
  * Returns a newly created instance of L4PropertyConfigurator set to use a given properties instance.
  * @param aProperties The properties to use in configuring the system.
  * @return the new instance of L4PropertyConfigurator.
  */
-+ (L4PropertyConfigurator *) propertyConfiguratorWithProperties:(L4Properties *) aProperties;
++ (instancetype)propertyConfiguratorWithProperties:(L4Properties *)aProperties;
 
 /**
  * This method initializes a new instance of this class with the specified file path.
  * @param aName the file path of the properties file you want to read from.
  * @return An initialized instance of this class.
  */
-- (id) initWithFileName:(NSString *) aName;
+- (id)initWithFileName:(NSString *) aName;
 
 /**
  * This method initializes a new instance of this class with the specified properties.
  * @param aProperties an initialized properties collection that contains the properties you want.
  * @return An initialized instance of this class.
  */
-- (id) initWithProperties:(L4Properties *) aProperties;
+- (id)initWithProperties:(L4Properties *) aProperties;
 
 /**
  * Read configuration from a file. The existing configuration is not cleared nor reset.

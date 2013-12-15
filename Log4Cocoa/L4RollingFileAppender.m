@@ -27,7 +27,7 @@ const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize = (1024 * 1024
 
 - (id) init
 {
-	return [self initWithLayout:nil fileName:nil append:YES];
+    return [self initWithLayout:nil fileName:nil append:YES];
 }
 
 - (id) initWithProperties:(L4Properties *)initProperties
@@ -49,13 +49,13 @@ const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize = (1024 * 1024
                 newMaxFileSize *= 1024; // convert to kilobytes
             }
         }
-		
+        
         // Support for appender.MaxBackupIndex in properties configuration file
         if ( [initProperties stringForKey:@"MaxBackupIndex"] != nil ) {
             NSString *buf = [[initProperties stringForKey:@"MaxBackupIndex"] uppercaseString];
             newMaxBackupIndex = atoi([buf UTF8String]);
         }
-		
+        
         [self setMaximumFileSize:newMaxFileSize];
         [self setMaxBackupIndex:newMaxBackupIndex];
     }
@@ -65,40 +65,40 @@ const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize = (1024 * 1024
 
 - (id) initWithLayout:(L4Layout *)aLayout fileName:(NSString *)aName
 {
-	return [self initWithLayout:aLayout fileName:aName append:YES];
+    return [self initWithLayout:aLayout fileName:aName append:YES];
 }
 
 - (id) initWithLayout:(L4Layout *)aLayout fileName:(NSString *)aName append:(BOOL) flag
 {
-	self = [super initWithLayout:aLayout fileName:aName append:flag];
-	
-	if (self != nil) {
-		[self setMaxBackupIndex:1];
-		[self setMaximumFileSize:kL4RollingFileAppenderDefaultMaxFileSize];
-	}
-	
-	return self;
+    self = [super initWithLayout:aLayout fileName:aName append:flag];
+    
+    if (self != nil) {
+        [self setMaxBackupIndex:1];
+        [self setMaximumFileSize:kL4RollingFileAppenderDefaultMaxFileSize];
+    }
+    
+    return self;
 }
 
 
 - (unsigned int)maxBackupIndex
 {
-	return maxBackupIndex;
+    return maxBackupIndex;
 }
 
 - (void)setMaxBackupIndex:(unsigned int)mbi
 {
-	maxBackupIndex = mbi;
+    maxBackupIndex = mbi;
 }
 
 - (unsigned long long)maximumFileSize
 {
-	return maxFileSize;
+    return maxFileSize;
 }
 
 - (void)setMaximumFileSize:(unsigned long long)mfs
 {
-	maxFileSize = mfs;
+    maxFileSize = mfs;
 }
 
 - (void)rollOver
@@ -136,71 +136,71 @@ const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize = (1024 * 1024
 /* ********************************************************************* */
 - (void)renameLogFile:(unsigned int)backupIndex
 {
-	NSFileManager*	fileManager = nil;
-	NSString*		tempOldFileName = nil;
-	NSString*		tempNewFileName = nil;
-	NSString*		tempPathExtension = nil;
-	
-	fileManager = [NSFileManager defaultManager];
-	
-	tempPathExtension = [[self fileName] pathExtension];
-	
-	// if we are trying to rename a backup file > maxBackupIndex
-	if (backupIndex >= [self maxBackupIndex]) {
-		if ([tempPathExtension length] <= 0) {
-			tempOldFileName = [NSString stringWithFormat:@"%@.%d", 
-							   [[self fileName] stringByDeletingPathExtension], 
-							   [self maxBackupIndex]];
-		} else {
-			tempOldFileName = [NSString stringWithFormat:@"%@.%d.%@", 
-							   [[[self fileName] stringByDeletingPathExtension] stringByDeletingPathExtension], 
-							   [self maxBackupIndex], tempPathExtension];
-		}
-		
-		// try to delete the oldest backup file
-		if (![fileManager removeItemAtPath:tempOldFileName error:nil]) {
-			// if we couldn't delete the file, log an error
-			[L4LogLog error:[NSString stringWithFormat:@"Unable to delete the file %@", tempOldFileName]];
-		}
-	} else {
-		// if the backupIndex = 0, we haven't renamed this file before
-		if (backupIndex == 0) {
-			tempOldFileName = [self fileName];
-		} else {
-			if ([tempPathExtension length] <= 0) {
-				// create the old name of the file
-				tempOldFileName = [NSString stringWithFormat:@"%@.%d", 
-								   [[self fileName] stringByDeletingPathExtension],
-								   backupIndex];
-			} else {
-				// create the old name of the file
-				tempOldFileName = [NSString stringWithFormat:@"%@.%d.%@", 
-								   [[[self fileName] stringByDeletingPathExtension] stringByDeletingPathExtension], 
-								   backupIndex, 
-								   tempPathExtension];
-			}
-		}
-		
-		// create the new name of the file
-		if ([tempPathExtension length] <= 0) {
-			tempNewFileName = [NSString stringWithFormat:@"%@.%d", 
-							   [[self fileName] stringByDeletingPathExtension], 
-							   (backupIndex + 1)];
-		} else {
-			tempNewFileName = [NSString stringWithFormat:@"%@.%d.%@", 
-							   [[[self fileName] stringByDeletingPathExtension] stringByDeletingPathExtension], 
-							   (backupIndex + 1), tempPathExtension];
-		}
-		
-		// if the new file name already exists, recursively call this method with the new file name's backup index
-		if ([fileManager fileExistsAtPath:tempNewFileName]) {
-			[self renameLogFile:(backupIndex + 1)];
-		}
-		
-		// rename the old file
-		if (![fileManager moveItemAtPath:tempOldFileName toPath:tempNewFileName error:nil]) {
-			[L4LogLog error:[NSString stringWithFormat:@"Unable to move file %@ to %@!", tempOldFileName, tempNewFileName]];
-		}
-	}
+    NSFileManager*    fileManager = nil;
+    NSString*        tempOldFileName = nil;
+    NSString*        tempNewFileName = nil;
+    NSString*        tempPathExtension = nil;
+    
+    fileManager = [NSFileManager defaultManager];
+    
+    tempPathExtension = [[self fileName] pathExtension];
+    
+    // if we are trying to rename a backup file > maxBackupIndex
+    if (backupIndex >= [self maxBackupIndex]) {
+        if ([tempPathExtension length] <= 0) {
+            tempOldFileName = [NSString stringWithFormat:@"%@.%d", 
+                               [[self fileName] stringByDeletingPathExtension], 
+                               [self maxBackupIndex]];
+        } else {
+            tempOldFileName = [NSString stringWithFormat:@"%@.%d.%@", 
+                               [[[self fileName] stringByDeletingPathExtension] stringByDeletingPathExtension], 
+                               [self maxBackupIndex], tempPathExtension];
+        }
+        
+        // try to delete the oldest backup file
+        if (![fileManager removeItemAtPath:tempOldFileName error:nil]) {
+            // if we couldn't delete the file, log an error
+            [L4LogLog error:[NSString stringWithFormat:@"Unable to delete the file %@", tempOldFileName]];
+        }
+    } else {
+        // if the backupIndex = 0, we haven't renamed this file before
+        if (backupIndex == 0) {
+            tempOldFileName = [self fileName];
+        } else {
+            if ([tempPathExtension length] <= 0) {
+                // create the old name of the file
+                tempOldFileName = [NSString stringWithFormat:@"%@.%d", 
+                                   [[self fileName] stringByDeletingPathExtension],
+                                   backupIndex];
+            } else {
+                // create the old name of the file
+                tempOldFileName = [NSString stringWithFormat:@"%@.%d.%@", 
+                                   [[[self fileName] stringByDeletingPathExtension] stringByDeletingPathExtension], 
+                                   backupIndex, 
+                                   tempPathExtension];
+            }
+        }
+        
+        // create the new name of the file
+        if ([tempPathExtension length] <= 0) {
+            tempNewFileName = [NSString stringWithFormat:@"%@.%d", 
+                               [[self fileName] stringByDeletingPathExtension], 
+                               (backupIndex + 1)];
+        } else {
+            tempNewFileName = [NSString stringWithFormat:@"%@.%d.%@", 
+                               [[[self fileName] stringByDeletingPathExtension] stringByDeletingPathExtension], 
+                               (backupIndex + 1), tempPathExtension];
+        }
+        
+        // if the new file name already exists, recursively call this method with the new file name's backup index
+        if ([fileManager fileExistsAtPath:tempNewFileName]) {
+            [self renameLogFile:(backupIndex + 1)];
+        }
+        
+        // rename the old file
+        if (![fileManager moveItemAtPath:tempOldFileName toPath:tempNewFileName error:nil]) {
+            [L4LogLog error:[NSString stringWithFormat:@"Unable to move file %@ to %@!", tempOldFileName, tempNewFileName]];
+        }
+    }
 }
 @end

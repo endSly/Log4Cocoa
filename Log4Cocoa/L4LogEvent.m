@@ -13,187 +13,110 @@ static NSDate *startTime = nil;
 
 @implementation L4LogEvent
 
+@synthesize renderedMessage = _renderedMessage;
+
 + (void) initialize
 {
-	startTime = [NSDate date];
+    startTime = [NSDate date];
 }
 
 + (NSDate *) startTime
 {
-	return startTime;
+    return startTime;
 }
 
-+ (L4LogEvent *) logger:(L4Logger *) aLogger
-					  level:(L4Level *) aLevel
-					message:(id) aMessage
++ (instancetype)logger:(L4Logger *)aLogger
+                 level:(L4Level *)aLevel
+               message:(id)aMessage
 {
-	return [self logger:aLogger
-				  level:aLevel
-			 lineNumber:NO_LINE_NUMBER
-			   fileName:NO_FILE_NAME
-			 methodName:NO_METHOD_NAME
-				message:aMessage
-			  exception:nil];
+    return [self logger:aLogger
+                  level:aLevel
+             lineNumber:NO_LINE_NUMBER
+               fileName:NO_FILE_NAME
+             methodName:NO_METHOD_NAME
+                message:aMessage
+              exception:nil];
 }
 
-+ (L4LogEvent *) logger:(L4Logger *) aLogger
-					  level:(L4Level *) aLevel
-					message:(id) aMessage
-				  exception:(NSException *) e;
++ (instancetype)logger:(L4Logger *)aLogger
+                 level:(L4Level *)aLevel
+               message:(id)aMessage
+             exception:(NSException *)e;
 {
-	return [self logger:aLogger
-				  level:aLevel
-			 lineNumber:NO_LINE_NUMBER
-			   fileName:NO_FILE_NAME
-			 methodName:NO_METHOD_NAME
-				message:aMessage
-			  exception:e];
+    return [self logger:aLogger
+                  level:aLevel
+             lineNumber:NO_LINE_NUMBER
+               fileName:NO_FILE_NAME
+             methodName:NO_METHOD_NAME
+                message:aMessage
+              exception:e];
 }
 
-+ (L4LogEvent *) logger:(L4Logger *) aLogger
-					  level:(L4Level *) aLevel
-				 lineNumber:(int) aLineNumber
-				   fileName:(char *) aFileName
-				 methodName:(char *) aMethodName
-					message:(id) aMessage
-				  exception:(NSException *) e
++ (instancetype)logger:(L4Logger *)aLogger
+                 level:(L4Level *)aLevel
+            lineNumber:(int)aLineNumber
+              fileName:(char *)aFileName
+            methodName:(char *)aMethodName
+               message:(id)aMessage
+             exception:(NSException *)e
 {
-	return [[L4LogEvent alloc] initWithLogger:aLogger
-											 level:aLevel
-										lineNumber:aLineNumber
-										  fileName:aFileName
-										methodName:aMethodName
-										   message:aMessage
-										 exception:e
-									eventTimestamp:[NSDate date]];
+    return [[L4LogEvent alloc] initWithLogger:aLogger
+                                        level:aLevel
+                                   lineNumber:aLineNumber
+                                     fileName:aFileName
+                                   methodName:aMethodName
+                                      message:aMessage
+                                    exception:e
+                               eventTimestamp:[NSDate date]];
 }
 
 - (id) init
 {
-	return nil;
+    return nil;
 }
 
 - (id) initWithLogger:(L4Logger *) aLogger
-				level:(L4Level *) aLevel
-		   lineNumber:(int) aLineNumber
-			 fileName:(char *) aFileName
-		   methodName:(char *) aMethodName
-			  message:(id) aMessage
-			exception:(NSException *) e
-	   eventTimestamp:(NSDate *) aDate
+                level:(L4Level *) aLevel
+           lineNumber:(int) aLineNumber
+             fileName:(char *) aFileName
+           methodName:(char *) aMethodName
+              message:(id) aMessage
+            exception:(NSException *) e
+       eventTimestamp:(NSDate *) aDate
 {
-	self = [super init];
-	if( self != nil )
-	{
-		rawFileName = aFileName;
-		rawMethodName = aMethodName;
-		rawLineNumber = aLineNumber;
-		
-		lineNumber = nil;
-		fileName = nil;
-		methodName = nil;
-		
-		logger = aLogger;
-		level = aLevel;
-		message = aMessage;
-		exception = e;
-		timestamp = aDate;
-	}
-	return self;
-}
-
-- (void) dealloc
-{
-	logger = nil;
-	level = nil;
-	message = nil;
-	exception = nil;
-	timestamp = nil;
-	
-	if (lineNumber != nil){
-		lineNumber = nil;
-	}
-	if (fileName != nil ){
-		fileName = nil;
-	}
-	if (methodName != nil ){
-		methodName = nil;
-	}
-}
-
-- (L4Logger *) logger
-{
-	return logger;
-}
-
-- (L4Level *) level
-{
-	return level;
-}
-
-- (NSNumber *) lineNumber
-{
-	if((lineNumber == nil) && (rawLineNumber != NO_LINE_NUMBER)) {
-		lineNumber = @(rawLineNumber);
-	} else if (rawLineNumber == NO_LINE_NUMBER) {
-		lineNumber = @(NO_LINE_NUMBER);
-	}
-	return lineNumber;
-}
-
-- (NSString *) fileName
-{
-	if((fileName == nil) && (rawFileName != NO_FILE_NAME)) {
-		fileName = @(rawFileName);
-	} else if (rawFileName == NO_FILE_NAME) {
-		fileName = @"No file name!";
-	}
-	return fileName;
-}
-
-- (NSString *) methodName
-{
-	if((methodName == nil) && (rawMethodName != NO_METHOD_NAME)) {
-		methodName = @(rawMethodName);
-	} else if (rawMethodName == NO_METHOD_NAME) {
-		methodName = @"No method name!";
-	}
-	return methodName;
-}
-
-- (NSDate *) timestamp
-{
-	return timestamp;
-}
-
-- (NSException *) exception
-{
-	return exception;
+    self = [super init];
+    if (self) {
+        _lineNumber = @(aLineNumber);
+        _fileName = @(aFileName);
+        _methodName = @(aMethodName);
+        
+        _logger = aLogger;
+        _level = aLevel;
+        _message = aMessage;
+        _exception = e;
+        _timestamp = aDate;
+    }
+    return self;
 }
 
 - (long) millisSinceStart
 {
-	// its a double in seconds
-	NSTimeInterval time = [timestamp timeIntervalSinceDate:startTime];
-	return (long) (time * 1000);
+    // its a double in seconds
+    NSTimeInterval time = [_timestamp timeIntervalSinceDate:startTime];
+    return (long) (time * 1000);
 }
 
-- (id) message
+- (NSString *) renderedMessage
 {
-	return message;
+    if (!_renderedMessage && _message) {
+        if ([_message isKindOfClass:[NSString class]]) {
+            _renderedMessage = [_message copy];  // if its a string return it.
+        } else {
+            _renderedMessage = [_message description];
+        }
+    }
+    
+    return _renderedMessage;
 }
 
-- (NSString *) renderedMessage	
-{
-	if( renderedMessage == nil && message != nil ) {
-		if([message isKindOfClass:[NSString class]]) {
-			renderedMessage = message;  // if its a string return it.
-		} else {
-			renderedMessage = [message description];
-		}
-	}
-	
-	return renderedMessage;
-}
-	
 @end

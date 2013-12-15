@@ -30,7 +30,7 @@
 - (void) updateParentsOfLogger:(L4Logger *) aLogger;
 
 /**
- * If the child already has a parent lower than this new logger leave it alone.  If the parent is above this new logger, 
+ * If the child already has a parent lower than this new logger leave it alone.  If the parent is above this new logger,
  * then insert itself inbetween.
  * @param node the children to update.
  * @param parent the new parent of the children.
@@ -39,110 +39,97 @@
 @end
 
 
-@implementation L4LoggerStore
+@implementation L4LoggerStore {
+    L4Logger              * _root;          /**< The root logger.*/
+    NSMutableDictionary   * _repository;    /**< The collection of loggers by id.*/
+    NSMutableArray        * _loggers;       /**< The collection of loggers.*/
+    int                     _thresholdInt;  /**< The minimum level as an int to log.*/
 
-+ (void) initialize 
-{
+    BOOL                    _emittedNoAppenderWarning;      /**< Tracks if a warning should be created if there are no appenders configured.*/
+    BOOL                    _emittedNoResourceBundleWarning;/**< Tracks if a warning should be created if there is no resource bundle.*/
 }
 
 - (id) init
 {
-	// ### todo ??? [self autorelease];
-	return nil; // don't use this method
+    return nil; // don't use this method
 }
 
 - (id) initWithRoot:(id) rootLogger
 {
-	self = [super init];
-	if( self != nil ) {
-		root = rootLogger;
-		
-		repository = [[NSMutableDictionary alloc] init];
-		loggers = [[NSMutableArray alloc] init];
+    self = [super init];
+    if (self) {
+        _root = rootLogger;
+        
+        _repository = [NSMutableDictionary dictionary];
+        _loggers = [NSMutableArray arrayWithObject:_root];
 
-		[loggers addObject:root];
-		root.repository = self;
-		[self setThreshold:[L4Level all]];
-
-		emittedNoAppenderWarning = NO;
-		emittedNoResourceBundleWarning = NO;
-	} else {
-		  // ### todo - ???
-	}
-	return self;
+        _root.repository = self;
+        self.threshold = [L4Level all];
+        
+        _emittedNoAppenderWarning = NO;
+        _emittedNoResourceBundleWarning = NO;
+    }
+    return self;
 }
 
 
 - (BOOL) isDisabled:(int) aLevel
 {
-	return thresholdInt > aLevel;
-}
-
-- (L4Level *) threshold
-{
-	return threshold;
-}
-
-- (void) setThreshold:(L4Level *) aLevel
-{
-    @synchronized(self) {
-        threshold = aLevel;
-        thresholdInt = [aLevel intValue];
-    }
+    return _thresholdInt > aLevel;
 }
 
 - (void) setThresholdByName:(NSString *) aLevelName
 {
-	[self setThreshold:[L4Level levelWithName:aLevelName defaultLevel:threshold]];
+    self.threshold = [L4Level levelWithName:aLevelName defaultLevel:self.threshold];
 }
 
 - (L4Logger *) rootLogger
 {
-	return root;
+    return _root;
 }
 
 - (L4Logger *) loggerForClass:(Class) aClass
 {
-	id theLogger = nil;
-	if( aClass != nil ) {
+    if (!aClass)
+        return nil;
+    
+    id logger;
+    @synchronized(self) {
+        logger = _repository[NSStringFromClass(aClass)];
         
-        @synchronized(self) {
-            theLogger = repository[aClass];
-            
-            if( theLogger == nil ) {
-                NSString *pseudoFqcn = [self pseudoFqcnForClass:aClass];
-                theLogger = [self loggerForName:pseudoFqcn factory:self];
-                repository[aClass] = theLogger;
-            }
+        if (!logger) {
+            NSString *pseudoFqcn = [self pseudoFqcnForClass:aClass];
+            logger = [self loggerForName:pseudoFqcn factory:self];
+            _repository[NSStringFromClass(aClass)] = logger;
         }
     }
-
-	return theLogger;
+    
+    return logger;
 }
 
 - (L4Logger *) loggerForName:(NSString *) aName
 {
-	return [self loggerForName:aName factory:self];
+    return [self loggerForName:aName factory:self];
 }
 
 - (L4Logger *) loggerForName:(NSString *) aName factory:(id <L4LoggerFactory>) aFactory
 {
-	L4Logger *theLogger = nil;
-	id theNode;
-	
+    L4Logger *theLogger = nil;
+    id theNode;
+    
     @synchronized(self) {
-        theNode = repository[aName];
+        theNode = _repository[aName];
         
         if( theNode == nil ) {
             //
-            // if the node is nil, then its a new logger & therefore 
+            // if the node is nil, then its a new logger & therefore
             // a new leaf node, since no placeholder node was found.
             //
             theLogger = [aFactory newLoggerInstance:aName];
             theLogger.repository = self;
-            repository[aName] = theLogger;
+            _repository[aName] = theLogger;
             [self updateParentsOfLogger:theLogger];
-            [loggers addObject:theLogger];
+            [_loggers addObject:theLogger];
             
         } else if([theNode isKindOfClass:[L4Logger class]]) {
             theLogger =  (L4Logger *) theNode;
@@ -154,10 +141,10 @@
             //
             theLogger = [aFactory newLoggerInstance:aName];
             theLogger.repository = self;
-            repository[aName] = theLogger;
+            _repository[aName] = theLogger;
             [self updateChildren:theNode withParent:theLogger ];
             [self updateParentsOfLogger:theLogger];
-            [loggers addObject:theLogger];
+            [_loggers addObject:theLogger];
             
         } else {
             // We should hopefully never end up here.  ### TODO ??? - Internal Consistency Error
@@ -169,43 +156,38 @@
                NSStringFromClass([theNode class])] stringByAppendingString:twoDo]];
         }
     }
-
-	return (L4Logger *) theLogger;
+    
+    return (L4Logger *) theLogger;
 }
 
-- (NSArray *) currentLoggers
+- (NSArray *)currentLoggers
 {
-    NSArray *currentLoggers = nil;
     @synchronized(self) {
-        currentLoggers = [loggers copy];
+        return [_loggers copy];
     }
-    return currentLoggers;
 }
 
 - (void) emitNoAppenderWarning:(L4Logger *) aLogger
 {
-	if( !emittedNoAppenderWarning ) {
-		[L4LogLog warn:[NSString stringWithFormat:@"No appenders could be found for logger(%@).", [aLogger name]]];
-		[L4LogLog warn:@"Please initialize the Log4Cocoa system properly."];
-
-		emittedNoAppenderWarning = YES;
-	}
+    if (!_emittedNoAppenderWarning ) {
+        [L4LogLog warn:[NSString stringWithFormat:@"No appenders could be found for logger(%@).", [aLogger name]]];
+        [L4LogLog warn:@"Please initialize the Log4Cocoa system properly."];
+        
+        _emittedNoAppenderWarning = YES;
+    }
 }
 
 - (void) resetConfiguration
 {
     @synchronized(self) {
-        NSEnumerator *enumerator = [loggers objectEnumerator];
-        L4Logger *logger;
-        
-        [root setLevel:[L4Level debug]];
-        [self setThreshold:[L4Level all]];
+        _root.level = [L4Level debug];
+        self.threshold = [L4Level all];
         
         [self shutdown];
         
-        while ((logger = (L4Logger *)[enumerator nextObject])) {
-            [logger setLevel:nil];
-            [logger setAdditivity:YES];
+        for (L4Logger *logger in _loggers) {
+            logger.level = nil;
+            logger.additivity = YES;
         }
     }
 }
@@ -213,102 +195,83 @@
 - (void) shutdown
 {
     @synchronized(self) {
-        NSEnumerator *enumerator = [loggers objectEnumerator];
-        L4Logger *logger;
+        [_root closeNestedAppenders];
         
-        [root closeNestedAppenders];
-        
-        while ((logger = (L4Logger *)[enumerator nextObject])) {
+        for (L4Logger *logger in _loggers)
             [logger closeNestedAppenders];
-        }
+
+        [_root removeAllAppenders];
         
-        [root removeAllAppenders];
-        enumerator = [loggers objectEnumerator];
-        
-        while ((logger = (L4Logger *)[enumerator nextObject])) {
+        for (L4Logger *logger in _loggers)
             [logger removeAllAppenders];
-        }
     }
 }
 
-/* ********************************************************************* */
-#pragma mark L4LoggerFactoryCategory methods
-/* ********************************************************************* */
+
+#pragma mark - L4LoggerFactoryCategory methods
 
 - (L4Logger *) newLoggerInstance:(NSString *) aName
 {
-	return [[L4Logger alloc] initWithName:aName];
+    return [[L4Logger alloc] initWithName:aName];
 }
 
-/* ********************************************************************* */
-#pragma mark Private methods
-/* ********************************************************************* */
+
+#pragma mark - Private methods
+
 - (NSString *) pseudoFqcnForClass:(Class) aClass
 {
-	NSMutableString *pseudoFqcn = [[NSMutableString alloc] init];
-	Class theClass = aClass;
-	
-	[pseudoFqcn insertString:NSStringFromClass(theClass) atIndex:0];
-	
-	for( theClass = [theClass superclass]; theClass != nil; theClass = [theClass superclass] ) {
-		[pseudoFqcn insertString:@"." atIndex:0];
-		[pseudoFqcn insertString:NSStringFromClass(theClass) atIndex:0];
-	}
-	return pseudoFqcn;
+    NSMutableString *pseudoFqcn = [[NSMutableString alloc] init];
+    Class theClass = aClass;
+    
+    [pseudoFqcn insertString:NSStringFromClass(theClass) atIndex:0];
+    
+    for( theClass = [theClass superclass]; theClass != nil; theClass = [theClass superclass] ) {
+        [pseudoFqcn insertString:@"." atIndex:0];
+        [pseudoFqcn insertString:NSStringFromClass(theClass) atIndex:0];
+    }
+    return pseudoFqcn;
 }
 
 - (void) updateParentsOfLogger:(L4Logger *) aLogger
 {
-	int i;
-	id node;
-	L4Logger *parent = root;
-	NSString *keyPath;
-	NSArray *keys = [[aLogger name] componentsSeparatedByString:@"."];
-	NSRange theRange;
-	
-	theRange.location = 0;
-	
-	// the trick here is to build up the key paths in reverse order not including
-	// the pseudo-fqcn (i.e the last node), to search for already existing parents
-	//
-	for( i = [keys count] - 1; i > 0; --i ) {
-		theRange.length = i;
-		keyPath = [[keys subarrayWithRange:theRange] componentsJoinedByString:@"."];
-		node = repository[keyPath];
-		
-		if(node == nil) {
-			// didn't find a parent or a placeholder, create a placeholder
-			// node, i.e. a MutalbeArray, and add this logger as a child
-			//
-			repository[keyPath] = [NSMutableArray arrayWithObject:aLogger];
-		} else if([node isKindOfClass:[L4Logger class]]) {
-			parent = node;
-			break;
-		} else if([node isKindOfClass:[NSMutableArray class]]) {
-			[node addObject:aLogger]; // found a place holder node, add this logger as a child
-		}
-	}
-	[aLogger setParent:parent];  // found a parent, set it for this logger
+    L4Logger *parent = _root;
+    
+    // the trick here is to build up the key paths in reverse order not including
+    // the pseudo-fqcn (i.e the last node), to search for already existing parents
+    NSArray *keys = [aLogger.name componentsSeparatedByString:@"."];
+    for (int i = keys.count - 1; i > 0; --i) {
+        NSString *keyPath = [[keys subarrayWithRange:NSMakeRange(0, i)] componentsJoinedByString:@"."];
+        id node = _repository[keyPath];
+        
+        if (!node) {
+            // didn't find a parent or a placeholder, create a placeholder
+            // node, i.e. a MutalbeArray, and add this logger as a child
+            //
+            _repository[keyPath] = [NSMutableArray arrayWithObject:aLogger];
+            
+        } else if ([node isKindOfClass:[L4Logger class]]) {
+            parent = node;
+            break;
+            
+        } else if ([node isKindOfClass:[NSMutableArray class]]) {
+            [node addObject:aLogger]; // found a place holder node, add this logger as a child
+        }
+    }
+    aLogger.parent = parent;  // found a parent, set it for this logger
 }
 
-- (void) updateChildren:(NSMutableArray *) node withParent:(L4Logger *) newLogger
+- (void) updateChildren:(NSArray *)node withParent:(L4Logger *)newLogger
 {
-	int i;
-	int last = [node count];
-	L4Logger *child = nil;
-	
-	for( i = 0; i < last; i++ ) {
-		child = (L4Logger *)node[i];
-		
-		// If the child's parent's name starts with the name of the new logger then its a child of the new logger leave the child alone, we'll get
-		// to the child's parent in this list.  Otherwise the parent is higher & insert the new logger.  All children that go through this same
-		// middle node, that don't have an already lower parent, should all point to the same higher parent.  If not, something is wrong.
-		//
-		if( ![[[child parent] name] hasPrefix:[newLogger name]] ) {
-			[newLogger setParent:[child parent]];
-			[child setParent:newLogger];
-		}
-	}
+    for (L4Logger *child in node) {
+        // If the child's parent's name starts with the name of the new logger then its a child of the new logger leave the child alone, we'll get
+        // to the child's parent in this list.  Otherwise the parent is higher & insert the new logger.  All children that go through this same
+        // middle node, that don't have an already lower parent, should all point to the same higher parent.  If not, something is wrong.
+        //
+        if (![child.parent.name hasPrefix:newLogger.name] ) {
+            newLogger.parent = child.parent;
+            child.parent = newLogger;
+        }
+    }
 }
 
 @end

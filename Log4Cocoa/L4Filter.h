@@ -7,9 +7,9 @@
  * An enumeration of the allowed L4Filter actions.
  */
 typedef NS_ENUM(NSUInteger, L4FilterResult) {
-	L4FilterDeny	= -1, /**< Prevent the request to log the event. */
-	L4FilterNeutral = 0,  /**< Do not affect the request to log the event. */
-	L4FilterAccept  = 1   /**< Allow the request to log he event. */
+    L4FilterDeny    = -1, /**< Prevent the request to log the event. */
+    L4FilterNeutral = 0,  /**< Do not affect the request to log the event. */
+    L4FilterAccept  = 1   /**< Allow the request to log he event. */
 };
 
 /**

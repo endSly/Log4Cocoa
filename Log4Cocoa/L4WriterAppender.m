@@ -15,11 +15,11 @@ static NSData *lineBreakChar;
 
 - (id) init
 {
-	self = [super init];
-	if( self != nil ) {
-		immediateFlush = YES;
-	}
-	return self;
+    self = [super init];
+    if( self != nil ) {
+        immediateFlush = YES;
+    }
+    return self;
 }
 
 - (id) initWithProperties:(L4Properties *) initProperties
@@ -43,21 +43,21 @@ static NSData *lineBreakChar;
 
 - (id) initWithLayout:(L4Layout *)aLayout fileHandle:(NSFileHandle *)aFileHandle
 {
-	if (!(self = [self init])) return nil; // call designated initializer
-	fileHandle= aFileHandle;
-	[self setLayout:aLayout];
-	return self;
+    if (!(self = [self init])) return nil; // call designated initializer
+    fileHandle= aFileHandle;
+    [self setLayout:aLayout];
+    return self;
 }
 
 
 - (BOOL) immediateFlush
 {
-	return immediateFlush;
+    return immediateFlush;
 }
 
 - (void) setImmediateFlush:(BOOL) flush
 {
-	immediateFlush = flush;
+    immediateFlush = flush;
 }
 
 - (void) append:(L4LogEvent *) anEvent
@@ -71,37 +71,37 @@ static NSData *lineBreakChar;
 
 - (void) subAppend:(L4LogEvent *) anEvent
 {
-	[self write:[self.layout format:anEvent]];
+    [self write:[self.layout format:anEvent]];
 }
 
 - (BOOL) checkEntryConditions
 {
-	if (_closed) {
-		[L4LogLog warn:@"Not allowed to write to a closed appender."];
-		return NO;
-	}
+    if (_closed) {
+        [L4LogLog warn:@"Not allowed to write to a closed appender."];
+        return NO;
+    }
 
-	if (fileHandle) {
-		[L4LogLog error:[@"No file handle for output stream set for the appender named:" stringByAppendingString:self.name]];
-		return NO;
-	}
+    if (fileHandle) {
+        [L4LogLog error:[@"No file handle for output stream set for the appender named:" stringByAppendingString:self.name]];
+        return NO;
+    }
 
-	if (self.layout) {
-		[L4LogLog error:[@"No layout set for the appender named:" stringByAppendingString:self.name]];
-		return NO;
-	}
-	
-	return YES;
+    if (self.layout) {
+        [L4LogLog error:[@"No layout set for the appender named:" stringByAppendingString:self.name]];
+        return NO;
+    }
+    
+    return YES;
 }
 
 - (void) closeWriter
 {
-	@try {
-		[fileHandle closeFile];
-	}
-	@catch (NSException *localException) {
-		[L4LogLog error:[NSString stringWithFormat:@"Could not close file handle:%@\n%@", fileHandle,  localException]];
-	}
+    @try {
+        [fileHandle closeFile];
+    }
+    @catch (NSException *localException) {
+        [L4LogLog error:[NSString stringWithFormat:@"Could not close file handle:%@\n%@", fileHandle,  localException]];
+    }
 }
 
 - (void)setFileHandle:(NSFileHandle*)fh
@@ -117,14 +117,14 @@ static NSData *lineBreakChar;
 
 - (void) reset
 {
-	[self closeWriter];
+    [self closeWriter];
 }
 
 - (void) write:(NSString *) theString
 {
-	if( theString != nil )
-	{
-		@try {
+    if( theString != nil )
+    {
+        @try {
             @synchronized(self) {
                 // TODO ### -- NEED UNIX EXPERT IS THIS THE BEST WAY ??
                 // TODO - ### - NEED TO WORK ON ENCODING ISSUES (& THEN LATER LOCALIZATION)
@@ -132,31 +132,31 @@ static NSData *lineBreakChar;
                 [fileHandle writeData:[theString dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES]];
                 [fileHandle writeData:lineBreakChar];
             }
-		}
-		@catch (NSException *localException) {
-			[L4LogLog error:[NSString stringWithFormat:@"Appender failed to write string:%@\n%@", theString, localException]];
-		}
-	}
+        }
+        @catch (NSException *localException) {
+            [L4LogLog error:[NSString stringWithFormat:@"Appender failed to write string:%@\n%@", theString, localException]];
+        }
+    }
 }
 
 - (void) writeHeader
 {
-	[self write:[self.layout header]];
+    [self write:[self.layout header]];
 }
 
 - (void) writeFooter
 {
-	[self write:[self.layout footer]];
+    [self write:[self.layout footer]];
 }
 
 - (NSStringEncoding) encoding
 {
-	return encoding;
+    return encoding;
 }
 
 - (void) setEncoding:(NSStringEncoding) newEncoding
 {
-	encoding = newEncoding;
+    encoding = newEncoding;
 }
 
 /* ********************************************************************* */
@@ -175,7 +175,7 @@ static NSData *lineBreakChar;
 
 - (BOOL) requiresLayout
 {
-	return YES;
+    return YES;
 }
 
 @end

@@ -24,12 +24,12 @@
 /* ********************************************************************* */
 + (L4ConsoleAppender *) standardOutWithLayout:(L4Layout *)aLayout
 {
-	return [[L4ConsoleAppender alloc] initTarget:YES withLayout:aLayout];
+    return [[L4ConsoleAppender alloc] initTarget:YES withLayout:aLayout];
 }
 
 + (L4ConsoleAppender *) standardErrWithLayout:(L4Layout *)aLayout
 {
-	return [[L4ConsoleAppender alloc] initTarget:NO withLayout:aLayout];
+    return [[L4ConsoleAppender alloc] initTarget:NO withLayout:aLayout];
 }
 
 /* ********************************************************************* */
@@ -37,26 +37,26 @@
 /* ********************************************************************* */
 - (id) init
 {
-	return [self initTarget:YES withLayout:[L4Layout simpleLayout]];
+    return [self initTarget:YES withLayout:[L4Layout simpleLayout]];
 }
 
 - (id) initTarget:(BOOL)standardOut withLayout:(L4Layout *)aLayout
 {
-	self = [super init];
-	if( self != nil ) {
-		if( standardOut ) {
-			[self setStandardOut];
-		} else {
-			[self setStandardErr];
-		}
-		[self setLayout:aLayout];
-	}
-	return self;
+    self = [super init];
+    if( self != nil ) {
+        if( standardOut ) {
+            [self setStandardOut];
+        } else {
+            [self setStandardErr];
+        }
+        [self setLayout:aLayout];
+    }
+    return self;
 }
 
 - (BOOL) isStandardOut
 {
-	return isStandardOut;
+    return isStandardOut;
 }
 
 /* ********************************************************************* */

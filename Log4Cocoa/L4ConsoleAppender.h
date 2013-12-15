@@ -6,7 +6,7 @@
  */
 @interface L4ConsoleAppender : L4WriterAppender
 {
-	BOOL isStandardOut; /**< Tracks if this appender is for stdout.*/
+    BOOL isStandardOut; /**< Tracks if this appender is for stdout.*/
 }
 
 /**
@@ -41,9 +41,9 @@
 /**
  * Initializes an instance from properties.  The properties supported are:
  * - <c>LogToStandardOut:</c> specifies if this appender should append to stdout or stderr.  If the value is true, then
- *		stdout will be used.  Otherwise stderr will be used.
+ *        stdout will be used.  Otherwise stderr will be used.
  * If the values are being set in a file, this is how they could look:
- *	<code>log4cocoa.appender.A2.LogToStandardOut=false</code>
+ *    <code>log4cocoa.appender.A2.LogToStandardOut=false</code>
  * @param initProperties the proterties to use.
  */
 - (id) initWithProperties:(L4Properties *) initProperties;

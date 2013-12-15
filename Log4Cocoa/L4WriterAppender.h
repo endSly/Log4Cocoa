@@ -6,10 +6,10 @@
  * An extension of L4Appender that knows how to append by writing to a filehandle.
  */
 @interface L4WriterAppender : L4AppenderSkeleton {
-	BOOL immediateFlush; /**< Flush after write; default is YES. */
-	NSStringEncoding encoding; /**< The string encoding to use; default is lossy ASCII.*/
-	BOOL lossyEncoding;	/**< Whether to allow lossy string encoding; default is YES.*/
-	NSFileHandle *fileHandle; /**< The file we are writing to.*/
+    BOOL immediateFlush; /**< Flush after write; default is YES. */
+    NSStringEncoding encoding; /**< The string encoding to use; default is lossy ASCII.*/
+    BOOL lossyEncoding;    /**< Whether to allow lossy string encoding; default is YES.*/
+    NSFileHandle *fileHandle; /**< The file we are writing to.*/
 }
 
 /**
@@ -30,7 +30,7 @@
  * Initializes an instance from properties.  The properties supported are:
  * - <c>ImmediateFlush:</c> see setImmediateFlush:
  * If the values are being set in a file, this is how they could look:
- *	<code>log4cocoa.appender.A2.ImmediateFlush=false</code>
+ *    <code>log4cocoa.appender.A2.ImmediateFlush=false</code>
  * @param initProperties the proterties to use.
  */
 - (id) initWithProperties:(L4Properties *)initProperties;
@@ -44,12 +44,12 @@
 /**
  *  Reminder: the nesting of calls is:
  * 
- * 	doAppend()
- * 	  - check threshold
- * 	  - filter
- * 	  - append();
- * 		- checkEntryConditions();
- * 		- subAppend();
+ *     doAppend()
+ *       - check threshold
+ *       - filter
+ *       - append();
+ *         - checkEntryConditions();
+ *         - subAppend();
  */
 - (void) append:(L4LogEvent *)anEvent;
 

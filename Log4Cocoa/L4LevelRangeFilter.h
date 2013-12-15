@@ -23,15 +23,15 @@
  */
 
 @interface L4LevelRangeFilter : L4Filter {
-	BOOL acceptOnMatch; /**< YES to allow logging on a match, NO to prevent logging on a match.*/
-	L4Level *minimumLevelToMatch; /**< the minimum L4Level to match.*/
-	L4Level *maximumLevelToMatch; /**< the minimum L4Level to match.*/
+    BOOL acceptOnMatch; /**< YES to allow logging on a match, NO to prevent logging on a match.*/
+    L4Level *minimumLevelToMatch; /**< the minimum L4Level to match.*/
+    L4Level *maximumLevelToMatch; /**< the minimum L4Level to match.*/
 }
 
 /**
  * Initializes an instance from properties.  The properties supported are:
  * - <c>AcceptOnMatch:</c> a string that get's converted to a BOOL. YES/NO work well. See the documentation for [NSString 
- *		boolValue] for other options.
+ *        boolValue] for other options.
  * - <c>MinimumLevel:</c> the name of the minimum L4Level to match. See L4Level#levelWithName: for options.
  * - <c>MaximumLevel:</c> the name of the maximum L4Level to match. See L4Level#levelWithName: for options.
  *
@@ -44,7 +44,7 @@
  * This is the default initializer, as the instance should have these two values set.
  *
  * @param shouldAccept YES to allow logging on a match of levelToMatch, NO to prevent logging on a match.
- *	@param minimumLevel: the name of the minimum L4Level to match. See L4Level#levelWithName: for options.
+ *    @param minimumLevel: the name of the minimum L4Level to match. See L4Level#levelWithName: for options.
  *  @param maximumLevel: the name of the maximum L4Level to match. See L4Level#levelWithName: for options.
  */
 - (id) initWithAcceptOnMatch:(BOOL)shouldAccept fromLevel:(L4Level *)minimumLevel toLevel:(L4Level *)maximumLevel;

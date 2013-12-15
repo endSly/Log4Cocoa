@@ -11,7 +11,7 @@
 
 - (id) init
 {
-	return [self initWithLayout:nil fileName:nil append:NO];
+    return [self initWithLayout:nil fileName:nil append:NO];
 }
 
 - (id) initWithProperties:(L4Properties *) initProperties
@@ -33,7 +33,7 @@
             NSString *buf = [[initProperties stringForKey:@"Append"] lowercaseString];
             append = [buf isEqualToString:@"true"];
         }
-		[self setupFile];
+        [self setupFile];
     }
     
     return self;
@@ -41,33 +41,33 @@
 
 - (id) initWithLayout:(L4Layout *) aLayout fileName:(NSString *) aName
 {
-	return [self initWithLayout:aLayout fileName:aName append:NO];
+    return [self initWithLayout:aLayout fileName:aName append:NO];
 }
 
 - (id) initWithLayout:(L4Layout *) aLayout fileName:(NSString *) aName append:(BOOL) flag
 {
     self = [super init];
-	if (self != nil)
-	{
-		[self setLayout:aLayout];
-		fileName = [aName stringByExpandingTildeInPath];
-		append = flag;
-		[self setupFile];
-	}
-	return self;
+    if (self != nil)
+    {
+        [self setLayout:aLayout];
+        fileName = [aName stringByExpandingTildeInPath];
+        append = flag;
+        [self setupFile];
+    }
+    return self;
 }
 
 - (void)dealloc
 {
-	fileName = nil;
-	
+    fileName = nil;
+    
 }
 
 - (void)setupFile
 {
-	NSFileManager*	fileManager = nil;
+    NSFileManager*    fileManager = nil;
 
-	@synchronized(self) {
+    @synchronized(self) {
         if (fileName == nil || [fileName length] <= 0) {
             [self closeFile];
             fileName = nil;
@@ -104,12 +104,12 @@
 
 - (NSString *) fileName
 {
-	return fileName;
+    return fileName;
 }
 
 - (BOOL) append
 {
-	return append;
+    return append;
 }
 
 /* ********************************************************************* */

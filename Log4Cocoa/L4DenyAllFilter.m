@@ -9,7 +9,7 @@
 
 - (L4FilterResult) decide:(L4LogEvent *) event
 {
-	return L4FilterDeny;
+    return L4FilterDeny;
 }
 
 @end

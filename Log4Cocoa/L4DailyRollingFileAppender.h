@@ -22,8 +22,8 @@ extern NSString *const L4RollingFrequencyMinutely;  /**< Roll the file over ever
  * It is possible to specify monthly, weekly, half-daily, daily, hourly, or minutely rollover schedules.  
 */
 @interface L4DailyRollingFileAppender : L4FileAppender {
-	NSString    *_rollingFrequency; /**< The frequency with which the file should be rolled.*/
-	NSDate      *_lastRolloverDate; /**< The date the last role-over ocured.*/
+    NSString    *_rollingFrequency; /**< The frequency with which the file should be rolled.*/
+    NSDate      *_lastRolloverDate; /**< The date the last role-over ocured.*/
 }
 
 /**
@@ -48,7 +48,7 @@ extern NSString *const L4RollingFrequencyMinutely;  /**< Roll the file over ever
  * Initializes an instance from properties.  The properties supported are:
  * - <c>L4RollingFrequencyKey:</c> specifies the frequency when the log file should be rolled.  See L4RollingFrequency.
  * If the values are being set in a file, this is how they could look:
- *	<code>log4cocoa.appender.A2.L4RollingFrequency=L4RollingFrequencyDaily</code>
+ *    <code>log4cocoa.appender.A2.L4RollingFrequency=L4RollingFrequencyDaily</code>
  * @param initProperties the proterties to use.
  */
 - (id) initWithProperties:(L4Properties *) initProperties;

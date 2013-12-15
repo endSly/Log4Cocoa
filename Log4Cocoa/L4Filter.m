@@ -10,13 +10,13 @@
 
 - (id)initWithProperties:(L4Properties *)initProperties
 {
-	return [super init];
+    return [super init];
 }
 
 
 - (L4FilterResult)decide:(L4LogEvent *)event
 {
-	return L4FilterNeutral;
+    return L4FilterNeutral;
 }
 
 @end

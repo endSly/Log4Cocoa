@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 
-#define		  L4LogLog_PREFIX @"log4cocoa: "
+#define          L4LogLog_PREFIX @"log4cocoa: "
 #define  L4LogLog_WARN_PREFIX @"log4cocoa: WARN: "
 #define L4LogLog_ERROR_PREFIX @"log4cocoa: ERROR: "
 
@@ -9,20 +9,19 @@
  * stderr depending on the severity of the message.  
  * @note This class should not be used outside the framework.
  */
-@interface L4LogLog : NSObject {
-}
+@interface L4LogLog : NSObject
 
 /**
  * Is internal debugging enabled?
  * @return YES if it is, NO if it is not.
  */
-+ (BOOL) internalDebuggingEnabled;
++ (BOOL)internalDebuggingEnabled;
 
 /**
  * Changes the state of internal debugging.
  * @param enabled YES to enable, NO to disable.
  */
-+ (void) setInternalDebuggingEnabled:(BOOL) enabled;
++ (void)setInternalDebuggingEnabled:(BOOL)enabled;
 
 /**
  * Accessor for quietModeEnabled.
@@ -89,9 +88,9 @@
  * @param exception the exsception to log.
  */
 + (void) writeMessage:(NSString *)message 
-		   withPrefix:(NSString *)prefix 
-			   toFile:(NSFileHandle *)fileHandle 
-			exception:(NSException *)exception;
+           withPrefix:(NSString *)prefix 
+               toFile:(NSFileHandle *)fileHandle 
+            exception:(NSException *)exception;
 
 @end
 // For copyright & license, see LICENSE.

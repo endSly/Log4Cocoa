@@ -21,22 +21,13 @@
  */
 @protocol L4LoggerRepository <NSObject>
 
+@property L4Level *threshold; /**< The minimum level to log.*/
+
 /**
  * Is the repository disabled for a given level? The answer depends on the repository threshold and the 
  * <code>level</code> parameter.
  */
 - (BOOL) isDisabled:(int) aLevel;
-
-/**
- * Accessor for the threshold property.
- */
-- (L4Level *)threshold;
-
-/**
- * Mutator for the threshold property.
- * @param aLevel the new threshold level.
- */
-- (void) setThreshold:(L4Level *)aLevel;
 
 /**
  * Mutator for the threshold property.

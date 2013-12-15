@@ -27,13 +27,13 @@ extern NSString* const L4InvalidBraceClauseException;
 /**
  * An NSCharacterSet that contains the default format specifier characters
  */
-#define L4PatternLayoutDefaultSpecifiers	[NSCharacterSet characterSetWithCharactersInString:@"CdFlLmMnprt%"]
+#define L4PatternLayoutDefaultSpecifiers    [NSCharacterSet characterSetWithCharactersInString:@"CdFlLmMnprt%"]
 
 /**
  * An NSCharacterSet that contains the subset of characters from L4PatternLayoutDefaultSpecifiers that can have a brace clause 
  * after the character
  */
-#define L4PatternLayoutTrailingBracesSpecifiers	[NSCharacterSet characterSetWithCharactersInString:@"Cd"]
+#define L4PatternLayoutTrailingBracesSpecifiers    [NSCharacterSet characterSetWithCharactersInString:@"Cd"]
 
 @class L4LogEvent;
 @class L4PatternParser;
@@ -230,15 +230,35 @@ extern NSString* const L4InvalidBraceClauseException;
  * </table>
  * 
  */
-@interface L4PatternLayout :L4Layout
-{
-	NSString*			conversionPattern; /**< conversionPattern*/
-	id					parserDelegate; /**< parserDelegate*/
-	id					converterDelegate; /**< converterDelegate*/
 
-	@private
-	NSMutableArray*		tokenArray; /**< tokenArray*/
-}
+@protocol L4PatternLayoutConverterDelegate;
+@protocol L4PatternLayoutParserDelegate;
+
+@interface L4PatternLayout :L4Layout
+
+/**
+ * Layout conversion pattern
+ */
+@property (copy) NSString * conversionPattern;
+
+/**
+ * When the pattern layout formats logging messages, it first takes the conversion 
+ * pattern and parses it into token strings.  Then, it takes each token string and 
+ * converts it into the corresponding part of the final formatted message.  
+ * You can provide a converter delegate to override or extend how a pattern layout
+ * converts its token strings.  By default, the pattern layout does nothing to 
+ * literal string tokens and converts format specifiers as explained in the description of this class.
+ * The converter delegate must respond to the convertTokenString:withLoggingEvent:intoString:method.
+ */
+@property (strong) id <L4PatternLayoutConverterDelegate> converterDelegate;
+
+/**
+ * When the pattern layout formats logging messages, it first takes the conversion pattern and parses it into token strings.
+ * You can provide a parser delegate to override how a pattern layout parses the conversion pattern into token strings.  By
+ * default, the pattern layout divides the conversion pattern into a series of literal strings and format specifiers.
+ * The parser delegate must respond to the parseConversionPattern:intoArray:method.
+ */
+@property (strong) id <L4PatternLayoutParserDelegate> parserDelegate;
 
 /**
  * Initializes an L4PatternLayout with the default conversion pattern, %m%n
@@ -266,60 +286,27 @@ extern NSString* const L4InvalidBraceClauseException;
  * @param event A logging event that contains information that the layout needs to format the logging message.
  * @throw L4InvalidSpecifierException if the pattern layout's conversion pattern contains an invalid conversion specifier.
  * @throw L4NoConversionPatternException if the pattern layout's conversion pattern is nil.  This should only happen if you
- *		have code like the following:<code>[patternLayout setConversionPattern:nil];</code>
+ *        have code like the following:<code>[patternLayout setConversionPattern:nil];</code>
  * @throw L4InvalidBraceClauseException when a conversion specifier's brace clause is invalid for any reason. 
- * @return	A formatted logging message that adheres to the L4PatternLayout's conversion pattern.
+ * @return    A formatted logging message that adheres to the L4PatternLayout's conversion pattern.
 */
 - (NSString *)format:(L4LogEvent *)event;
 
-/**
- * Returns the pattern layout's conversion pattern
- * @return The pattern layout's conversion pattern
- */
-- (NSString*)conversionPattern;
+@end
 
-/**
- * Sets the pattern layout's conversion pattern.
- * @param cp The new conversion pattern.
+/*
+ * This is here for testing purposes.  Otherwise, the conversion pattern does not get parsed until a log event happens.
  */
-- (void)setConversionPattern:(NSString*)cp;
+@interface L4PatternLayout (TestMethods)
 
-/**
- * Returns the pattern layout's parser delegate object.
- * @return	The pattern layout's parser delegate.
- */
-- (id)parserDelegate;
-
-/**
- * Sets the optional parser delegate object for this pattern layout.
- * When the pattern layout formats logging messages, it first takes the conversion pattern and parses it into token strings.  
- * You can provide a parser delegate to override how a pattern layout parses the conversion pattern into token strings.  By 
- * default, the pattern layout divides the conversion pattern into a series of literal strings and format specifiers.
- * The parser delegate must respond to the parseConversionPattern:intoArray:method.
- * @param pd The new parser delegate
- */
-- (void)setParserDelegate:(id)pd;
-
-/** 
- * Returns the pattern layout's converter delegate object.
- * @return The pattern layout's converter delegate.
- */
-- (id)converterDelegate;
-
-/**
- * Sets the optional converter delegate object for this pattern layout.
- * When the pattern layout formats logging messages, it first takes the conversion pattern and parses it into token strings.  Then, it takes each token string and converts it into the corresponding part of the final formatted message.  You can provide a converter delegate to override or extend how a pattern layout converts its token strings.  By default, the pattern layout does nothing to literal string tokens and converts format specifiers as explained in the description of this class.
- * The converter delegate must respond to the convertTokenString:withLoggingEvent:intoString:method.
- * @param cd The new converter delegate.
-*/
-- (void)setConverterDelegate:(id)cd;
+- (NSArray *)tokenArray;
 
 @end
 
 /**
  * Declares methods that an L4PatternLayout's converter delegate must implement.
  */
-@interface NSObject (L4PatternLayoutConverterDelegate)
+@protocol L4PatternLayoutConverterDelegate <NSObject>
 
 /**
  * Allows an object to override or extend how an L4PatternLayout converts its token strings into pieces of the final formatted.
@@ -336,7 +323,7 @@ extern NSString* const L4InvalidBraceClauseException;
 /**
  * Declares methods that an L4PatternLayout's parser delegate must implement.
  */
-@interface NSObject (L4PatternLayoutParserDelegate)
+@protocol L4PatternLayoutParserDelegate  <NSObject>
 
 /**
  * Allows an object to override how an L4PatternLayout parses its conversion pattern into a series of token strings.
@@ -345,13 +332,6 @@ extern NSString* const L4InvalidBraceClauseException;
  */
 - (void)parseConversionPattern:(NSString*)cp intoArray:(NSMutableArray* __autoreleasing *)tokenStringArray;
 
-@end
-
-/*
- * This is here for testing purposes.  Otherwise, the conversion pattern does not get parsed until a log event happens.
- */
-@interface L4PatternLayout (TestMethods)
-- (NSArray *)tokenArray;
 @end
 
 // For copyright & license, see LICENSE.

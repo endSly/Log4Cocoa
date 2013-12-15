@@ -15,8 +15,8 @@ extern const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize;
  */
 @interface L4RollingFileAppender : L4FileAppender
 {
-	unsigned int		maxBackupIndex; /**< The number of old files to keep; by default, this is 1.*/
-	unsigned long long	maxFileSize; /**< The max size a log file is allowed to be; by default, this is 10MB.*/
+    unsigned int        maxBackupIndex; /**< The number of old files to keep; by default, this is 1.*/
+    unsigned long long    maxFileSize; /**< The max size a log file is allowed to be; by default, this is 10MB.*/
 }
 
 /**
@@ -30,11 +30,11 @@ extern const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize;
 /**
  * Initializes an instance from properties.  The properties supported are:
  * - <c>MaximumFileSize:</c> the maxamum size of the log file in bytes, before beginning a new one.  A suffix of MB and 
- *	KB can be used to specify mega and kilo bytes.
+ *    KB can be used to specify mega and kilo bytes.
  * - <c>MaxBackupIndex:</c> specifies how many log files to keep.
  * If the values are being set in a file, this is how they could look:
- *	<code>log4cocoa.appender.A2.MaximumFileSize=10MB
- *	log4cocoa.appender.A2.MaxBackupIndex=3</code>
+ *    <code>log4cocoa.appender.A2.MaximumFileSize=10MB
+ *    log4cocoa.appender.A2.MaxBackupIndex=3</code>
  * This specifies that three files should be maintained, in adition to the one currently being logged to, and that the
  * file should be rolled at 10 MB in size.
  * @param initProperties the proterties to use.
@@ -47,7 +47,7 @@ extern const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize;
  * respectively.
  * @param aLayout The layout object you want this appender to have.
  * @param aName The file path of the initial file you want created.  Backup files have the same name, but with the 
- *		backup file number appended to it (See the <code>rollOver</code> method). 
+ *        backup file number appended to it (See the <code>rollOver</code> method). 
  * @return An initialized instance of this class.
  */
 - (id) initWithLayout:(L4Layout *) aLayout fileName:(NSString *) aName;
@@ -57,9 +57,9 @@ extern const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize;
  * This is the class's designated initializer.
  * @param aLayout The layout object you want this appender to have.
  * @param aName The file path of the initial file you want created.  Backup files have the same name, but with the 
- *		backup file number appended to it (See the <code>rollOver</code> method).
+ *        backup file number appended to it (See the <code>rollOver</code> method).
  * @param flag YES = log output should be appended to the file.  NO = the file's previous contents should be 
- *		overwritten.
+ *        overwritten.
  * @return An initialized instance of this class
  */
 - (id) initWithLayout:(L4Layout *) aLayout fileName:(NSString *) aName append:(BOOL) flag;

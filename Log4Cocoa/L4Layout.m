@@ -8,9 +8,9 @@
 
 @implementation L4Layout
 
-+ (L4Layout *)simpleLayout
++ (instancetype)simpleLayout
 {
-	return [[L4SimpleLayout alloc] init];
+    return [[L4SimpleLayout alloc] init];
 }
 
 - (id)initWithProperties:(L4Properties *)initProperties
@@ -20,27 +20,27 @@
 
 - (NSString *)format:(L4LogEvent *)event
 {
-	return [event description];
+    return [event description];
 }
 
 - (NSString *)contentType
 {
-	return @"text/plain";
+    return @"text/plain";
 }
 
 - (NSString *)header
 {
-	return nil;
+    return nil;
 }
 
 - (NSString *)footer
 {
-	return nil;
+    return nil;
 }
 
 - (BOOL)ignoresExceptions
 {
-	return YES;
+    return YES;
 }
 
 @end

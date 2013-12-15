@@ -13,7 +13,7 @@
  * This factory method is used to create a simple layout.
  * @return the new instance of L4SimpleLayout.
  */
-+ (L4Layout *)simpleLayout;
++ (instancetype)simpleLayout;
 
 /**
  * Initializes an instance from properties.  Currently there are no properties that apply to this class.

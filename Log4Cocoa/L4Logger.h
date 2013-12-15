@@ -11,16 +11,16 @@
 /**
  * This is the primary interface into the logging framework. 
  * The functionality of the class is broken down into the following areas:
- *	<dl> 
+ *    <dl> 
  *  <dt><b>Base methods</b></dt>
- *	<dd> responsible for setting the level at which messages get logged.</dd>
+ *    <dd> responsible for setting the level at which messages get logged.</dd>
  *  <dt> <b>AppenderRelatedMethods methods</b></dt>
- *	<dd> responsible for adding, calling, and removing L4Appender instances.</dd>
+ *    <dd> responsible for adding, calling, and removing L4Appender instances.</dd>
  *  <dt> <b>CoreLoggingMethods methods </b></dt>
- *	<dd> the methods that do the actual logging.</dd>
+ *    <dd> the methods that do the actual logging.</dd>
  *  <dt> <b>LogManagerCoverMethods methods </b></dt>
- *	<dd> Class methods the handle the chain of L4Logger instances, and find the correct L4Logger
- *		 instance for a given class or logger name.</dd>
+ *    <dd> Class methods the handle the chain of L4Logger instances, and find the correct L4Logger
+ *         instance for a given class or logger name.</dd>
  *  </dl>
  */
 @interface L4Logger : NSObject {
@@ -58,13 +58,13 @@
  * DON'T USE, only for use of log manager
  * @param loggerName the name of this logger.
  */
-- (id) initWithName:(NSString *)loggerName;
+- (id)initWithName:(NSString *)loggerName;
 
 /**
  * The efective level for this logger.  Events with a level below this will not be logged.
  * @return the minimum level this logger will log.
  */
-- (L4Level *) effectiveLevel;
+- (L4Level *)effectiveLevel;
 
 /* ********************************************************************* */
 #pragma mark AppenderRelatedMethods methods
@@ -189,10 +189,10 @@
  * @param aMessage the message to be logged if the assertian is false.
  */
 - (void) lineNumber:(int) lineNumber
-		   fileName:(char *) fileName
-		 methodName:(char *) methodName
-			 assert:(BOOL) anAssertion
-				log:(NSString *) aMessage;
+           fileName:(char *) fileName
+         methodName:(char *) methodName
+             assert:(BOOL) anAssertion
+                log:(NSString *) aMessage;
 
 
 /**
@@ -207,11 +207,11 @@
  * @param e the exception to be logged.
  */
 - (void) lineNumber:(int) lineNumber
-		   fileName:(char *) fileName
-		 methodName:(char *) methodName
-			message:(id) aMessage
-			  level:(L4Level *) aLevel
-		  exception:(NSException *) e;
+           fileName:(char *) fileName
+         methodName:(char *) methodName
+            message:(id) aMessage
+              level:(L4Level *) aLevel
+          exception:(NSException *) e;
 
 /* This is the designated logging method that the others invoke. */
 /**
@@ -285,7 +285,7 @@
  */
 @interface L4FunctionLogger :NSObject
 {
-	L4FunctionLogger *instance; /**< the singleon instance of this class. */
+    L4FunctionLogger *instance; /**< the singleon instance of this class. */
 }
 /**
  * Accessor for the singleton instance.

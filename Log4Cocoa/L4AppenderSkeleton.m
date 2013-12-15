@@ -68,7 +68,7 @@
             L4Filter *newFilter = [self filterForClassName:className andProperties:filterProperties];
             
             if ( newFilter != nil ) {
-				[self appendFilter:newFilter];
+                [self appendFilter:newFilter];
             } else {
                 [L4LogLog error:[NSString stringWithFormat:
                                   @"Error while creating filter \"%@\".", className]];
@@ -89,7 +89,7 @@
 {
     BOOL isAsSevere = NO;
     @synchronized(self) {
-    	isAsSevere = ((_threshold == nil) || ([aLevel isGreaterOrEqual:_threshold]));
+        isAsSevere = ((_threshold == nil) || ([aLevel isGreaterOrEqual:_threshold]));
     }
     return isAsSevere;
 }
@@ -98,40 +98,40 @@
 
 - (L4Filter *) filterForClassName:(NSString *)filterClassName andProperties:(L4Properties *)filterProperties
 {
-	L4Filter *newFilter = nil;
-	Class filterClass = NSClassFromString(filterClassName);
-	
-	if ( filterClass == nil ) {
-	 	[L4LogLog error:[NSString stringWithFormat:@"Cannot find L4Filter class with name:\"%@\".", filterClassName]];
-	} else {	  		
-	 	if ( ![[[filterClass alloc] init] isKindOfClass:[L4Filter class]] ) {
-	  		[L4LogLog error:
-			 [NSString stringWithFormat:
-			  @"Failed to create instance with name \"%@\" since it is not of kind L4Filter.", filterClass]];
-	 	} else {
-	  		newFilter = [(L4Filter *)[filterClass alloc] initWithProperties:filterProperties];
-	 	}
-	}
-	return newFilter;
+    L4Filter *newFilter = nil;
+    Class filterClass = NSClassFromString(filterClassName);
+    
+    if ( filterClass == nil ) {
+         [L4LogLog error:[NSString stringWithFormat:@"Cannot find L4Filter class with name:\"%@\".", filterClassName]];
+    } else {              
+         if ( ![[[filterClass alloc] init] isKindOfClass:[L4Filter class]] ) {
+              [L4LogLog error:
+             [NSString stringWithFormat:
+              @"Failed to create instance with name \"%@\" since it is not of kind L4Filter.", filterClass]];
+         } else {
+              newFilter = [(L4Filter *)[filterClass alloc] initWithProperties:filterProperties];
+         }
+    }
+    return newFilter;
 }
 
 - (L4Layout *)layoutForClassName:(NSString *)layoutClassName andProperties:(L4Properties *)layoutProperties
 {
-	L4Layout *newLayout = nil;
-	Class layoutClass = NSClassFromString(layoutClassName);
-	
-	if ( layoutClass == nil ) {
-	 	[L4LogLog error:[NSString stringWithFormat:@"Cannot find L4Layout class with name:\"%@\".", layoutClassName]];
-	} else {	  		
-	 	if ( ![[[layoutClass alloc] init] isKindOfClass:[L4Layout class]] ) {
-	  		[L4LogLog error:
-			 [NSString stringWithFormat:
-			  @"Failed to create instance with name \"%@\" since it is not of kind L4Layout.", layoutClass]];
-	 	} else {
-	  		newLayout = [(L4Layout *)[layoutClass alloc] initWithProperties:layoutProperties];
-	 	}
-	}
-	return newLayout;
+    L4Layout *newLayout = nil;
+    Class layoutClass = NSClassFromString(layoutClassName);
+    
+    if ( layoutClass == nil ) {
+         [L4LogLog error:[NSString stringWithFormat:@"Cannot find L4Layout class with name:\"%@\".", layoutClassName]];
+    } else {              
+         if ( ![[[layoutClass alloc] init] isKindOfClass:[L4Layout class]] ) {
+              [L4LogLog error:
+             [NSString stringWithFormat:
+              @"Failed to create instance with name \"%@\" since it is not of kind L4Layout.", layoutClass]];
+         } else {
+              newLayout = [(L4Layout *)[layoutClass alloc] initWithProperties:layoutProperties];
+         }
+    }
+    return newLayout;
 }
 
 #pragma mark - L4AppenderCategory methods
@@ -192,7 +192,7 @@
 
 - (L4Filter *)headFilter
 {
-	return _headFilter;
+    return _headFilter;
 }
 
 - (void)clearFilters
@@ -216,7 +216,7 @@
 
 - (BOOL)requiresLayout
 {
-	return NO;
+    return NO;
 }
 
 @end
