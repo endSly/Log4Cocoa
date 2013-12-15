@@ -218,7 +218,7 @@
 			children = (
 				0DDBCE16185C1C3100B42744 /* Layouts */,
 				0DDBCE15185C1BCE00B42744 /* Appenders */,
-				0DDBCE17185C7DD300B42744 /* Configurators */,
+				0DDBCE17185C7DD300B42744 /* Configuration */,
 				0DDBCE18185C7E6200B42744 /* Loggers */,
 				0DDBCE19185CAB3C00B42744 /* Filters */,
 				0DE9853314C36A7F001E0E1A /* L4Level.h */,
@@ -307,7 +307,7 @@
 			name = Layouts;
 			sourceTree = "<group>";
 		};
-		0DDBCE17185C7DD300B42744 /* Configurators */ = {
+		0DDBCE17185C7DD300B42744 /* Configuration */ = {
 			isa = PBXGroup;
 			children = (
 				0DE9854814C36A7F001E0E1A /* L4Properties.h */,
@@ -317,7 +317,7 @@
 				0DE9852314C36A7F001E0E1A /* L4BasicConfigurator.h */,
 				0DE9852414C36A7F001E0E1A /* L4BasicConfigurator.m */,
 			);
-			name = Configurators;
+			name = Configuration;
 			sourceTree = "<group>";
 		};
 		0DDBCE18185C7E6200B42744 /* Loggers */ = {

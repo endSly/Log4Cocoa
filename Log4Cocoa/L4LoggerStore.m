@@ -11,7 +11,7 @@
 /**
  * Private methods.
  */
-@interface L4LoggerStore (Private)
+@interface L4LoggerStore ()
 /**
  * Generates a psuedo-fully qualified class name for the class using java-esque dot "." notation seperating classes from
  * their parents.  For example L4Logger results in the string - <code>NSObject.L4Logger</code>

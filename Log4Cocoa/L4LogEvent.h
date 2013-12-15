@@ -73,8 +73,8 @@
 + (instancetype)logger:(L4Logger *) aLogger
                  level:(L4Level *) aLevel
             lineNumber:(int) aLineNumber
-              fileName:(char *) aFileName
-            methodName:(char *) aMethodName
+              fileName:(const char *) aFileName
+            methodName:(const char *) aMethodName
                message:(id) aMessage
              exception:(NSException *) e;
 
@@ -93,8 +93,8 @@
 - (id)initWithLogger:(L4Logger *) aLogger
                level:(L4Level *) aLevel
           lineNumber:(int) aLineNumber
-            fileName:(char *) aFileName
-          methodName:(char *) aMethodName
+            fileName:(const char *) aFileName
+          methodName:(const char *) aMethodName
              message:(id) aMessage
            exception:(NSException *) e
       eventTimestamp:(NSDate *) aDate;

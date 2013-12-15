@@ -1,3 +1,5 @@
+// For copyright & license, see LICENSE.
+
 #import <Foundation/Foundation.h>
 #import "L4FileAppender.h"
 
@@ -22,13 +24,10 @@ extern NSString *const L4RollingFrequencyMinutely;  /**< Roll the file over ever
  * It is possible to specify monthly, weekly, half-daily, daily, hourly, or minutely rollover schedules.  
 */
 @interface L4DailyRollingFileAppender : L4FileAppender {
-    NSString    *_rollingFrequency; /**< The frequency with which the file should be rolled.*/
     NSDate      *_lastRolloverDate; /**< The date the last role-over ocured.*/
 }
 
-/**
- * Sets rolling frequency
- */
+/** The frequency with which the file should be rolled.*/
 @property (nonatomic, copy) NSString *rollingFrequency;
 
 /**
@@ -68,4 +67,3 @@ extern NSString *const L4RollingFrequencyMinutely;  /**< Roll the file over ever
 - (void)subAppend: (L4LogEvent*)event;
 
 @end
-// For copyright & license, see LICENSE.

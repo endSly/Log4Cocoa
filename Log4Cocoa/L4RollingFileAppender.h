@@ -14,10 +14,20 @@ extern const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize;
  * specified size.  This class is a subclass of L4FileAppender.
  */
 @interface L4RollingFileAppender : L4FileAppender
-{
-    unsigned int        maxBackupIndex; /**< The number of old files to keep; by default, this is 1.*/
-    unsigned long long    maxFileSize; /**< The max size a log file is allowed to be; by default, this is 10MB.*/
-}
+
+/**
+ * The maxBackupIndex determines how many backup files are kept before the oldest is erased. This method takes a
+ * positive integer value. If set to zero, then there will be no backup files and the log file will be truncated when it
+ * reaches maxFileSize.
+ */
+@property NSUInteger maxBackupIndex;
+
+/** 
+ * Returns the maximum file size allowed for log files.  If the file grows larger than this, it will be backed up and
+ * any additional logging statements will be written to a new file.
+ * By default, this is 10MB.
+ */
+@property NSUInteger maxFileSize;
 
 /**
  * This method initializes a new instance of the L4RollingFileAppender class.
@@ -63,34 +73,6 @@ extern const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize;
  * @return An initialized instance of this class
  */
 - (id) initWithLayout:(L4Layout *) aLayout fileName:(NSString *) aName append:(BOOL) flag;
-
-/**
- * Returns the maximum number of backup files that will be created when the initial log file rolls over.
- * @return The maximum number of backup files that will be created when the initial log file rolls over.
- */
-- (unsigned int) maxBackupIndex;
-
-/**
- * Set the maximum number of backup files to keep around.
- * The maxBackupIndex determines how many backup files are kept before the oldest is erased. This method takes a 
- * positive integer value. If set to zero, then there will be no backup files and the log file will be truncated when it
- * reaches maxFileSize.
- * @param mbi The maximum number of backup files that will be created
- */
-- (void)setMaxBackupIndex:(unsigned int)mbi;
-
-/**
- * Returns the maximum file size allowed for log files.  If the file grows larger than this, it will be backed up and 
- * any additional logging statements will be written to a new file.
- * @result The maximum file size allowed for log files (in bytes)
- */
-- (unsigned long long) maximumFileSize;
-
-/**
- * Sets the maximum file size allowed for log files.
- * @param mfs The maximum file size allowed for log files (in bytes).
- */
-- (void)setMaximumFileSize:(unsigned long long)mfs;
 
 /**
  * Explicitly rolls a file over.

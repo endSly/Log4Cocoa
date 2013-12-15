@@ -6,22 +6,13 @@
 #import "L4Layout.h"
 #import "L4Properties.h"
 
-@interface L4ConsoleAppender (Private)
-/**
- * Sets this appender up to use stdout.
- */
-- (void) setStandardOut;
-/**
- * Sets this appender up to use stderr.
- */
-- (void) setStandardErr;
-@end
+@implementation L4ConsoleAppender {
+    BOOL _isStandardOut; /**< Tracks if this appender is for stdout.*/
+}
 
-@implementation L4ConsoleAppender
 
-/* ********************************************************************* */
-#pragma mark Class methods
-/* ********************************************************************* */
+#pragma mark - Class methods
+
 + (L4ConsoleAppender *) standardOutWithLayout:(L4Layout *)aLayout
 {
     return [[L4ConsoleAppender alloc] initTarget:YES withLayout:aLayout];
@@ -32,9 +23,9 @@
     return [[L4ConsoleAppender alloc] initTarget:NO withLayout:aLayout];
 }
 
-/* ********************************************************************* */
-#pragma mark Instance methods
-/* ********************************************************************* */
+
+#pragma mark - Instance methods
+
 - (id) init
 {
     return [self initTarget:YES withLayout:[L4Layout simpleLayout]];
@@ -43,33 +34,33 @@
 - (id) initTarget:(BOOL)standardOut withLayout:(L4Layout *)aLayout
 {
     self = [super init];
-    if( self != nil ) {
-        if( standardOut ) {
+    if (self) {
+        if (standardOut) {
             [self setStandardOut];
         } else {
             [self setStandardErr];
         }
-        [self setLayout:aLayout];
+        self.layout = aLayout;
     }
     return self;
 }
 
 - (BOOL) isStandardOut
 {
-    return isStandardOut;
+    return _isStandardOut;
 }
 
-/* ********************************************************************* */
-#pragma mark L4Appender protocol methods
-/* ********************************************************************* */
+
+#pragma mark - L4Appender protocol methods
+
 - (id) initWithProperties:(L4Properties *)initProperties
 {    
     self = [super initWithProperties:initProperties];
-    if ( self != nil ) {
+    if (self) {
         BOOL logToStandardOut = YES;
         
         // Support for appender.LogToStandardOut in properties configuration file
-        if ( [initProperties stringForKey:@"LogToStandardOut"] != nil ) {
+        if ([initProperties stringForKey:@"LogToStandardOut"]) {
             NSString *buf = [[initProperties stringForKey:@"LogToStandardOut"] lowercaseString];
             logToStandardOut = [buf isEqualToString:@"true"];
         }
@@ -85,15 +76,14 @@
 }
 
 
-/* ********************************************************************* */
-#pragma mark Private methods
-/* ********************************************************************* */
+#pragma mark - Private methods
+
 - (void) setStandardOut
 {
     @synchronized(self) {
-        if(!isStandardOut || (fileHandle == nil)) {
-            isStandardOut = YES;
-            fileHandle = [NSFileHandle fileHandleWithStandardOutput];
+        if (!_isStandardOut || !_fileHandle) {
+            _isStandardOut = YES;
+            _fileHandle = [NSFileHandle fileHandleWithStandardOutput];
         }
     }
 }
@@ -101,12 +91,11 @@
 - (void) setStandardErr
 {
     @synchronized(self) {
-        if(isStandardOut || (fileHandle == nil)) {
-            isStandardOut = NO;
-            fileHandle = [NSFileHandle fileHandleWithStandardError];
+        if (_isStandardOut || !_fileHandle) {
+            _isStandardOut = NO;
+            _fileHandle = [NSFileHandle fileHandleWithStandardError];
         }
     }
 }
-
 
 @end

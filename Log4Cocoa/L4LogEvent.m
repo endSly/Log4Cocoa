@@ -5,9 +5,9 @@
 #import "L4LogEvent.h"
 #import "L4Logger.h"
 
-static int   NO_LINE_NUMBER = -1;
-static char *NO_FILE_NAME   = "";
-static char *NO_METHOD_NAME = "";
+static const int   NO_LINE_NUMBER = -1;
+static const char *NO_FILE_NAME   = "";
+static const char *NO_METHOD_NAME = "";
 
 static NSDate *startTime = nil;
 
@@ -55,8 +55,8 @@ static NSDate *startTime = nil;
 + (instancetype)logger:(L4Logger *)aLogger
                  level:(L4Level *)aLevel
             lineNumber:(int)aLineNumber
-              fileName:(char *)aFileName
-            methodName:(char *)aMethodName
+              fileName:(const char *)aFileName
+            methodName:(const char *)aMethodName
                message:(id)aMessage
              exception:(NSException *)e
 {
@@ -78,8 +78,8 @@ static NSDate *startTime = nil;
 - (id) initWithLogger:(L4Logger *) aLogger
                 level:(L4Level *) aLevel
            lineNumber:(int) aLineNumber
-             fileName:(char *) aFileName
-           methodName:(char *) aMethodName
+             fileName:(const char *) aFileName
+           methodName:(const char *) aMethodName
               message:(id) aMessage
             exception:(NSException *) e
        eventTimestamp:(NSDate *) aDate

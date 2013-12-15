@@ -7,17 +7,25 @@
 #import <Foundation/Foundation.h>
 #import "L4WriterAppender.h"
 
-@interface L4FileAppender : L4WriterAppender {
-    BOOL        append;     /**< Tracks if we should append or over-right.*/
-    NSString  * fileName;   /**< The name of the file we write to.*/
-}
+@interface L4FileAppender : L4WriterAppender
+
+/**
+ * Tracks if we should append or over-right.
+ */
+
+@property (nonatomic, readonly) BOOL append;
+
+/**
+ * The path to the file to which log output should be written.
+ */
+@property (nonatomic, readonly) NSString * fileName;
 
 /**
  * A basic initializer.
  * This method calls <code>initWithLayout:fileName:append:bufferIO:bufferSize:</code> with layout and file name set to nil,
  * append is NO, bufferIO is NO, bufferSize is 0
  */
-- (id) init;
+- (id)init;
 
 /**
  * Initializes an instance from properties.  The properties supported are:
@@ -28,7 +36,7 @@
  *    log4cocoa.appender.A2.Append=false</code>
  * @param initProperties the proterties to use.
  */
-- (id) initWithProperties:(L4Properties *) initProperties;
+- (id)initWithProperties:(L4Properties *)initProperties;
 
 /**
  * Initializes an L4FileAppender instance with the specified layout and file path name.
@@ -39,7 +47,7 @@
  * @throws
  * @return An initialized L4FileAppender object
  */
-- (id) initWithLayout:(L4Layout *) aLayout fileName:(NSString *) aName;
+- (id)initWithLayout:(L4Layout *)aLayout fileName:(NSString *)aName;
 
 /**
  * Initializes an L4FileAppender instance with the specified layout, file path name, and append option.
@@ -51,19 +59,7 @@
  * @throws
  * @return An initialized L4FileAppender object
  */
-- (id) initWithLayout:(L4Layout *) aLayout fileName:(NSString *) aName append:(BOOL) flag;
-
-/**
- * The path to the file to which log output should be written.
- * @return The path to the file to which log output should be written.
- */
-- (NSString *) fileName;
-
-/**
- * The append option of this object.
- * @return YES = output will be appended to the end of the file, NO = output will overwrite the previous contents of the file
- */
-- (BOOL) append;
+- (id)initWithLayout:(L4Layout *)aLayout fileName:(NSString *)aName append:(BOOL)flag;
 
 @end
 
@@ -75,7 +71,7 @@
 /**
  * This method closes and releases the underlying file handle.
  */
-- (void) closeFile;
+- (void)closeFile;
 
 /**
  * This method is called to insure the file is set up to write to.

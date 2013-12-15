@@ -1,3 +1,5 @@
+// For copyright & license, see LICENSE.
+
 #import "L4WriterAppender.h"
 #import "L4Layout.h"
 #import "L4LogEvent.h"
@@ -16,8 +18,9 @@ static NSData *lineBreakChar;
 - (id) init
 {
     self = [super init];
-    if( self != nil ) {
-        immediateFlush = YES;
+    if (self) {
+        _immediateFlush = YES;
+        _lossyEncoding = YES;
     }
     return self;
 }
@@ -26,16 +29,17 @@ static NSData *lineBreakChar;
 {    
     self = [super initWithProperties:initProperties];
     
-    if ( self != nil ) {
+    if (self) {
         BOOL newImmediateFlush = YES;
         
         // Support for appender.ImmediateFlush in properties configuration file
-        if ( [initProperties stringForKey:@"ImmediateFlush"] != nil ) {
+        if ([initProperties stringForKey:@"ImmediateFlush"]) {
             NSString *buf = [[initProperties stringForKey:@"ImmediateFlush"] lowercaseString];
             newImmediateFlush = [buf isEqualToString:@"true"];
         }
         
-        [self setImmediateFlush:newImmediateFlush];
+        self.immediateFlush = newImmediateFlush;
+        _lossyEncoding = YES;
     }
     
     return self;
@@ -43,33 +47,26 @@ static NSData *lineBreakChar;
 
 - (id) initWithLayout:(L4Layout *)aLayout fileHandle:(NSFileHandle *)aFileHandle
 {
-    if (!(self = [self init])) return nil; // call designated initializer
-    fileHandle= aFileHandle;
-    [self setLayout:aLayout];
+    self = [super init];
+    if (self) {
+        _fileHandle = aFileHandle;
+        self.layout = aLayout;
+        _immediateFlush = YES;
+        _lossyEncoding = YES;
+    }
     return self;
 }
 
-
-- (BOOL) immediateFlush
-{
-    return immediateFlush;
-}
-
-- (void) setImmediateFlush:(BOOL) flush
-{
-    immediateFlush = flush;
-}
-
-- (void) append:(L4LogEvent *) anEvent
+- (void)append:(L4LogEvent *)anEvent
 {
     @synchronized(self) {
-        if([self checkEntryConditions]) {
+        if ([self checkEntryConditions]) {
             [self subAppend:anEvent];
         }
     }
 }
 
-- (void) subAppend:(L4LogEvent *) anEvent
+- (void)subAppend:(L4LogEvent *)anEvent
 {
     [self write:[self.layout format:anEvent]];
 }
@@ -81,7 +78,7 @@ static NSData *lineBreakChar;
         return NO;
     }
 
-    if (fileHandle) {
+    if (_fileHandle) {
         [L4LogLog error:[@"No file handle for output stream set for the appender named:" stringByAppendingString:self.name]];
         return NO;
     }
@@ -97,20 +94,19 @@ static NSData *lineBreakChar;
 - (void) closeWriter
 {
     @try {
-        [fileHandle closeFile];
+        [_fileHandle closeFile];
     }
     @catch (NSException *localException) {
-        [L4LogLog error:[NSString stringWithFormat:@"Could not close file handle:%@\n%@", fileHandle,  localException]];
+        [L4LogLog error:[NSString stringWithFormat:@"Could not close file handle:%@\n%@", _fileHandle,  localException]];
     }
 }
 
 - (void)setFileHandle:(NSFileHandle*)fh
 {
     @synchronized(self) {
-        if (fileHandle != fh) {
+        if (_fileHandle != fh) {
             [self closeWriter];
-            fileHandle = nil;
-            fileHandle = fh;
+            _fileHandle = fh;
         }
     }
 }
@@ -120,21 +116,20 @@ static NSData *lineBreakChar;
     [self closeWriter];
 }
 
-- (void) write:(NSString *) theString
+- (void) write:(NSString *)string
 {
-    if( theString != nil )
-    {
+    if (string) {
         @try {
             @synchronized(self) {
                 // TODO ### -- NEED UNIX EXPERT IS THIS THE BEST WAY ??
                 // TODO - ### - NEED TO WORK ON ENCODING ISSUES (& THEN LATER LOCALIZATION)
                 //
-                [fileHandle writeData:[theString dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES]];
-                [fileHandle writeData:lineBreakChar];
+                [_fileHandle writeData:[string dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:_lossyEncoding]];
+                [_fileHandle writeData:lineBreakChar];
             }
         }
         @catch (NSException *localException) {
-            [L4LogLog error:[NSString stringWithFormat:@"Appender failed to write string:%@\n%@", theString, localException]];
+            [L4LogLog error:[NSString stringWithFormat:@"Appender failed to write string:%@\n%@", string, localException]];
         }
     }
 }
@@ -149,23 +144,13 @@ static NSData *lineBreakChar;
     [self write:[self.layout footer]];
 }
 
-- (NSStringEncoding) encoding
-{
-    return encoding;
-}
 
-- (void) setEncoding:(NSStringEncoding) newEncoding
-{
-    encoding = newEncoding;
-}
+#pragma mark - L4AppenderCategory methods
 
-/* ********************************************************************* */
-#pragma mark L4AppenderCategory methods
-/* ********************************************************************* */
-- (void) close // synchronized ... make thread safe???
+- (void) close
 {
     @synchronized(self) {
-        if( !_closed ) {
+        if (!_closed) {
             _closed = YES;
             [self writeFooter];
             [self reset];
@@ -179,4 +164,3 @@ static NSData *lineBreakChar;
 }
 
 @end
-// For copyright & license, see LICENSE.

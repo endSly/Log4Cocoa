@@ -14,103 +14,102 @@
  * Private methods.
  */
 @interface L4AppenderSkeleton ()
+
 /**
  * Returns a new subclass of L4Filter specified by the class name, configured with the supplied properties.
  * @param filterClassName the name of the L4Filter subclass to instantiate.
  * @param filterProperties the properties used to configure the new instance.
  */
 - (L4Filter *)filterForClassName:(NSString *)filterClassName andProperties:(L4Properties *)filterProperties;
+
 /**
  * Returns a new subclass of L4Layout specified by the class name, configured with the supplied properties.
  * @param layoutClassName the name of the L4Layout subclass to instantiate.
  * @param layoutProperties the properties used to configure the new instance.
  */
 - (L4Layout *)layoutForClassName:(NSString *)layoutClassName andProperties:(L4Properties *)layoutProperties;
+
 @end
 
-@implementation L4AppenderSkeleton
+@implementation L4AppenderSkeleton {
+    L4Filter        * _headFilter;  /**< The firsst filter used by this appender.*/
+    L4Filter __weak * _tailFilter;  /**< The last filter used by this appender.*/
+    BOOL              _closed;      /**< Tracks if this appender has been closed.*/
+}
 
-@synthesize layout = _layout;
-
-- (id) initWithProperties:(L4Properties *)initProperties
+- (id)initWithProperties:(L4Properties *)initProperties
 {
     self = [super init];
-    
+
     if (self) {
         // Configure the layout
         if ([initProperties stringForKey:@"layout"]) {
             L4Properties *layoutProperties = [initProperties subsetForPrefix:@"layout."];
             NSString *className = [initProperties stringForKey:@"layout"];
             L4Layout *newLayout = [self layoutForClassName:className andProperties:layoutProperties];
-            
-            if ( newLayout != nil ) {
-                [self setLayout:newLayout];
+
+            if (!newLayout) {
+                self.layout = newLayout;
             } else {
-                [L4LogLog error:[NSString stringWithFormat:
-                                  @"Error while creating layout \"%@\".", className]];
+                [L4LogLog error:[NSString stringWithFormat:@"Error while creating layout \"%@\".", className]];
                 return nil;
             }
         }
-        
+
         // Support for appender.Threshold in properties configuration file
-        if ( [initProperties stringForKey:@"Threshold"] != nil ) {
+        if ([initProperties stringForKey:@"Threshold"]) {
             NSString *newThreshold = [[initProperties stringForKey:@"Threshold"] uppercaseString];
             [self setThreshold:[L4Level levelWithName:newThreshold]];
         }
-        
+
         // Configure the filters
         L4Properties *filtersProperties = [initProperties subsetForPrefix:@"filters."];
         int filterCount = 0;
-        while ( [filtersProperties stringForKey:[@(++filterCount) stringValue]] != nil ) {
+        while ([filtersProperties stringForKey:[@(++filterCount) stringValue]]) {
             NSString *filterName = [@(filterCount) stringValue];
             L4Properties *filterProperties = [filtersProperties subsetForPrefix:[filterName stringByAppendingString:@"."]];
             NSString *className = [filtersProperties stringForKey:filterName];
             L4Filter *newFilter = [self filterForClassName:className andProperties:filterProperties];
-            
-            if ( newFilter != nil ) {
+
+            if (newFilter) {
                 [self appendFilter:newFilter];
             } else {
-                [L4LogLog error:[NSString stringWithFormat:
-                                  @"Error while creating filter \"%@\".", className]];
+                [L4LogLog error:[NSString stringWithFormat:@"Error while creating filter \"%@\".", className]];
                 return nil;
             }
         }
     }
-    
+
     return self;
 }
 
 
-- (void) append:(L4LogEvent *) anEvent
+- (void)append:(L4LogEvent *)anEvent
 {
 }
 
-- (BOOL) isAsSevereAsThreshold:(L4Level *) aLevel
+- (BOOL)isAsSevereAsThreshold:(L4Level *)aLevel
 {
-    BOOL isAsSevere = NO;
     @synchronized(self) {
-        isAsSevere = ((_threshold == nil) || ([aLevel isGreaterOrEqual:_threshold]));
+        return ((_threshold == nil) || ([aLevel isGreaterOrEqual:_threshold]));
     }
-    return isAsSevere;
 }
 
 #pragma mark - Private methods
 
-- (L4Filter *) filterForClassName:(NSString *)filterClassName andProperties:(L4Properties *)filterProperties
+- (L4Filter *)filterForClassName:(NSString *)filterClassName andProperties:(L4Properties *)filterProperties
 {
     L4Filter *newFilter = nil;
     Class filterClass = NSClassFromString(filterClassName);
-    
+
     if ( filterClass == nil ) {
-         [L4LogLog error:[NSString stringWithFormat:@"Cannot find L4Filter class with name:\"%@\".", filterClassName]];
-    } else {              
-         if ( ![[[filterClass alloc] init] isKindOfClass:[L4Filter class]] ) {
-              [L4LogLog error:
-             [NSString stringWithFormat:
-              @"Failed to create instance with name \"%@\" since it is not of kind L4Filter.", filterClass]];
-         } else {
-              newFilter = [(L4Filter *)[filterClass alloc] initWithProperties:filterProperties];
-         }
+        [L4LogLog error:[NSString stringWithFormat:@"Cannot find L4Filter class with name:\"%@\".", filterClassName]];
+    } else {
+        if ( ![[[filterClass alloc] init] isKindOfClass:[L4Filter class]] ) {
+            [L4LogLog error:[NSString stringWithFormat:@"Failed to create instance with name \"%@\" since it is not of kind L4Filter.", filterClass]];
+        } else {
+            newFilter = [(L4Filter *)[filterClass alloc] initWithProperties:filterProperties];
+        }
     }
     return newFilter;
 }
@@ -119,17 +118,17 @@
 {
     L4Layout *newLayout = nil;
     Class layoutClass = NSClassFromString(layoutClassName);
-    
+
     if ( layoutClass == nil ) {
-         [L4LogLog error:[NSString stringWithFormat:@"Cannot find L4Layout class with name:\"%@\".", layoutClassName]];
-    } else {              
-         if ( ![[[layoutClass alloc] init] isKindOfClass:[L4Layout class]] ) {
-              [L4LogLog error:
+        [L4LogLog error:[NSString stringWithFormat:@"Cannot find L4Layout class with name:\"%@\".", layoutClassName]];
+    } else {
+        if ( ![[[layoutClass alloc] init] isKindOfClass:[L4Layout class]] ) {
+            [L4LogLog error:
              [NSString stringWithFormat:
               @"Failed to create instance with name \"%@\" since it is not of kind L4Layout.", layoutClass]];
-         } else {
-              newLayout = [(L4Layout *)[layoutClass alloc] initWithProperties:layoutProperties];
-         }
+        } else {
+            newLayout = [(L4Layout *)[layoutClass alloc] initWithProperties:layoutProperties];
+        }
     }
     return newLayout;
 }
@@ -141,20 +140,20 @@
 {
     L4Filter *aFilter = [self headFilter];
     BOOL breakLoop = NO;
-    
+
     if(![self isAsSevereAsThreshold:[anEvent level]]) {
         return;
     }
 
     BOOL isOkToAppend = YES;
-    
+
     @synchronized(self) {
 
         if (_closed) {
             [L4LogLog error:[NSString stringWithFormat:@"Attempted to append to closed appender named: %@", _name]];
             isOkToAppend = NO;
         }
-        
+
         while (aFilter && !breakLoop) {
             switch([aFilter decide:anEvent]) {
                 case L4FilterDeny:
@@ -170,7 +169,7 @@
                     break;
             }
         }
-        
+
         if (isOkToAppend) {
             [self append:anEvent]; // passed all threshold checks, append event.
         }
@@ -182,9 +181,9 @@
     @synchronized(self) {
         if( _headFilter == nil ) {
             _headFilter = newFilter;
-            _tailFilter = newFilter; // don't retain at the tail, just the head.
+            _tailFilter = newFilter;
         } else {
-            [_tailFilter setNext:newFilter];
+            _tailFilter.next = newFilter;
             _tailFilter = newFilter;
         }
     }
@@ -201,12 +200,12 @@
 
         @synchronized(self) {
             for (L4Filter *filter = _headFilter; filter; filter = [_headFilter next] ) {
-                [filter setNext:nil];
+                filter.next = nil;
             }
             _headFilter = nil;
             _tailFilter = nil;
         }
-    
+
     }
 }
 

@@ -57,17 +57,6 @@ NSString *const L4RollingFrequencyMinutely = @"L4RollingFrequencyMinutely";
     return self;
 }
 
-- (void)dealloc
-{
-    _lastRolloverDate = nil;
-    _rollingFrequency = nil;
-}
-
-- (NSString *)rollingFrequency
-{
-    return _rollingFrequency;
-}
-
 - (void)setRollingFrequency:(NSString *)aRollingFrequency
 {    
     _rollingFrequency = [aRollingFrequency copy];

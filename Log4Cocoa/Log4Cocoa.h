@@ -34,5 +34,3 @@
 #import "L4XMLLayout.h"
 #import "Log4CocoaDefines.h"
 #import "NSObject+Log4Cocoa.h"
-
-

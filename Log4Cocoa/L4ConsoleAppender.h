@@ -1,3 +1,5 @@
+// For copyright & license, see LICENSE.
+
 #import <Foundation/Foundation.h>
 #import "L4WriterAppender.h"
 
@@ -5,9 +7,6 @@
  * An implementation of L4Appender that writes messages to the console; either stdout or stderr.
  */
 @interface L4ConsoleAppender : L4WriterAppender
-{
-    BOOL isStandardOut; /**< Tracks if this appender is for stdout.*/
-}
 
 /**
  * Creates and returns an L4ConsoleAppender on stdout with the given L4Layout.
@@ -55,4 +54,3 @@
 - (BOOL) isStandardOut;
 
 @end
-// For copyright & license, see LICENSE.

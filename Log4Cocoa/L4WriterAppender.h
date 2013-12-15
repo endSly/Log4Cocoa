@@ -6,17 +6,23 @@
  * An extension of L4Appender that knows how to append by writing to a filehandle.
  */
 @interface L4WriterAppender : L4AppenderSkeleton {
-    BOOL immediateFlush; /**< Flush after write; default is YES. */
-    NSStringEncoding encoding; /**< The string encoding to use; default is lossy ASCII.*/
-    BOOL lossyEncoding;    /**< Whether to allow lossy string encoding; default is YES.*/
-    NSFileHandle *fileHandle; /**< The file we are writing to.*/
+    NSFileHandle *_fileHandle; /**< The file we are writing to.*/
 }
+
+/** Flush after write; default is YES. */
+@property BOOL immediateFlush;
+
+/** The string encoding to use; default is lossy ASCII.*/
+@property NSStringEncoding encoding;
+
+/** Whether to allow lossy string encoding; default is YES.*/
+@property BOOL lossyEncoding;
 
 /**
  * Default init method.
  * @return the new instance.
  */
-- (id) init;
+- (id)init;
 
 /**
  * Creates a new appneder with the provided info.
@@ -24,7 +30,7 @@
  * @param aFileHandle an exisiting file handle to write to.
  * @return the new instance.
  */
-- (id) initWithLayout:(L4Layout *)aLayout fileHandle:(NSFileHandle *)aFileHandle;
+- (id)initWithLayout:(L4Layout *)aLayout fileHandle:(NSFileHandle *)aFileHandle;
 
 /**
  * Initializes an instance from properties.  The properties supported are:
@@ -33,13 +39,7 @@
  *    <code>log4cocoa.appender.A2.ImmediateFlush=false</code>
  * @param initProperties the proterties to use.
  */
-- (id) initWithProperties:(L4Properties *)initProperties;
-
-/**
- * Mutator for immediateFlush attribute.
- * @param flush YES to flush immediatly, NO to not do so.
- */
-- (void) setImmediateFlush:(BOOL)flush;
+- (id)initWithProperties:(L4Properties *)initProperties;
 
 /**
  *  Reminder: the nesting of calls is:
@@ -51,7 +51,7 @@
  *         - checkEntryConditions();
  *         - subAppend();
  */
-- (void) append:(L4LogEvent *)anEvent;
+- (void)append:(L4LogEvent *)anEvent;
 
 /**
  * Actual writing occurs here.
@@ -59,13 +59,13 @@
  * <p>Most subclasses of <code>WriterAppender</code> will need to
  * override this method.
  */
-- (void) subAppend:(L4LogEvent *)anEvent;
+- (void)subAppend:(L4LogEvent *)anEvent;
 
 /**
  * NOTE --- this method adds a lineBreakChar between log messages.
  * So layouts & log messages do not need to add a trailing line break.
  */
-- (void) write:(NSString *)theString;
+- (void)write:(NSString *)theString;
 
 /**
  * Sets the NSFileHandle where the log output will go.
@@ -106,18 +106,6 @@
  * This method causes the footer of the associated layout to be written to the log file.
  */
 - (void) writeFooter;
-
-/**
- * Accessor for the encoding attribute.
- * @return the current string encoding.
- */
-- (NSStringEncoding) encoding;
-
-/**
- * Mutator for the encoding attribute.
- * @param newEncoding the new string encoding to use.
- */
-- (void) setEncoding:(NSStringEncoding) newEncoding;
 
 @end
 

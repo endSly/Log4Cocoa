@@ -46,9 +46,9 @@
     NSMutableDictionary* appenders; /**< The internal collection in which individual configured appenders are stored.*/
 }
 
-/* ********************************************************************* */
-#pragma mark Class methods
-/* ********************************************************************* */
+
+#pragma mark - Class methods
+
 + (instancetype)propertyConfiguratorWithFileName:(NSString *)aName
 {
      return [[self alloc] initWithFileName: aName];
@@ -59,9 +59,9 @@
      return [(L4PropertyConfigurator *) [self alloc] initWithProperties:aProperties];
 }
 
-/* ********************************************************************* */
-#pragma mark Instance methods
-/* ********************************************************************* */
+
+#pragma mark - Instance methods
+
 - (void) configure
 {
     @synchronized(self) {
@@ -111,13 +111,6 @@
      }
 }
 
-- (void)dealloc
-{
-    properties = nil;
-     appenders = nil;
-     
-}
-
 - (id) init
 {
     return nil; // never use this constructor
@@ -131,7 +124,7 @@
 - (id) initWithProperties:(L4Properties *)initProperties
 {
     self = [super init];
-     if ( self != nil ) {
+     if (self) {
           properties = [initProperties subsetForPrefix:@"log4cocoa."];
           appenders = [[NSMutableDictionary alloc] init];
      }
@@ -139,9 +132,9 @@
      return self;
 }
 
-/* ********************************************************************* */
-#pragma mark Private methods
-/* ********************************************************************* */
+
+#pragma mark - Private methods
+
 - (id<L4Appender>) appenderForClassName:(NSString *)appenderClassName andProperties:(L4Properties *)appenderProperties
 {
     id <L4Appender> newAppender = nil;

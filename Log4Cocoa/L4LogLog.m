@@ -10,39 +10,40 @@ static BOOL quietMode = NO;
 static NSData *lineBreakChar;
 
 @implementation L4LogLog
-+ (void) initialize
+
++ (void)initialize
 {
-    lineBreakChar = [@"\n" dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+    lineBreakChar = [@"\n" dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
 }
 
-+ (BOOL) internalDebuggingEnabled
++ (BOOL)internalDebuggingEnabled
 {
     return internalDebugging;
 }
 
-+ (void) setInternalDebuggingEnabled:(BOOL) enabled
++ (void)setInternalDebuggingEnabled:(BOOL)enabled
 {
     internalDebugging = enabled;
 }
 
-+ (BOOL) quietModeEnabled
++ (BOOL)quietModeEnabled
 {
     return quietMode;
 }
 
-+ (void) setQuietModeEnabled:(BOOL) enabled
++ (void)setQuietModeEnabled:(BOOL) enabled
 {
     quietMode = enabled;
 }
 
-+ (void) debug:(NSString *)message
++ (void)debug:(NSString *)message
 {
     [self debug:message exception:nil];
 }
 
-+ (void) debug:(NSString *)message exception:(NSException *)exception
++ (void)debug:(NSString *)message exception:(NSException *)exception
 {
-    if(internalDebugging && !quietMode) {
+    if (internalDebugging && !quietMode) {
         [self writeMessage:message
                 withPrefix:L4LogLog_PREFIX
                     toFile:[NSFileHandle fileHandleWithStandardOutput]
@@ -50,14 +51,14 @@ static NSData *lineBreakChar;
     }
 }
 
-+ (void) warn:(NSString *)message
++ (void)warn:(NSString *)message
 {
     [self warn:message exception:nil];
 }
 
-+ (void) warn:(NSString *)message exception:(NSException *)exception
++ (void)warn:(NSString *)message exception:(NSException *)exception
 {
-    if(!quietMode) {
+    if (!quietMode) {
         [self writeMessage:message
                 withPrefix:L4LogLog_WARN_PREFIX
                     toFile:[NSFileHandle fileHandleWithStandardError]
@@ -65,14 +66,14 @@ static NSData *lineBreakChar;
     }
 }
 
-+ (void) error:(NSString *)message
++ (void)error:(NSString *)message
 {
     [self error:message exception:nil];
 }
 
-+ (void) error:(NSString *)message exception:(NSException *)exception
++ (void)error:(NSString *)message exception:(NSException *)exception
 {
-    if(!quietMode) {
+    if (!quietMode) {
         [self writeMessage:message
                 withPrefix:L4LogLog_ERROR_PREFIX
                     toFile:[NSFileHandle fileHandleWithStandardError]
@@ -87,21 +88,21 @@ static NSData *lineBreakChar;
 // What are the performance implications, if any?
 // ### TODO -- must test under heavy load and talk to performance expert.
 //
-+ (void) writeMessage:(NSString *)message
-           withPrefix:(NSString *)prefix
-               toFile:(NSFileHandle *)fileHandle
-            exception:(NSException *)exception
++ (void)writeMessage:(NSString *)message
+          withPrefix:(NSString *)prefix
+              toFile:(NSFileHandle *)fileHandle
+           exception:(NSException *)exception
 {
     @try {
         [fileHandle writeData:
-         [[prefix stringByAppendingString:message] dataUsingEncoding:NSASCIIStringEncoding
+         [[prefix stringByAppendingString:message] dataUsingEncoding:NSUTF8StringEncoding
                                                 allowLossyConversion:YES]];
         [fileHandle writeData:lineBreakChar];
-        
-        if( exception != nil ) {
+
+        if (exception) {
             [fileHandle writeData:
-             [[prefix stringByAppendingString:[exception description]] dataUsingEncoding:NSASCIIStringEncoding 
-                                                                    allowLossyConversion:YES]];
+             [[prefix stringByAppendingString:exception.description] dataUsingEncoding:NSUTF8StringEncoding
+                                                                  allowLossyConversion:YES]];
             [fileHandle writeData:lineBreakChar];
         }
     }

@@ -151,11 +151,6 @@ static L4Level *L4_ALL   = nil;
     return NO;
 }
 
-- (void)dealloc
-{
-    _name = nil;
-}
-
 - (NSString *)description
 {
     return self.name;

@@ -13,7 +13,7 @@ const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize = (1024 * 1024
 /**
  * Private methods for the L4RollingFileAppender class.
  */
-@interface L4RollingFileAppender (PrivateMethods)
+@interface L4RollingFileAppender ()
 /**
  * Renames the current log file to have a specific index. Used for rolling log files.
  * @param backupIndex the index of the new file.
@@ -56,8 +56,8 @@ const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize = (1024 * 1024
             newMaxBackupIndex = atoi([buf UTF8String]);
         }
         
-        [self setMaximumFileSize:newMaxFileSize];
-        [self setMaxBackupIndex:newMaxBackupIndex];
+        self.maxFileSize = newMaxFileSize;
+        self.maxBackupIndex = newMaxBackupIndex;
     }
     
     return self;
@@ -72,41 +72,20 @@ const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize = (1024 * 1024
 {
     self = [super initWithLayout:aLayout fileName:aName append:flag];
     
-    if (self != nil) {
-        [self setMaxBackupIndex:1];
-        [self setMaximumFileSize:kL4RollingFileAppenderDefaultMaxFileSize];
+    if (self) {
+        self.maxFileSize = 1;
+        self.maxFileSize = kL4RollingFileAppenderDefaultMaxFileSize;
     }
     
     return self;
-}
-
-
-- (unsigned int)maxBackupIndex
-{
-    return maxBackupIndex;
-}
-
-- (void)setMaxBackupIndex:(unsigned int)mbi
-{
-    maxBackupIndex = mbi;
-}
-
-- (unsigned long long)maximumFileSize
-{
-    return maxFileSize;
-}
-
-- (void)setMaximumFileSize:(unsigned long long)mfs
-{
-    maxFileSize = mfs;
 }
 
 - (void)rollOver
 {
     @synchronized(self) {
         // if maxBackupIndex is 0, truncate file and create no backups
-        if ([self maxBackupIndex] <= 0) {
-            [fileHandle truncateFileAtOffset:0];
+        if (self.maxBackupIndex <= 0) {
+            [_fileHandle truncateFileAtOffset:0];
         } else {
             [self closeFile];
             [self renameLogFile:0];
@@ -115,14 +94,14 @@ const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize = (1024 * 1024
     }
 }
 
-/* ********************************************************************* */
-#pragma mark Protected methods
-/* ********************************************************************* */
+
+#pragma mark - Protected methods
+
 - (void)subAppend:(L4LogEvent*)event
 {
     @synchronized(self) {
         // if the file's size has exceeded maximumFileSize, roll the file over
-        if ([fileHandle offsetInFile] >= [self maximumFileSize]) {
+        if ([_fileHandle offsetInFile] >= self.maxFileSize) {
             [self rollOver];
         }
         
@@ -131,19 +110,19 @@ const unsigned long long kL4RollingFileAppenderDefaultMaxFileSize = (1024 * 1024
     }
 }
 
-/* ********************************************************************* */
-#pragma mark Private methods
-/* ********************************************************************* */
+
+#pragma mark - Private methods
+
 - (void)renameLogFile:(unsigned int)backupIndex
 {
-    NSFileManager*    fileManager = nil;
-    NSString*        tempOldFileName = nil;
-    NSString*        tempNewFileName = nil;
-    NSString*        tempPathExtension = nil;
+    NSFileManager*  fileManager = nil;
+    NSString*       tempOldFileName = nil;
+    NSString*       tempNewFileName = nil;
+    NSString*       tempPathExtension = nil;
     
     fileManager = [NSFileManager defaultManager];
     
-    tempPathExtension = [[self fileName] pathExtension];
+    tempPathExtension = [self.fileName pathExtension];
     
     // if we are trying to rename a backup file > maxBackupIndex
     if (backupIndex >= [self maxBackupIndex]) {

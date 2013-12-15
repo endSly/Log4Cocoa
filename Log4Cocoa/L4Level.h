@@ -1,3 +1,5 @@
+// For copyright & license, see LICENSE.
+
 #import <Foundation/Foundation.h>
 
 // ALL < DEBUG < INFO < WARN < ERROR < FATAL < OFF
@@ -166,10 +168,4 @@
  */
 - (BOOL)isEnabledFor:(L4Level *)aLevel;
 
-/**
- *  Prevents releasing of singleton copies.
- */
-- (oneway void)release;
-
 @end
-// For copyright & license, see LICENSE.
