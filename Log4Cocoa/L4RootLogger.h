@@ -16,12 +16,6 @@
 - (id)initWithLevel:(L4Level *)aLevel;
 
 /**
- * Change the level of this logger.
- * @param aLevel the new level to use.
- */
-- (void)setLevel:(L4Level *)aLevel;
-
-/**
  * Access the level of this logger.
  * @return the current level for this logger.
  */

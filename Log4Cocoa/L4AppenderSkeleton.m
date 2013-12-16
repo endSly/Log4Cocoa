@@ -175,9 +175,8 @@
 - (void)appendFilter:(L4Filter *)newFilter
 {
     @synchronized(self) {
-        if( _headFilter == nil ) {
-            _headFilter = newFilter;
-            _tailFilter = newFilter;
+        if (!_headFilter) {
+            _headFilter = _tailFilter = newFilter;
         } else {
             _tailFilter.next = newFilter;
             _tailFilter = newFilter;

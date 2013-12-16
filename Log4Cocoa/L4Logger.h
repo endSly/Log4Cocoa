@@ -139,44 +139,44 @@
  * Determines if a trace message should be logged.
  * @return YES if debug messages are enabled, NO if they are not.
  */
-- (BOOL) isTraceEnabled;
+- (BOOL)isTraceEnabled;
 
 /**
  * Determines if a debug message should be logged.
  * @return YES if debug messages are enabled, NO if they are not.
  */
-- (BOOL) isDebugEnabled;
+- (BOOL)isDebugEnabled;
 
 /**
  * Determines if an info message should be logged.
  * @return YES if info messages are enabled, NO if they are not.
  */
-- (BOOL) isInfoEnabled;
+- (BOOL)isInfoEnabled;
 
 /**
  * Determines if a warn message should be logged.
  * @return YES if warn messages are enabled, NO if they are not.
  */
-- (BOOL) isWarnEnabled;
+- (BOOL)isWarnEnabled;
 
 /**
  * Determines if an error message should be logged.
  * @return YES if error messages are enabled, NO if they are not.
  */
-- (BOOL) isErrorEnabled;
+- (BOOL)isErrorEnabled;
 
 /**
  * Determines if a fatel message should be logged.
  * @return YES if fatel messages are enabled, NO if they are not.
  */
-- (BOOL) isFatalEnabled;
+- (BOOL)isFatalEnabled;
 
 /**
  * Determines if aLevel should be logged.
  * @param aLevel the L4Level to be checked.
  * @return YES if logging is enabled for the level, NO if it is not.
  */
-- (BOOL) isEnabledFor:(L4Level *) aLevel;
+- (BOOL)isEnabledFor:(L4Level *) aLevel;
 
 /**
  * Logs an error message in an NSAssert is false.
@@ -188,7 +188,7 @@
  * @param anAssertion the NSAssert to be tested.
  * @param aMessage the message to be logged if the assertian is false.
  */
-- (void) lineNumber:(int) lineNumber
+- (void)lineNumber:(int) lineNumber
            fileName:(char *) fileName
          methodName:(char *) methodName
              assert:(BOOL) anAssertion
@@ -206,7 +206,7 @@
  * @param aLevel the L4Level for this log message.
  * @param e the exception to be logged.
  */
-- (void) lineNumber:(int) lineNumber
+- (void)lineNumber:(int) lineNumber
            fileName:(char *) fileName
          methodName:(char *) methodName
             message:(id) aMessage
@@ -223,34 +223,34 @@
  */
 - (void) forcedLog:(L4LogEvent *) event;
 
-/* ********************************************************************* */
-#pragma mark Logger management methods
-/* ********************************************************************* */
+
+#pragma mark - Logger management methods
+
 /**
  * Accessor for the logger repository.
  * @return the logger repository.
  */
-+ (id <L4LoggerRepository>) loggerRepository;
++ (id <L4LoggerRepository>)loggerRepository;
 
 /**
  * Accessor for the root logger.
  * @return the root logger.
  */
-+ (L4Logger *) rootLogger;
++ (instancetype)rootLogger;
 
 /**
  * Accesses the logger for the given class.
  * @param aClass the class we want the logger for.
  * @return the logger for the class
  */
-+ (L4Logger *) loggerForClass:(Class) aClass;
++ (instancetype)loggerForClass:(Class) aClass;
 
 /**
  * Accesses the logger for the given name.
  * @param aName the name of the logger we want.
  * @return the logger for the class
  */
-+ (L4Logger *) loggerForName:(NSString *) aName;
++ (instancetype)loggerForName:(NSString *) aName;
 
 /**
  * Accesses the logger for the given name.
@@ -258,23 +258,23 @@
  * @param aFactory the factory to use to create the logger if it does not yet exist.
  * @return the logger for the class
  */
-+ (L4Logger *) loggerForName:(NSString *) aName factory:(id <L4LoggerFactory>) aFactory;
++ (instancetype)loggerForName:(NSString *) aName factory:(id <L4LoggerFactory>) aFactory;
 
 /**
  * The array of loggers.
  * @return the current loggers.
  */
-+ (NSArray *) currentLoggers;
++ (NSArray *)currentLoggers;
 
 /**
  * Shut down logging.
  */
-+ (void) shutdown;
++ (void)shutdown;
 
 /**
  * Reset the logging configuration.
  */
-+ (void) resetConfiguration;
++ (void)resetConfiguration;
 
 @end
 

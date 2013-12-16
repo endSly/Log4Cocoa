@@ -12,7 +12,7 @@
  * standard, generic logging behaviour.
  */
 @interface L4AppenderSkeleton : NSObject <L4Appender> {
-    L4Filter        * _headFilter;  /**< The firsst filter used by this appender.*/
+    L4Filter        * _headFilter;  /**< The first filter used by this appender.*/
     L4Filter __weak * _tailFilter;  /**< The last filter used by this appender.*/
     BOOL              _closed;      /**< Tracks if this appender has been closed.*/
 }

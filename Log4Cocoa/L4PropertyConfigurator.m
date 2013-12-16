@@ -19,25 +19,25 @@
  * @param appenderProperties the properties used to configure the new appender.
  * @return the newly configured appender.
  */
-- (id<L4Appender>) appenderForClassName:(NSString *)appenderClassName andProperties:(L4Properties *)appenderProperties;
+- (id<L4Appender>)appenderForClassName:(NSString *)appenderClassName andProperties:(L4Properties *)appenderProperties;
 
 /**
  * Reads through the properties one at a time looking for properties related to additivity.  If found, they are
  * used to configure the framework.
  */
-- (void) configureAdditivity;
+- (void)configureAdditivity;
 
 /**
  * Reads through the properties one at a time looking for a named appender.  If one is found, the properties
  * for that appender are seperated out, and sent to the appender to initialize & configure the appender.
  */
-- (void) configureAppenders;
+- (void)configureAppenders;
 
 /**
  * Reads through the properties one at a time looking for a named loggers.  If one is found, the properties
  * for that logger are seperated out, and sent to the logger to initialize & configure the logger.
  */
-- (void) configureLoggers;
+- (void)configureLoggers;
 @end
 
 

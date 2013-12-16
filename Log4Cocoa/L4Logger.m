@@ -230,22 +230,22 @@ static L4LoggerStore *_loggerRepository = nil;
     return _loggerRepository;
 }
 
-+ (L4Logger *) rootLogger
++ (instancetype)rootLogger
 {
     return [_loggerRepository rootLogger];
 }
 
-+ (L4Logger *) loggerForClass:(Class) aClass
++ (instancetype)loggerForClass:(Class) aClass
 {
     return [_loggerRepository loggerForClass:aClass];
 }
 
-+ (L4Logger *) loggerForName:(NSString *) aName
++ (instancetype)loggerForName:(NSString *) aName
 {
     return [_loggerRepository loggerForName:aName];
 }
 
-+ (L4Logger *) loggerForName:(NSString *) aName factory:(id <L4LoggerFactory>) aFactory
++ (instancetype)loggerForName:(NSString *) aName factory:(id <L4LoggerFactory>) aFactory
 {
     return [_loggerRepository loggerForName:aName factory:aFactory];
 }

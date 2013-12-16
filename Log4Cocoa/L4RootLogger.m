@@ -1,3 +1,5 @@
+// For copyright & license, see LICENSE.
+
 #import "L4RootLogger.h"
 #import "L4LogLog.h"
 #import "L4Level.h"
@@ -28,4 +30,3 @@
 }
 
 @end
-// For copyright & license, see LICENSE.
