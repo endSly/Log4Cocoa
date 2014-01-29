@@ -151,3 +151,7 @@ In the application’s target, you need to add a copy-files build phase that cop
 You can find the framework in the Products group in the project’s Files list.
 
 
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/endSly/log4cocoa/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
