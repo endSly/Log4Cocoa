@@ -6,6 +6,13 @@
 
 @implementation L4RootLogger
 
+// +initialize fixed for a leak problem when the superclass L4Logger calls L4RootLogger within its own +initialize
+// by defining the subclass +initialize, the superclass +initialize would not be called twice (its incorrect too since L4Logger is designed to be a singleton as well)
++ (void)initialize
+{
+
+}
+
 - (id) initWithLevel:(L4Level *)aLevel
 {
     self = [super initWithName: @"root"];
